@@ -1,5 +1,10 @@
 # Django settings for douentza project.
 
+import locale
+import os
+abs_path = os.path.abspath(__file__)
+ROOT_DIR = os.path.dirname(abs_path)
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -69,9 +74,8 @@ STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    # Put strings here, like "/home/html/static" or "C:/www/django/static".
-    # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    ROOT_DIR + '/media',
 )
 
 # List of finder classes that know how to find static files in

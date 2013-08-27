@@ -91,10 +91,18 @@ class HotlineResponse(models.Model):
                            default=SEX_UNKNOWN)
     duration = models.PositiveIntegerField()
     location = models.ForeignKey('Entity', null=True, blank=True)
+    ethnic = models.ForeignKey('Ethnic', null=True, blank=True )
 
     def __unicode__(self):
         return self.request.__unicode__()
 
+
+class Ethnic(models.Model):
+    slug = models.CharField(max_length=20, primary_key=True)
+    name = models.CharField(max_length=40, verbose_name="Nom")
+
+    def __unicode__(self):
+        return "{name}/{slug}".format(name=self.name, slug=self.slug)
 
 class Entity(MPTTModel):
 
@@ -176,9 +184,8 @@ class Question(models.Model):
 
 
 class Choices(models.Model):
-
-    name = models.CharField(max_length=30, verbose_name="Nom")
     slug = models.CharField(max_length=20, primary_key=True)
+    name = models.CharField(max_length=30, verbose_name="Nom")
     question = models.ForeignKey('Question', related_name="choices")
 
     def __unicode__(self):

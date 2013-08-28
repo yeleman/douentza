@@ -10,7 +10,7 @@ from django.contrib.auth.admin import UserAdmin
 from django import forms
 
 from douentza.models import (HotlineEvent, HotlineUser, HotlineResponse,
-                             Entity, Survey, Question, Choices, Ethnic)
+                             Entity, Survey, Question, ChoiceQuestion, Ethnicity)
 
 
 class UserModificationForm(forms.ModelForm):
@@ -65,7 +65,7 @@ class CustomHotlineResponse(admin.ModelAdmin):
 
 
 class CustomEntity(admin.ModelAdmin):
-    list_display = ("slug", "name", "type", "latitude",
+    list_display = ("slug", "name", "entity_type", "latitude",
                     "longitude", "parent",)
     list_filter = ("parent", )
 
@@ -75,5 +75,6 @@ admin.site.register(HotlineResponse, CustomHotlineResponse)
 admin.site.register(Entity, CustomEntity)
 admin.site.register(Survey)
 admin.site.register(Question)
-admin.site.register(Choices)
-admin.site.register(Ethnic)
+admin.site.register(ChoiceQuestion)
+admin.site.register(Ethnicity)
+admin.site.register(HotlineUser)

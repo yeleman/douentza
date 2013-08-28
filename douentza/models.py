@@ -27,23 +27,21 @@ class HotlineEvent(models.Model):
     TYPE_CALL_ME = 'CALL_ME'
     TYPE_CHARGE_ME = 'CHARGE_ME'
     TYPE_RING = 'RING'
-    TYPE_SMS_UNKNOWN = 'SMS_UNKNOWN'
     TYPE_SMS_HOTLINE = 'SMS_HOTLINE'
     TYPE_SMS_SPAM = 'SMS_SPAM'
+
     TYPES = ((TYPE_CALL_ME, "Peux-tu me rappeler?"),
              (TYPE_CHARGE_ME, "Peux-tu recharger mon compte?"),
              (TYPE_RING, "Bip."),
-             (TYPE_SMS_UNKNOWN, "SMS à déterminer."),
              (TYPE_SMS_HOTLINE, "SMS (Hotline)."),
              (TYPE_SMS_SPAM, "SMS (SPAM)"))
     HOTLINE_TYPES = (TYPE_CALL_ME, TYPE_CHARGE_ME, TYPE_SMS_HOTLINE, TYPE_RING)
-    SMS_TYPES = (TYPE_SMS_UNKNOWN, TYPE_SMS_HOTLINE, TYPE_SMS_SPAM)
+    SMS_TYPES = (TYPE_SMS_HOTLINE, TYPE_SMS_SPAM)
 
     identity = models.CharField(max_length=30)
     event_type = models.CharField(max_length=50, choices=TYPES)
     received_on = models.DateTimeField()
     created_on = models.DateTimeField(auto_now_add=True)
-    hotline_number = models.CharField(max_length=30, null=True, blank=True)
     sms_message = models.TextField(null=True, blank=True)
     processed = models.BooleanField(default=False)
     operator = models.CharField(max_length=50, choices=OPERATORS)
@@ -54,13 +52,11 @@ class HotlineEvent(models.Model):
         return self.answer.exists()
 
     def __unicode__(self):
-        return "%(type)s/%(number)s" % {'type': self.event_type,
-                                        'number': self.identity}
+        return "{event_type}/{number}".format(event_type=self.event_type,
+                                              number=self.identity)
 
 
 class HotlineUser(AbstractUser):
-
-    phone_number = models.CharField(max_length=30, null=True, blank=True)
 
     def full_name(self):
         if self.get_full_name():
@@ -82,27 +78,28 @@ class HotlineResponse(models.Model):
         SEX_FEMALE: "Femme"
     }
 
-    request = models.ForeignKey(HotlineEvent, unique=True,
-                                related_name='answer')
-    created_on = models.DateTimeField(auto_now_add=True)
     response_date = models.DateTimeField()
+    created_on = models.DateTimeField(auto_now_add=True)
+    event = models.ForeignKey(HotlineEvent, unique=True, related_name='answer')
     age = models.PositiveIntegerField(null=True, blank=True)
     sex = models.CharField(max_length='1', choices=SEXES.items(),
                            default=SEX_UNKNOWN)
-    duration = models.PositiveIntegerField()
+    duration = models.FloatField(max_length='4')
     location = models.ForeignKey('Entity', null=True, blank=True)
-    ethnic = models.ForeignKey('Ethnic', null=True, blank=True )
+    ethnicity = models.ForeignKey('Ethnicity', null=True, blank=True )
 
     def __unicode__(self):
-        return self.request.__unicode__()
+        return "{event}/{response_date}/{location}".format(event=self.event.__unicode__(),
+                                                           response_date=self.response_date,
+                                                           location=self.location)
 
 
-class Ethnic(models.Model):
-    slug = models.CharField(max_length=20, primary_key=True)
+class Ethnicity(models.Model):
     name = models.CharField(max_length=40, verbose_name="Nom")
 
     def __unicode__(self):
-        return "{name}/{slug}".format(name=self.name, slug=self.slug)
+        return self.name
+
 
 class Entity(MPTTModel):
 
@@ -111,18 +108,20 @@ class Entity(MPTTModel):
     TYPE_ARRONDISSEMENT = 'arrondissement'
     TYPE_COMMUNE = 'commune'
     TYPE_VILLAGE = 'village'
+    TYPE_OTHER = 'autre'
 
     TYPES = {
         TYPE_REGION: "Région",
         TYPE_CERCLE: "Cercle",
         TYPE_ARRONDISSEMENT: "Arrondissement",
         TYPE_COMMUNE: "Commune",
-        TYPE_VILLAGE: "Village"
+        TYPE_VILLAGE: "Village",
+        TYPE_OTHER:'Autre'
     }
 
     slug = models.CharField(max_length=20, primary_key=True)
     name = models.CharField(max_length=100)
-    type = models.CharField(max_length=30, choices=TYPES.items())
+    entity_type = models.CharField(max_length=30, choices=TYPES.items())
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
     parent = TreeForeignKey('self', null=True, blank=True,
@@ -145,7 +144,7 @@ class Entity(MPTTModel):
 
     def parent_level(self):
         if self.parent:
-            return self.parent.type
+            return self.parent.entity_type
         return self.parent
 
 
@@ -158,35 +157,41 @@ class Survey(models.Model):
 
 
 class Question(models.Model):
-    TYPE_STRING = 'string'
-    TYPE_BOOL = 'bool'
+
+    class Meta:
+        get_latest_by = 'order'
+
+    TYPE_STRING = 'chaine'
+    TYPE_BOOL = 'booleen'
     TYPE_DATE = 'date'
-    TYPE_INT = 'int'
-    TYPE_FLOAT = 'float'
-    TYPE_CHOICE = 'choice'
+    TYPE_INT = 'entier'
+    TYPE_FLOAT = 'reel'
+    TYPE_CHOICE = 'choix'
 
     TYPES = {
-        TYPE_STRING: "String",
-        TYPE_BOOL: "Bool",
+        TYPE_STRING: "Chaîne",
+        TYPE_BOOL: "Booléen",
         TYPE_DATE: "Date",
-        TYPE_INT: "Int",
-        TYPE_FLOAT: "Float",
-        TYPE_CHOICE: "Choice"
+        TYPE_INT: "Entier",
+        TYPE_FLOAT: "Réel",
+        TYPE_CHOICE: "Choix"
     }
 
-    order = models.PositiveIntegerField(verbose_name="Ordre")
+    order = models.PositiveIntegerField(default=0, verbose_name="Ordre")
     label = models.CharField(max_length=200, verbose_name='Question')
-    type = models.CharField(max_length=30, choices=TYPES.items())
+    question_type = models.CharField(max_length=30, choices=TYPES.items())
     survey = models.ForeignKey('Survey', related_name='questions')
 
     def __unicode__(self):
-        return "{label}".format(label=self.label)
+        return "{label}/{survey}".format(label=self.label,
+                                         survey=self.survey.__unicode__())
 
 
-class Choices(models.Model):
+class ChoiceQuestion(models.Model):
     slug = models.CharField(max_length=20, primary_key=True)
-    name = models.CharField(max_length=30, verbose_name="Nom")
+    label = models.CharField(max_length=30, verbose_name="Choix")
     question = models.ForeignKey('Question', related_name="choices")
 
     def __unicode__(self):
-        return "{name}/{slug}".format(name=self.name, slug=self.slug)
+        return "{label}/{question}".format(label=self.label,
+                                           question=self.question.__unicode__())

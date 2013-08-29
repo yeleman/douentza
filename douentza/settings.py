@@ -1,6 +1,5 @@
 # Django settings for douentza project.
 
-import locale
 import os
 abs_path = os.path.abspath(__file__)
 ROOT_DIR = os.path.dirname(abs_path)

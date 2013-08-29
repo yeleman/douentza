@@ -7,6 +7,8 @@ from __future__ import (unicode_literals, absolute_import,
 
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.template.defaultfilters import slugify
+
 from mptt.models import MPTTModel, TreeForeignKey
 from mptt.managers import TreeManager
 
@@ -24,6 +26,15 @@ class HotlineEvent(models.Model):
         unique_together = [('identity', 'received_on')]
         get_latest_by = "received_on"
 
+    STATUS_NEW = 'NEW'
+    STATUS_NOT_RESPONDED = 'NOT_RESPONSE'
+    STATUS_RESPONDED = 'RESPONDED'
+    STATUS_BUSY = 'BUSY'
+    STATUS = ((STATUS_NEW, "A appeler"),
+             (STATUS_NOT_RESPONDED, "Ne repond pas"),
+             (STATUS_RESPONDED, "Repondu"),
+             (STATUS_BUSY, "Occupé"))
+
     TYPE_CALL_ME = 'CALL_ME'
     TYPE_CHARGE_ME = 'CHARGE_ME'
     TYPE_RING = 'RING'
@@ -40,20 +51,17 @@ class HotlineEvent(models.Model):
 
     identity = models.CharField(max_length=30)
     event_type = models.CharField(max_length=50, choices=TYPES)
+    status = models.CharField(max_length=50, choices=STATUS)
     received_on = models.DateTimeField()
     created_on = models.DateTimeField(auto_now_add=True)
     sms_message = models.TextField(null=True, blank=True)
-    processed = models.BooleanField(default=False)
     operator = models.CharField(max_length=50, choices=OPERATORS)
     hotline_user = models.ForeignKey('HotlineUser', null=True, blank=True)
 
-    @property
-    def archived(self):
-        return self.answer.exists()
-
     def __unicode__(self):
-        return "{event_type}/{number}".format(event_type=self.event_type,
-                                              number=self.identity)
+        return "{event_type}/{number}/{status}".format(event_type=self.event_type,
+                                                       status=self.status,
+                                                       number=self.identity)
 
 
 class HotlineUser(AbstractUser):
@@ -69,9 +77,9 @@ class HotlineResponse(models.Model):
     class Meta:
         get_latest_by = 'response_date'
 
-    SEX_UNKNOWN = 'U'
-    SEX_MALE = 'M'
-    SEX_FEMALE = 'F'
+    SEX_UNKNOWN = 'unknow'
+    SEX_MALE = 'male'
+    SEX_FEMALE = 'female'
     SEXES = {
         SEX_UNKNOWN: 'Inconnu',
         SEX_MALE: "Homme",
@@ -80,12 +88,13 @@ class HotlineResponse(models.Model):
 
     response_date = models.DateTimeField()
     created_on = models.DateTimeField(auto_now_add=True)
-    event = models.ForeignKey(HotlineEvent, unique=True, related_name='answer')
+    event = models.ForeignKey(HotlineEvent, unique=True, related_name='response')
     age = models.PositiveIntegerField(null=True, blank=True)
-    sex = models.CharField(max_length='1', choices=SEXES.items(),
+    sex = models.CharField(max_length=6, choices=SEXES.items(),
                            default=SEX_UNKNOWN)
-    duration = models.FloatField(max_length='4')
-    location = models.ForeignKey('Entity', null=True, blank=True)
+    duration = models.PositiveIntegerField(max_length=4,
+                                           help_text="Donnez la durée en seconde")
+    location = models.ForeignKey('Entity')
     ethnicity = models.ForeignKey('Ethnicity', null=True, blank=True )
 
     def __unicode__(self):
@@ -95,7 +104,12 @@ class HotlineResponse(models.Model):
 
 
 class Ethnicity(models.Model):
+    slug = models.SlugField()
     name = models.CharField(max_length=40, verbose_name="Nom")
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Ethnicity, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return self.name
@@ -153,7 +167,7 @@ class Survey(models.Model):
     description = models.TextField(null=True, blank=True)
 
     def __unicode__(self):
-        return "{title}".format(title=self.title)
+        return self.title
 
 
 class Question(models.Model):
@@ -161,12 +175,12 @@ class Question(models.Model):
     class Meta:
         get_latest_by = 'order'
 
-    TYPE_STRING = 'chaine'
-    TYPE_BOOL = 'booleen'
+    TYPE_STRING = 'string'
+    TYPE_BOOL = 'boolean'
     TYPE_DATE = 'date'
-    TYPE_INT = 'entier'
-    TYPE_FLOAT = 'reel'
-    TYPE_CHOICE = 'choix'
+    TYPE_INT = 'int'
+    TYPE_FLOAT = 'float'
+    TYPE_CHOICE = 'choice'
 
     TYPES = {
         TYPE_STRING: "Chaîne",
@@ -183,15 +197,19 @@ class Question(models.Model):
     survey = models.ForeignKey('Survey', related_name='questions')
 
     def __unicode__(self):
-        return "{label}/{survey}".format(label=self.label,
+        return "{survey}/{label}".format(label=self.label,
                                          survey=self.survey.__unicode__())
 
 
-class ChoiceQuestion(models.Model):
-    slug = models.CharField(max_length=20, primary_key=True)
-    label = models.CharField(max_length=30, verbose_name="Choix")
+class QuestionChoice(models.Model):
+
+    class Meta:
+        unique_together = (('label', 'question'),)
+
+    slug = models.CharField(max_length=20)
+    label = models.CharField(max_length=70, verbose_name="Choix")
     question = models.ForeignKey('Question', related_name="choices")
 
     def __unicode__(self):
-        return "{label}/{question}".format(label=self.label,
+        return "{question}/{label}".format(label=self.label,
                                            question=self.question.__unicode__())

@@ -10,7 +10,7 @@ from django.contrib.auth.admin import UserAdmin
 from django import forms
 
 from douentza.models import (HotlineEvent, HotlineUser, HotlineResponse,
-                             Entity, Survey, Question, ChoiceQuestion, Ethnicity)
+                             Entity, Survey, Question, QuestionChoice, Ethnicity)
 
 
 class UserModificationForm(forms.ModelForm):
@@ -53,8 +53,8 @@ class CustomUserAdmin(UserAdmin):
 
 class CustomHotlineEvent(admin.ModelAdmin):
     list_display = ("received_on", "operator", "identity", "event_type",
-                    "sms_message", "created_on",  "processed", "hotline_user",
-                    "archived")
+                    "sms_message", "created_on", "hotline_user",
+                    "status")
     list_filter = ("created_on", "event_type", "operator", "hotline_user")
 
 
@@ -70,11 +70,16 @@ class CustomEntity(admin.ModelAdmin):
     list_filter = ("parent", )
 
 
+class CustomEthnicity(admin.ModelAdmin):
+    list_display = ("slug", "name")
+    exclude = ("slug",)
+
+
 admin.site.register(HotlineEvent, CustomHotlineEvent)
 admin.site.register(HotlineResponse, CustomHotlineResponse)
 admin.site.register(Entity, CustomEntity)
 admin.site.register(Survey)
 admin.site.register(Question)
-admin.site.register(ChoiceQuestion)
-admin.site.register(Ethnicity)
+admin.site.register(QuestionChoice)
+admin.site.register(Ethnicity, CustomEthnicity)
 admin.site.register(HotlineUser)

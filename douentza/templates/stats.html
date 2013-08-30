@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h2>Statistiques</h2>
+    <table class="table table-condensed table-hover table-bordered table-striped table-info">
+        <tbody>
+            <tr>
+                <th class="span8">Dernier appel</th>
+                <td class="span4">{{ last_event.received_on }}</td>
+            </tr>
+            <tr>
+                <th>Nombre total de projets</th>
+                <td class="total">{{ total_prjects }}</td>
+            </tr>
+            <tr>
+                <th>Nombre total d'appels</th>
+                <td class="total">{{ total_events }}</td>
+            </tr>
+            <tr>
+                <th>Nombre total de questionnaire</th>
+                <td class="total">{{ total_survey }}</td>
+            </tr>
+            <tr>
+                <th>Nombre total de numéros uniques</th>
+                <td class="total">{{ total_unique_number }}</td>
+            </tr>
+            <tr>
+                <th>Total par sexes (Homme/Femme/Inconnu)</th>
+                <td>{{ sex_male }} H, {{sex_female}} F, {{sex_unknown}} Inconnus</td>
+            </tr>
+        </tbody>
+    </table>
+
+{% endblock %}

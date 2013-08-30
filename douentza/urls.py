@@ -9,7 +9,9 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Examples:
-    # url(r'^$', 'douentza.views.home', name='home'),
+    url(r'^stats/$', 'douentza.views.stats', name='stats'),
+    url(r'^graph_url/$', 'douentza.views.graph_data_json', name='graph_url'),
+
     # url(r'^douentza/', include('douentza.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:

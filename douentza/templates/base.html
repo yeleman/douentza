@@ -3,8 +3,8 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>Hotline - Douentza</title>
-        <link href="{{ STATIC_URL }}bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <title>{% block title %}Accueil{% endblock %} - Hotline - Douentza</title>
+        <link href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet">
         <link href="{{ STATIC_URL }}css/douentza.css" rel="stylesheet">
         <link href="{{ STATIC_URL }}css/flot.css" rel="stylesheet">
     </head>
@@ -20,10 +20,8 @@
         </div>
 
         <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.9.1.min.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.flot.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}jquery.flot.time.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.flot.selection.js"></script>
         <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/douentza.js"></script>
         <script type="text/javascript">
         $(document).ready(function (){
             {% block extra_js %}{% endblock %}

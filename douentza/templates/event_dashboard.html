@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div><h1> Derniers appels</h1></div>
+<div>
+    <table class="table table-bordered ancient_events_table">
+        <thead>
+            <tr><th colspan="4">Plus anciens</th></tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <table class="table table-bordered yesterday_events_table">
+        <thead>
+            <tr><th colspan="4">Hier</th></tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <table class="table table-bordered today_events_table">
+        <thead>
+            <tr><th colspan="4">Aujourd'hui</th></tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
+{% block extra_js %}update_event_tables("{% url 'all_events_json' %}");{% endblock %}

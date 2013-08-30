@@ -27,3 +27,12 @@ def datetime_range(start, stop=None, days=1):
         start += datetime.timedelta(days)
 
     yield stop
+
+
+def start_or_end_day_from_date(adate, start=True):
+    return datetime.datetime(int(adate.year),
+                             int(adate.month),
+                             int(adate.day),
+                             0 if start else 23,
+                             0 if start else 59,
+                             0 if start else 59)

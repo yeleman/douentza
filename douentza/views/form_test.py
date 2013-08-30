@@ -13,17 +13,17 @@ from douentza.models import Question
 
 TYPES_CLS = {
     Question.TYPE_STRING: forms.CharField(),
-    Question.TYPE_BOOL: forms.BooleanField(),
+    Question.TYPE_BOOLEAN: forms.BooleanField(),
     Question.TYPE_DATE : forms.DateField(),
-    Question.TYPE_INT: forms.IntegerField(),
+    Question.TYPE_INTEGER: forms.IntegerField(),
     Question.TYPE_FLOAT: forms.FloatField(),
-    Question.TYPE_CHOICE: forms.ChoiceField(),
+    Question.TYPE_CHOICES: forms.ChoiceField(),
 }
 
 def get_form_property(question):
     question_type = question.get('type', Question.TYPE_STRING)
 
-    if question_type == Question.TYPE_CHOICE:
+    if question_type == Question.TYPE_CHOICES:
         field = forms.ChoiceField(choices=question.get('choices'))
     elif question_type == Question.TYPE_STRING:
         field = forms.CharField(max_length=250)
@@ -56,17 +56,17 @@ def tester(request):
     'questions': [
         {'order': 0,
          'label': "Quel age a tu ?",
-         'type': Question.TYPE_INT},
+         'type': Question.TYPE_INTEGER},
         {'order': 3,
          'label': "Comment tu 'appelles ?",
          'type': Question.TYPE_STRING},
         {'order': 2,
          'label': "Avez vous des enfants ?",
-         'type': Question.TYPE_CHOICE,
+         'type': Question.TYPE_CHOICES,
          'choices': [('yes', "Oui"), ('no', "No")]},
         {'order': 0,
          'label': "Tu aimes Tuska ?",
-         'type': Question.TYPE_BOOL},
+         'type': Question.TYPE_BOOLEAN},
         ]
     }
 

@@ -1,8 +1,8 @@
 # Django settings for douentza project.
 
 import os
-abs_path = os.path.abspath(__file__)
-ROOT_DIR = os.path.dirname(abs_path)
+
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -74,7 +74,6 @@ STATIC_URL = '/static/'
 # Additional locations of static files
 STATICFILES_DIRS = (
     # Don't forget to use absolute paths, not relative paths.
-    ROOT_DIR + '/media',
 )
 
 # List of finder classes that know how to find static files in

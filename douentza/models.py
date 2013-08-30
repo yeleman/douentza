@@ -207,19 +207,19 @@ class Question(models.Model):
         get_latest_by = 'order'
 
     TYPE_STRING = 'string'
-    TYPE_BOOL = 'boolean'
+    TYPE_BOOLEAN = 'boolean'
     TYPE_DATE = 'date'
-    TYPE_INT = 'int'
+    TYPE_INTEGER = 'int'
     TYPE_FLOAT = 'float'
-    TYPE_CHOICE = 'choice'
+    TYPE_CHOICES = 'choice'
 
     TYPES = {
         TYPE_STRING: "Chaîne",
-        TYPE_BOOL: "Booléen",
+        TYPE_BOOLEAN: "Booléen",
         TYPE_DATE: "Date",
-        TYPE_INT: "Entier",
+        TYPE_INTEGER: "Entier",
         TYPE_FLOAT: "Réel",
-        TYPE_CHOICE: "Choix"
+        TYPE_CHOICES: "Choix"
     }
 
     order = models.PositiveIntegerField(default=0, verbose_name="Ordre")

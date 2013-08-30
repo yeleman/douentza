@@ -1,9 +1,34 @@
+function formatDate(date, format) {
+    function pad(value) {
+        return (value.toString().length < 2) ? '0' + value : value;
+    }
+    return format.replace(/%([a-zA-Z])/g, function (_, formatCode) {
+        switch (formatCode) {
+        case 'Y':
+            return date.getUTCFullYear();
+        case 'M':
+            return pad(date.getUTCMonth() + 1);
+        case 'd':
+            return pad(date.getUTCDate());
+        case 'H':
+            return pad(date.getUTCHours());
+        case 'm':
+            return pad(date.getUTCMinutes());
+        case 's':
+            return pad(date.getUTCSeconds());
+        default:
+            throw new Error("ce format n'est pas supporté: " + formatCode);
+        }
+    });
+}
 
 function update_event_tables(data_url) {
     $.getJSON(data_url, function(data) {
         var today_events_table = $('.today_events_table tbody');
         var yesterday_events_table = $('.yesterday_events_table tbody');
         var ancient_events_table = $('.ancient_events_table tbody');
+        var time = "%H:%m:%s";
+        var date_tine = "%d %M %Y %H:%m:%s"
 
         today_events_table.empty();
         yesterday_events_table.empty();
@@ -13,7 +38,7 @@ function update_event_tables(data_url) {
             return $('<tr><td colspan="4">Aucun événnement</td></tr>');
         }
 
-        function get_row_for(anevent) {
+        function get_row_for(anevent, formatCode) {
             function get_td(cls, text, icon) {
                 var td = $('<td><button type="button" class="btn btn-xs">' +
                            '<span class="glyphicon"></span> </button></td>');
@@ -31,11 +56,11 @@ function update_event_tables(data_url) {
 
             var td_infos = $('<td />');
             td_infos.append($('<span class="glyphicon glyphicon-earphone"></span>'));
-            td_infos.append($('<strong>(' + anevent.identity + ')</strong> le ' +
-                      anevent.received_on + ' ' +
-                      anevent.status + ' ' +
-                      anevent.text));
-
+            var infos = '<strong>(' + anevent.identity + ')</strong> '
+                                    + formatDate(new Date(anevent.received_on), formatCode)
+                                    + ' ' + anevent.status + ' '
+                                    +anevent.event_type
+            td_infos.append(infos);
             row.append(td_infos);
             row.append(entry_button);
             row.append(callback_button);
@@ -48,7 +73,7 @@ function update_event_tables(data_url) {
             ancient_events_table.append(get_empty_row());
         } else{
             $.each(data.ancient_event, function(num, anevent) {
-                ancient_events_table.append(get_row_for(anevent));
+                ancient_events_table.append(get_row_for(anevent, date_tine));
             });
         }
 
@@ -56,7 +81,7 @@ function update_event_tables(data_url) {
             yesterday_events_table.append(get_empty_row());
         } else{
             $.each(data.yesterday_event, function(num, anevent) {
-                yesterday_events_table.append(get_row_for(anevent));
+                yesterday_events_table.append(get_row_for(anevent, time));
             });
         }
 
@@ -64,7 +89,7 @@ function update_event_tables(data_url) {
             today_events_table.append(get_empty_row());
         } else{
             $.each(data.today_event, function(num, anevent) {
-                today_events_table.append(get_row_for(anevent));
+                today_events_table.append(get_row_for(anevent, time));
             });
         }
     });

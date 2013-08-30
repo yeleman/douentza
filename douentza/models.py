@@ -11,6 +11,7 @@ from django.template.defaultfilters import slugify
 
 from mptt.models import MPTTModel, TreeForeignKey
 from mptt.managers import TreeManager
+from batbelt import to_timestamp
 
 
 ORANGE = 'O'
@@ -64,11 +65,12 @@ class HotlineEvent(models.Model):
                                                        number=self.identity)
 
     def to_dict(self):
-        return {'identity': self.identity, 'text': self.sms_message,
-                'status': self.status, 'event_type': self.event_type,
+        return {'identity': self.identity,
+                'text': self.sms_message,
+                'status': self.status,
+                'event_type': self.event_type,
                 'event_id': self.id,
-                'received_on': self.received_on.strftime("%d %B %Y %Hh:%Mmn"),
-                'time_received_on': self.received_on.strftime("%Hh:%Mmn")}
+                'received_on': int(to_timestamp(self.received_on)) * 1000}
 
 
 class Callback(models.Model):
@@ -81,8 +83,7 @@ class Callback(models.Model):
 
     def to_dict(self):
         return {'event': self.event,
-                'received_on': self.received_on.strftime("%d %B %Y %Hh:%Mmn"),
-                'time_received_on': self.received_on.strftime("%Hh:%Mmn")}
+                'received_on': int(to_timestamp(self.received_on)) * 1000}
 
 class HotlineUser(AbstractUser):
 

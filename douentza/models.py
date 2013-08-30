@@ -63,6 +63,26 @@ class HotlineEvent(models.Model):
                                                        status=self.status,
                                                        number=self.identity)
 
+    def to_dict(self):
+        return {'identity': self.identity, 'text': self.sms_message,
+                'status': self.status, 'event_type': self.event_type,
+                'event_id': self.id,
+                'received_on': self.received_on.strftime("%d %B %Y %Hh:%Mmn"),
+                'time_received_on': self.received_on.strftime("%Hh:%Mmn")}
+
+
+class Callback(models.Model):
+    event = models.ForeignKey(HotlineEvent, related_name='callback')
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return "{event}/{created_on}".format(event=self.event.__unicode__(),
+                                             created_on=self.created_on)
+
+    def to_dict(self):
+        return {'event': self.event,
+                'received_on': self.received_on.strftime("%d %B %Y %Hh:%Mmn"),
+                'time_received_on': self.received_on.strftime("%Hh:%Mmn")}
 
 class HotlineUser(AbstractUser):
 

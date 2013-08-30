@@ -10,7 +10,8 @@ from django.contrib.auth.admin import UserAdmin
 from django import forms
 
 from douentza.models import (HotlineEvent, HotlineUser, HotlineResponse,
-                             Entity, Survey, Question, QuestionChoice, Ethnicity)
+                             Entity, Survey, Question, QuestionChoice,
+                             Ethnicity, Callback)
 
 
 class UserModificationForm(forms.ModelForm):
@@ -83,3 +84,4 @@ admin.site.register(Question)
 admin.site.register(QuestionChoice)
 admin.site.register(Ethnicity, CustomEthnicity)
 admin.site.register(HotlineUser)
+admin.site.register(Callback)

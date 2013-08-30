@@ -16,7 +16,6 @@ from douentza.models import HotlineEvent
 
 def event(request):
     context = {'page': 'event'}
-    events = HotlineEvent.objects.all()
     context.update({'events': events})
     return render(request, "event.html", context)
 

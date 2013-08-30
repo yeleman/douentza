@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div><h1> Derniers appels</h1></div>
+<div>
+    <table class="table table-bordered">
+        <thead><tr><th COLSPAN="4">Plus anciens</th></tr></thead>
+        <tbody id="ancient_event_table">
+        </tbody>
+        <thead><tr><th COLSPAN="4">Hier</th></tr></thead>
+        <tbody id="yesterday_event_table">
+        </tbody>
+        <thead><tr><th COLSPAN="4">Aujourd'hui</th></tr></thead>
+        <tbody id="today_event_table">
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
+{% block extra_js %}
+
+function get_events() {
+    $.getJSON('/events/', function(data) {
+        $("#today_event_table").empty();
+        $("#yesterday_event_table").empty();
+        $("#ancient_event_event_table").empty();
+
+        if (data.ancient_event == "") {
+            $("#ancient_event_table").append("<tr><td COLSPAN='4'>" + "No event today" + "</td></tr>");
+        } else{
+            $.each(data.ancient_event, function(num, ancient_event) {
+                row = "<tr>" + "<td><span class='glyphicon glyphicon-earphone'></span>" +
+                      '<strong>(' + ancient_event.identity + ')</strong> le ' +
+                      ancient_event.received_on + ' ' +
+                      ancient_event.status + ' ' +
+                      ancient_event.text + ' ' +
+                      "</td>" +
+                      "<td><button button type='button' class='btn btn-xs btn-success'><span class='glyphicon glyphicon-pencil'></span> Saisir</button>" +
+                      "<td><button button type='button' class='btn btn-xs btn-default'>À rappeler</button></td>" +
+                      "<td><button button type='button' class='btn btn-xs btn-danger'> Ne repond pas</button></td></tr>";
+                $("#ancient_event_table").append(row);
+            });
+        }
+
+        if (data.today_event == "") {
+            $("#today_event_table").append("<tr><td COLSPAN='4'>" + "No event today" + "</td></tr>");
+        } else{
+            $.each(data.today_event, function(num, today_event) {
+                row = "<tr>" + "<td><span class='glyphicon glyphicon-earphone'></span>" +
+                      '<strong>(' + today_event.identity + ')</strong> à ' +
+                      today_event.time_received_on + ' ' +
+                      today_event.status + ' ' +
+                      today_event.text + ' ' +
+                      "</td>" +
+                      "<td><button button type='button' class='btn btn-xs btn-success'><span class='glyphicon glyphicon-pencil'></span> Saisir</button>" +
+                      "<td><button button type='button' class='btn btn-xs btn-default'>À rappeler</button></td>" +
+                      "<td><button button type='button' class='btn btn-xs btn-danger'> Ne repond pas</button></td></tr>";
+                $("#today_event_table").append(row);
+            });
+        }
+
+        if (data.yesterday_event == "") {
+            $("#yesterday_event_table").append("<tr><td COLSPAN='4'>" + "No event yesterday" + "</td></tr>");
+        } else{
+            $.each(data.yesterday_event, function(num, yesterday_event) {
+                row = "<tr>" + "<td><span class='glyphicon glyphicon-earphone'></span>" +
+                       '<strong>(' + yesterday_event.identity + ')</strong> à ' +
+                       yesterday_event.time_received_on + ' ' +
+                       yesterday_event.status + ' ' +
+                       yesterday_event.text + ' ' +
+                      "</td>" +
+                      "<td><button button type='button' class='btn btn-xs btn-success'><span class='glyphicon glyphicon-pencil'></span> Saisir</button></td>" +
+                      "<td><button button type='button' class='btn btn-xs btn-default'>À rappeler</button></td>" +
+                      "<td><button button type='button' class='btn btn-xs btn-danger'>Ne repond pas</button></td></tr>";
+                $("#yesterday_event_table").append(row);
+            });
+        }
+    });
+};
+
+get_events();
+
+{% endblock %}

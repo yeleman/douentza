@@ -4,3 +4,4 @@
 
 from stats import stats
 from stats import graph_data_json
+from event import event, events

@@ -12,7 +12,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 from douentza.models import HotlineEvent
-from douentza.utils import start_or_end_day_from_date
+from douentza.utils import start_or_end_day_from_date, get_default_context
 
 
 def dashboard(request):

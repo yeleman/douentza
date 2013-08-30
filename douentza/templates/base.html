@@ -6,14 +6,26 @@
         <title>Hotline - Douentza</title>
         <link href="{{ STATIC_URL }}bootstrap/css/bootstrap.min.css" rel="stylesheet">
         <link href="{{ STATIC_URL }}css/douentza.css" rel="stylesheet">
+        <link href="{{ STATIC_URL }}css/flot.css" rel="stylesheet">
     </head>
     <body class="{{ page }}">
         <div class="container">
+            <div class="row-fluid">
+            <div class="span8">
+            <h1>Hotline Douentza</h1>
+            <div class="btn-group">
+                <button class="btn btn-small link {% ifequal page 'stats' %}active{% endifequal %}" href="{% url 'stats' %}">Statistique</button>
+            </div>
+            </div>
+            </div>
             {% block content %}
             {% endblock %}
         </div>
 
         <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.flot.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}jquery.flot.time.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.flot.selection.js"></script>
         <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
         <script type="text/javascript">
         $(document).ready(function (){

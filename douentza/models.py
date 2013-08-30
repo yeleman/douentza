@@ -162,9 +162,20 @@ class Entity(MPTTModel):
         return self.parent
 
 
+class Project(models.Model):
+    name = models.CharField(max_length=70, verbose_name='Nom')
+    description = models.TextField(null=True, blank=True)
+
+    def __unicode__(self):
+        return self.name
+
+
 class Survey(models.Model):
     title = models.CharField(max_length=200, verbose_name='Titre')
     description = models.TextField(null=True, blank=True)
+    project = models.ForeignKey('Project', related_name='survey')
+    reponse = models.ForeignKey('HotlineResponse', null=True, blank=True)
+
 
     def __unicode__(self):
         return self.title

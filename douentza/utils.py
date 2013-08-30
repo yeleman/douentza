@@ -8,8 +8,11 @@ from __future__ import (unicode_literals, absolute_import,
 import datetime
 
 
-def get_default_context(page=''):
-    return {'page': page}
+def get_default_context(page='', **kwargs):
+    context = {'page': page}
+    for key, value in kwargs.items():
+        context.update({key: value})
+    return context
 
 
 def datetime_range(start, stop=None, days=1):

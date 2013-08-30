@@ -14,7 +14,6 @@ function update_event_tables(data_url) {
         }
 
         function get_row_for(anevent) {
-            console.log(anevent);
             function get_td(cls, text, icon) {
                 var td = $('<td><button type="button" class="btn btn-xs">' +
                            '<span class="glyphicon"></span> </button></td>');

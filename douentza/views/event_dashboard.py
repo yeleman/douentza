@@ -16,7 +16,7 @@ from douentza.utils import start_or_end_day_from_date
 
 
 def dashboard(request):
-    context = {'page': 'event_dashboard'}
+    context = get_default_context(page="event_dashboard")
     return render(request, "event_dashboard.html", context)
 
 

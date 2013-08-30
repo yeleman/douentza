@@ -32,4 +32,9 @@
         </tbody>
     </table>
 
+    <h2>Graphe des appels</h2>
+    <div id="container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+
 {% endblock %}
+
+{% block extra_js %}graph_event_response_counts("{% url 'event_response_counts' %}");{% endblock %}

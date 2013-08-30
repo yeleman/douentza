@@ -94,3 +94,29 @@ function update_event_tables(data_url) {
         }
     });
 }
+
+
+function graph_event_response_counts(data_url) {
+    $.getJSON(data_url, function(data) {
+        $('#container').highcharts({
+            chart: { type: 'spline',
+            },
+            title: { text: "Nombre d'appels par jour",
+                x: -20 //center
+            },
+            xAxis: { type: 'datetime',
+            },
+            yAxis: {
+                title: { text: "APPELS"
+                },
+            },
+            tooltip: { valueSuffix: null,
+            },
+            legend: {},
+            series: [{name: "Appels à la hotline",
+                      data: data.events},
+                     {name: "Rappels par la hotline",
+                      data: data.responses,}]
+        });
+    });
+};

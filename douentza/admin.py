@@ -11,7 +11,7 @@ from django import forms
 
 from douentza.models import (HotlineEvent, HotlineUser, HotlineResponse,
                              Entity, Survey, Question, QuestionChoice,
-                             Ethnicity, Callback)
+                             Ethnicity, Callback, Tag, Project)
 
 
 class UserModificationForm(forms.ModelForm):
@@ -85,3 +85,5 @@ admin.site.register(QuestionChoice)
 admin.site.register(Ethnicity, CustomEthnicity)
 admin.site.register(HotlineUser)
 admin.site.register(Callback)
+admin.site.register(Project)
+admin.site.register(Tag)

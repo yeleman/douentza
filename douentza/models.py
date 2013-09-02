@@ -12,9 +12,6 @@ from django.template.defaultfilters import slugify
 from mptt.models import MPTTModel, TreeForeignKey
 from mptt.managers import TreeManager
 
-from douentza.utils import to_jstimestamp
-
-
 ORANGE = 'O'
 MALITEL = 'M'
 
@@ -140,6 +137,7 @@ class HotlineResponse(models.Model):
                                            help_text="Donnez la durée en seconde")
     location = models.ForeignKey('Entity')
     ethnicity = models.ForeignKey('Ethnicity', null=True, blank=True )
+    tags = models.ManyToManyField('Tag', null=True, blank=True)
 
     def __unicode__(self):
         return "{event}/{response_date}/{location}".format(event=self.event.__unicode__(),
@@ -267,3 +265,10 @@ class QuestionChoice(models.Model):
     def __unicode__(self):
         return "{question}/{label}".format(label=self.label,
                                            question=self.question.__unicode__())
+
+
+class Tag(models.Model):
+    slug = models.CharField(max_length=50, primary_key=True)
+
+    def __unicode__(self):
+        return self.slug

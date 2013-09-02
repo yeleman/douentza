@@ -20,4 +20,9 @@ urlpatterns = patterns('',
     url(r'^statistics/$', 'douentza.views.statistics.dashboard', name='statistics'),
     url(r'^test$', 'douentza.views.form_test.tester', name='tester'),
     url(r'^$', 'douentza.views.event_dashboard.dashboard', name='event_dashboard'),
+    url(r'^change/(?P<event_id>[0-9]+)/(?P<new_status>[a-zA-Z\_]+)$',
+        'douentza.views.event_dashboard.change_event_status', name='change_event'),
+
+    url(r'^event/(?P<event_id>[0-9]+)/?$',
+        'douentza.views.events.display_event', name='display_event'),
 )

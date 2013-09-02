@@ -1,11 +1,16 @@
  {% load douentza %}
 
  {% for event in all_events %}
-<tr>
-    <td><span class="glyphicon glyphicon-earphone"></span> <strong>({{ event.identity|phone }})</strong> {{ event.received_on }} {{ event.status }} {{ event.event_type }}</td>
-    <td><button type="button" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-pencil"></span> Saisir le rappel</button></td>
-    <td><button type="button" class="btn btn-xs btn-default"><span class="glyphicon"></span> Occupé</button></td>
-    <td><button type="button" class="btn btn-xs btn-danger"><span class="glyphicon"></span> Ne répond pas</button></td>
+<tr {% if event.status != 'NEW_REQUEST' %}class="alert-warning"{% endif %}>
+    <td><span class="glyphicon glyphicon-earphone"></span> <strong>({{ event.identity|phone }})</strong> {{ event.received_on }} {{ event.status }} {{ event.event_type }}{% if event.callbacks %}
+        <ul>
+        {% for callback in event.callbacks.all %}
+        <li>{{ callback.created_on }} / {{ callback.status }}</li>
+        {% endfor %}
+    </ul>{% endif %}</td>
+    <td><a href="{% url 'display_event' event_id=event.id %}"><button type="button" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-pencil"></span> Saisir le rappel</button></a></td>
+    <td><a href="{% url 'change_event' event.id 'BUSY' %}"><button type="button" class="btn btn-xs btn-default"><span class="glyphicon"></span> Occupé</button></a></td>
+    <td><a href="{% url 'change_event' event.id 'NOT_RESPONDED' %}"><button type="button" class="btn btn-xs btn-danger"><span class="glyphicon"></span> Ne répond pas</button></a></td>
 </tr>
 {% empty %}
 <tr><td colspan="4">Aucun événnement</td>

@@ -22,6 +22,13 @@ OPERATORS = ((ORANGE, 'Orange'),
              (MALITEL, 'Malitel'))
 
 
+class IncomingManager(models.Manager):
+
+    def get_query_set(self):
+        return super(IncomingManager, self).get_query_set() \
+                                           .exclude(status=HotlineEvent.STATUS_GAVE_UP)
+
+
 class HotlineEvent(models.Model):
 
     class Meta:
@@ -32,10 +39,14 @@ class HotlineEvent(models.Model):
     STATUS_NOT_RESPONDED = 'NOT_RESPONDED'
     STATUS_RESPONDED = 'RESPONDED'
     STATUS_BUSY = 'BUSY'
-    STATUS = ((STATUS_NEW_REQUEST, "A appeler"),
-             (STATUS_NOT_RESPONDED, "Ne repond pas"),
-             (STATUS_RESPONDED, "Repondu"),
-             (STATUS_BUSY, "Occupé"))
+    STATUS_GAVE_UP = 'GAVE_UP'
+
+    STATUSES = {
+        STATUS_NEW_REQUEST: "A appeler",
+        STATUS_NOT_RESPONDED: "Ne repond pas",
+        STATUS_RESPONDED: "Repondu",
+        STATUS_BUSY: "Occupé",
+        STATUS_GAVE_UP: "Ne répond jamais"}
 
     TYPE_CALL_ME = 'CALL_ME'
     TYPE_CHARGE_ME = 'CHARGE_ME'
@@ -43,50 +54,58 @@ class HotlineEvent(models.Model):
     TYPE_SMS_HOTLINE = 'SMS_HOTLINE'
     TYPE_SMS_SPAM = 'SMS_SPAM'
 
-    TYPES = ((TYPE_CALL_ME, "Peux-tu me rappeler?"),
-             (TYPE_CHARGE_ME, "Peux-tu recharger mon compte?"),
-             (TYPE_RING, "Bip."),
-             (TYPE_SMS_HOTLINE, "SMS (Hotline)."),
-             (TYPE_SMS_SPAM, "SMS (SPAM)"))
+    TYPES = {
+        TYPE_CALL_ME: "Peux-tu me rappeler?",
+        TYPE_CHARGE_ME: "Peux-tu recharger mon compte?",
+        TYPE_RING: "Bip.",
+        TYPE_SMS_HOTLINE: "SMS (Hotline).",
+        TYPE_SMS_SPAM: "SMS (SPAM)"}
+
     HOTLINE_TYPES = (TYPE_CALL_ME, TYPE_CHARGE_ME, TYPE_SMS_HOTLINE, TYPE_RING)
     SMS_TYPES = (TYPE_SMS_HOTLINE, TYPE_SMS_SPAM)
 
     identity = models.CharField(max_length=30)
-    event_type = models.CharField(max_length=50, choices=TYPES)
-    status = models.CharField(max_length=50, choices=STATUS)
+    event_type = models.CharField(max_length=50, choices=TYPES.items())
+    status = models.CharField(max_length=50, choices=STATUSES.items())
     received_on = models.DateTimeField()
     created_on = models.DateTimeField(auto_now_add=True)
     sms_message = models.TextField(null=True, blank=True)
     operator = models.CharField(max_length=50, choices=OPERATORS)
     hotline_user = models.ForeignKey('HotlineUser', null=True, blank=True)
 
+    objects = models.Manager()
+    incoming = IncomingManager()
+
     def __unicode__(self):
         return "{event_type}/{number}/{status}".format(event_type=self.event_type,
                                                        status=self.status,
                                                        number=self.identity)
 
-    def to_dict(self):
-        return {'identity': self.identity,
-                'text': self.sms_message,
-                'status': self.status,
-                'event_type': self.event_type,
-                'event_id': self.id,
-                'received_on': self.received_on,
-                'received_on_ts': to_jstimestamp(self.received_on)}
+    def add_busy_call(self, new_status):
+        callback = Callback(event=self, status=new_status)
+        callback.save()
+
+        if self.callbacks.count() >= 3:
+            self.status = HotlineEvent.STATUS_GAVE_UP
+        else:
+            self.status = new_status
+        self.save()
 
 
 class Callback(models.Model):
+    # CallbackAttempt
+
+    class Meta:
+        get_latest_by = "created_on"
+
     event = models.ForeignKey(HotlineEvent, related_name='callbacks')
     created_on = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=50,
+                              choices=HotlineEvent.STATUSES.items())
 
     def __unicode__(self):
         return "{event}/{created_on}".format(event=self.event.__unicode__(),
                                              created_on=self.created_on)
-
-    def to_dict(self):
-        return {'event': self.event,
-                'created_on': self.created_on,
-                'created_on_ts': to_jstimestamp(self.created_on)}
 
 
 class HotlineUser(AbstractUser):

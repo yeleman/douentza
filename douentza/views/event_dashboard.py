@@ -10,6 +10,7 @@ import datetime
 
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.shortcuts import redirect
 
 from douentza.models import HotlineEvent
 from douentza.utils import start_or_end_day_from_date, get_default_context
@@ -25,16 +26,30 @@ def all_events():
     today = datetime.date.today()
     yesterday = today - datetime.timedelta(days=1)
 
-    data_event = {'today_events': [event.to_dict() for event in
-        HotlineEvent.objects.filter(received_on__gte=start_or_end_day_from_date(today, True),
-                                    received_on__lt=start_or_end_day_from_date(today, False)).all()],
-                 'yesterday_events': [event.to_dict() for event in
-        HotlineEvent.objects.filter(received_on__gte=start_or_end_day_from_date(yesterday, True),
-                                    received_on__lt=start_or_end_day_from_date(yesterday, False)).all()],
-                 'ancient_events': [event.to_dict() for event in
-        HotlineEvent.objects.filter(received_on__lt=start_or_end_day_from_date(yesterday, True)).all()]}
+    data_event = {'today_events': HotlineEvent.incoming.filter(received_on__gte=start_or_end_day_from_date(today, True),
+                                                              received_on__lt=start_or_end_day_from_date(today, False)).all(),
+                  'yesterday_events': HotlineEvent.incoming.filter(received_on__gte=start_or_end_day_from_date(yesterday, True),
+                                                                 received_on__lt=start_or_end_day_from_date(yesterday, False)).all(),
+                  'ancient_events': HotlineEvent.incoming.filter(received_on__lt=start_or_end_day_from_date(yesterday, True)).all()}
     return data_event
 
 
 def events_json(request):
     return HttpResponse(json.dumps(all_events()), mimetype='application/json')
+
+
+def change_event_status(request, event_id, new_status):
+
+    if not new_status in HotlineEvent.STATUSES.keys():
+        return 0
+
+    try:
+        event = HotlineEvent.objects \
+                            .exclude(status=HotlineEvent.STATUS_RESPONDED) \
+                            .get(id=int(event_id))
+    except (HotlineEvent.DoesNotExist, ValueError):
+        raise Exception()
+
+    event.add_busy_call(new_status)
+
+    return redirect('event_dashboard')

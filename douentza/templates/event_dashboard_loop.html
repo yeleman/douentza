@@ -7,4 +7,6 @@
     <td><button type="button" class="btn btn-xs btn-default"><span class="glyphicon"></span> Occupé</button></td>
     <td><button type="button" class="btn btn-xs btn-danger"><span class="glyphicon"></span> Ne répond pas</button></td>
 </tr>
+{% empty %}
+<tr><td colspan="4">Aucun événnement</td>
 {% endfor %}

@@ -9,14 +9,25 @@
         <link href="{{ STATIC_URL }}css/flot.css" rel="stylesheet">
     </head>
     <body class="{{ page }}">
+
         <div class="container">
-            <div class="row-fluid">
-            <div class="span8">
-            <h1>Hotline Douentza</h1>
-            </div>
-            </div>
-            {% block content %}
-            {% endblock %}
+
+        <nav class="navbar navbar-default" role="navigation">
+            <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse"><span class="sr-only">Toggle navigation</span></button>
+            <a class="navbar-brand">Duwenza</a>
+          </div>
+          <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                <li {% ifequal page 'event_dashboard' %} class="active"{% endifequal %}><a href="{% url 'event_dashboard' %}">Tableau de bord</a></li>
+                <li {% ifequal page 'statistics' %} class="active"{% endifequal %}><a href="{% url 'statistics' %}">Statistiques</a></li>
+            </ul>
+          </div>
+        </nav>
+
+
+        {% block content %}{% endblock %}
+
         </div>
 
         <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.9.1.min.js"></script>

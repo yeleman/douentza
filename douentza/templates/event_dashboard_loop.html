@@ -1,0 +1,10 @@
+ {% load douentza %}
+
+ {% for event in all_events %}
+<tr>
+    <td><span class="glyphicon glyphicon-earphone"></span> <strong>({{ event.identity|phone }})</strong> {{ event.received_on }} {{ event.status }} {{ event.event_type }}</td>
+    <td><button type="button" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-pencil"></span> Saisir le rappel</button></td>
+    <td><button type="button" class="btn btn-xs btn-default"><span class="glyphicon"></span> Occupé</button></td>
+    <td><button type="button" class="btn btn-xs btn-danger"><span class="glyphicon"></span> Ne répond pas</button></td>
+</tr>
+{% endfor %}

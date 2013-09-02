@@ -11,7 +11,8 @@ from django.template.defaultfilters import slugify
 
 from mptt.models import MPTTModel, TreeForeignKey
 from mptt.managers import TreeManager
-from batbelt import to_timestamp
+
+from douentza.utils import to_jstimestamp
 
 
 ORANGE = 'O'
@@ -27,11 +28,11 @@ class HotlineEvent(models.Model):
         unique_together = [('identity', 'received_on')]
         get_latest_by = "received_on"
 
-    STATUS_NEW = 'NEW'
-    STATUS_NOT_RESPONDED = 'NOT_RESPONSE'
+    STATUS_NEW_REQUEST = 'NEW_REQUEST'
+    STATUS_NOT_RESPONDED = 'NOT_RESPONDED'
     STATUS_RESPONDED = 'RESPONDED'
     STATUS_BUSY = 'BUSY'
-    STATUS = ((STATUS_NEW, "A appeler"),
+    STATUS = ((STATUS_NEW_REQUEST, "A appeler"),
              (STATUS_NOT_RESPONDED, "Ne repond pas"),
              (STATUS_RESPONDED, "Repondu"),
              (STATUS_BUSY, "Occupé"))
@@ -70,11 +71,12 @@ class HotlineEvent(models.Model):
                 'status': self.status,
                 'event_type': self.event_type,
                 'event_id': self.id,
-                'received_on': int(to_timestamp(self.received_on)) * 1000}
+                'received_on': self.received_on,
+                'received_on_ts': to_jstimestamp(self.received_on)}
 
 
 class Callback(models.Model):
-    event = models.ForeignKey(HotlineEvent, related_name='callback')
+    event = models.ForeignKey(HotlineEvent, related_name='callbacks')
     created_on = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
@@ -83,7 +85,9 @@ class Callback(models.Model):
 
     def to_dict(self):
         return {'event': self.event,
-                'received_on': int(to_timestamp(self.received_on)) * 1000}
+                'created_on': self.created_on,
+                'created_on_ts': to_jstimestamp(self.created_on)}
+
 
 class HotlineUser(AbstractUser):
 
@@ -109,7 +113,7 @@ class HotlineResponse(models.Model):
 
     response_date = models.DateTimeField()
     created_on = models.DateTimeField(auto_now_add=True)
-    event = models.ForeignKey(HotlineEvent, unique=True, related_name='response')
+    event = models.ForeignKey(HotlineEvent, unique=True, related_name='responses')
     age = models.PositiveIntegerField(null=True, blank=True)
     sex = models.CharField(max_length=6, choices=SEXES.items(),
                            default=SEX_UNKNOWN)
@@ -194,7 +198,6 @@ class Project(models.Model):
 class Survey(models.Model):
     title = models.CharField(max_length=200, verbose_name='Titre')
     description = models.TextField(null=True, blank=True)
-    project = models.ForeignKey('Project', related_name='survey')
     reponse = models.ForeignKey('HotlineResponse', null=True, blank=True)
 
 

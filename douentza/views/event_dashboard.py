@@ -17,21 +17,24 @@ from douentza.utils import start_or_end_day_from_date, get_default_context
 
 def dashboard(request):
     context = get_default_context(page="event_dashboard")
+    context.update({'all_events': all_events()})
     return render(request, "event_dashboard.html", context)
 
 
-def events_json(request):
-
+def all_events():
     today = datetime.date.today()
     yesterday = today - datetime.timedelta(days=1)
 
-    data_event = {'today_event': [event.to_dict() for event in
+    data_event = {'today_events': [event.to_dict() for event in
         HotlineEvent.objects.filter(received_on__gte=start_or_end_day_from_date(today, True),
                                     received_on__lt=start_or_end_day_from_date(today, False)).all()],
-                 'yesterday_event': [event.to_dict() for event in
+                 'yesterday_events': [event.to_dict() for event in
         HotlineEvent.objects.filter(received_on__gte=start_or_end_day_from_date(yesterday, True),
                                     received_on__lt=start_or_end_day_from_date(yesterday, False)).all()],
-                 'ancient_event': [event.to_dict() for event in
+                 'ancient_events': [event.to_dict() for event in
         HotlineEvent.objects.filter(received_on__lt=start_or_end_day_from_date(yesterday, True)).all()]}
+    return data_event
 
-    return HttpResponse(json.dumps(data_event), mimetype='application/json')
+
+def events_json(request):
+    return HttpResponse(json.dumps(all_events()), mimetype='application/json')

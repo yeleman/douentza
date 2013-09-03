@@ -9,9 +9,9 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django import forms
 
-from douentza.models import (HotlineEvent, HotlineUser, HotlineResponse,
+from douentza.models import (HotlineEvent, HotlineUser,
                              Entity, Survey, Question, QuestionChoice,
-                             Ethnicity, Callback, Tag, Project)
+                             Ethnicity, CallbackAttempt, Tag, Project)
 
 
 class UserModificationForm(forms.ModelForm):
@@ -59,12 +59,6 @@ class CustomHotlineEvent(admin.ModelAdmin):
     list_filter = ("created_on", "event_type", "operator", "hotline_user")
 
 
-class CustomHotlineResponse(admin.ModelAdmin):
-    list_display = ("response_date", "created_on", "age", "sex",
-                    "duration", "location",)
-    list_filter = ("created_on", "sex",)
-
-
 class CustomEntity(admin.ModelAdmin):
     list_display = ("slug", "name", "entity_type", "latitude",
                     "longitude", "parent",)
@@ -77,13 +71,12 @@ class CustomEthnicity(admin.ModelAdmin):
 
 
 admin.site.register(HotlineEvent, CustomHotlineEvent)
-admin.site.register(HotlineResponse, CustomHotlineResponse)
 admin.site.register(Entity, CustomEntity)
 admin.site.register(Survey)
 admin.site.register(Question)
 admin.site.register(QuestionChoice)
 admin.site.register(Ethnicity, CustomEthnicity)
 admin.site.register(HotlineUser)
-admin.site.register(Callback)
+admin.site.register(CallbackAttempt)
 admin.site.register(Project)
 admin.site.register(Tag)

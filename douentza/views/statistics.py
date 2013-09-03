@@ -11,7 +11,7 @@ import datetime
 from django.shortcuts import render
 from django.http import HttpResponse
 
-from douentza.models import HotlineEvent, HotlineResponse, Project, Survey
+from douentza.models import HotlineEvent, Project, Survey
 from douentza.utils import get_default_context, datetime_range, start_or_end_day_from_date, to_timestamp
 
 
@@ -29,7 +29,7 @@ def get_event_responses_counts():
         ts = int(to_timestamp(date)) * 1000
         qcount = HotlineEvent.objects.filter(received_on__gte=start_or_end_day_from_date(date),
                                              received_on__lt=start_or_end_day_from_date(date, False)).count()
-        scount = HotlineResponse.objects.filter(response_date__gte=start_or_end_day_from_date(date),
+        scount = HotlineEvent.objects.filter(response_date__gte=start_or_end_day_from_date(date),
                                                 response_date__lt=start_or_end_day_from_date(date, False)).count()
         events.append((ts, qcount))
         responses.append((ts, scount))
@@ -50,9 +50,9 @@ def get_statistics_dict():
     nb_survey = Survey.objects.count()
     nb_unique_number = HotlineEvent.objects.values('identity').distinct().count()
 
-    sex_unknown = HotlineResponse.objects.filter(sex=HotlineResponse.SEX_UNKNOWN).count()
-    sex_male = HotlineResponse.objects.filter(sex=HotlineResponse.SEX_MALE).count()
-    sex_female = HotlineResponse.objects.filter(sex=HotlineResponse.SEX_FEMALE).count()
+    sex_unknown = HotlineEvent.objects.filter(sex=HotlineEvent.SEX_UNKNOWN).count()
+    sex_male = HotlineEvent.objects.filter(sex=HotlineEvent.SEX_MALE).count()
+    sex_female = HotlineEvent.objects.filter(sex=HotlineEvent.SEX_FEMALE).count()
 
     context.update({'last_event': last_event,
                     'nb_total_events': nb_total_events,

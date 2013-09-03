@@ -34,6 +34,15 @@ class HotlineEvent(models.Model):
         unique_together = [('identity', 'received_on')]
         get_latest_by = "received_on"
 
+    SEX_UNKNOWN = 'unknow'
+    SEX_MALE = 'male'
+    SEX_FEMALE = 'female'
+    SEXES = {
+        SEX_UNKNOWN: 'Inconnu',
+        SEX_MALE: "Homme",
+        SEX_FEMALE: "Femme"
+    }
+
     STATUS_NEW_REQUEST = 'NEW_REQUEST'
     STATUS_NOT_RESPONDED = 'NOT_RESPONDED'
     STATUS_RESPONDED = 'RESPONDED'
@@ -68,6 +77,14 @@ class HotlineEvent(models.Model):
     status = models.CharField(max_length=50, choices=STATUSES.items())
     received_on = models.DateTimeField()
     created_on = models.DateTimeField(auto_now_add=True)
+    age = models.PositiveIntegerField(null=True, blank=True)
+    sex = models.CharField(max_length=6, choices=SEXES.items(),
+                           default=SEX_UNKNOWN)
+    duration = models.PositiveIntegerField(max_length=4, null=True, blank=True,
+                                           help_text="Donnez la durée en seconde")
+    location = models.ForeignKey('Entity', null=True, blank=True)
+    ethnicity = models.ForeignKey('Ethnicity', null=True, blank=True )
+    tags = models.ManyToManyField('Tag', null=True, blank=True)
     sms_message = models.TextField(null=True, blank=True)
     operator = models.CharField(max_length=50, choices=OPERATORS)
     hotline_user = models.ForeignKey('HotlineUser', null=True, blank=True)
@@ -81,30 +98,44 @@ class HotlineEvent(models.Model):
                                                        number=self.identity)
 
     def add_busy_call(self, new_status):
-        callback = Callback(event=self, status=new_status)
-        callback.save()
+        callbackattempt = CallbackAttempt(event=self, status=new_status)
+        callbackattempt.save()
 
-        if self.callbacks.count() >= 3:
+        if self.callbackattempts.count() >= 3:
             self.status = HotlineEvent.STATUS_GAVE_UP
         else:
             self.status = new_status
         self.save()
 
+    def add_additional_request(self):
+        if self.status !=  HotlineEvent.STATUS_RESPONDED:
+            additionalrequest = AdditionalRequest(event=self)
+            additionalrequest.save()
+
 
 @implements_to_string
-class Callback(models.Model):
-    # CallbackAttempt
+class AdditionalRequest(models.Model):
+    event = models.ForeignKey(HotlineEvent, related_name='additionalrequests')
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return "{event}/{created_on}".format(event=self.event.__str__(),
+                                             created_on=self.created_on)
+
+
+@implements_to_string
+class CallbackAttempt(models.Model):
 
     class Meta:
         get_latest_by = "created_on"
 
-    event = models.ForeignKey(HotlineEvent, related_name='callbacks')
+    event = models.ForeignKey(HotlineEvent, related_name='callbackattempts')
     created_on = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=50,
                               choices=HotlineEvent.STATUSES.items())
 
     def __str__(self):
-        return "{event}/{created_on}".format(event=self.event.__unicode__(),
+        return "{event}/{created_on}".format(event=self.event.__str__(),
                                              created_on=self.created_on)
 
 
@@ -118,39 +149,6 @@ class HotlineUser(AbstractUser):
 
     def __str(self):
         return self.full_name()
-
-
-@implements_to_string
-class HotlineResponse(models.Model):
-
-    class Meta:
-        get_latest_by = 'response_date'
-
-    SEX_UNKNOWN = 'unknow'
-    SEX_MALE = 'male'
-    SEX_FEMALE = 'female'
-    SEXES = {
-        SEX_UNKNOWN: 'Inconnu',
-        SEX_MALE: "Homme",
-        SEX_FEMALE: "Femme"
-    }
-
-    response_date = models.DateTimeField()
-    created_on = models.DateTimeField(auto_now_add=True)
-    event = models.ForeignKey(HotlineEvent, unique=True, related_name='responses')
-    age = models.PositiveIntegerField(null=True, blank=True)
-    sex = models.CharField(max_length=6, choices=SEXES.items(),
-                           default=SEX_UNKNOWN)
-    duration = models.PositiveIntegerField(max_length=4,
-                                           help_text="Donnez la durée en seconde")
-    location = models.ForeignKey('Entity')
-    ethnicity = models.ForeignKey('Ethnicity', null=True, blank=True )
-    tags = models.ManyToManyField('Tag', null=True, blank=True)
-
-    def __self__(self):
-        return "{event}/{response_date}/{location}".format(event=self.event.__unicode__(),
-                                                           response_date=self.response_date,
-                                                           location=self.location)
 
 
 @implements_to_string
@@ -182,7 +180,7 @@ class Entity(MPTTModel):
         TYPE_ARRONDISSEMENT: "Arrondissement",
         TYPE_COMMUNE: "Commune",
         TYPE_VILLAGE: "Village",
-        TYPE_OTHER:'Autre'
+        TYPE_OTHER: 'Autre',
     }
 
     slug = models.CharField(max_length=20, primary_key=True)
@@ -227,7 +225,7 @@ class Project(models.Model):
 class Survey(models.Model):
     title = models.CharField(max_length=200, verbose_name='Titre')
     description = models.TextField(null=True, blank=True)
-    reponse = models.ForeignKey('HotlineResponse', null=True, blank=True)
+    event = models.ForeignKey('HotlineEvent', null=True, blank=True)
 
 
     def __str__(self):
@@ -263,7 +261,7 @@ class Question(models.Model):
 
     def __str__(self):
         return "{survey}/{label}".format(label=self.label,
-                                         survey=self.survey.__unicode__())
+                                         survey=self.survey.__str__())
 
 
 @implements_to_string
@@ -278,7 +276,7 @@ class QuestionChoice(models.Model):
 
     def __str__(self):
         return "{question}/{label}".format(label=self.label,
-                                           question=self.question.__unicode__())
+                                           question=self.question.__str__())
 
 
 @implements_to_string

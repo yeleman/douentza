@@ -9,7 +9,7 @@ from django.shortcuts import render
 
 from douentza.models import HotlineRequest
 from douentza.utils import get_default_context
-
+from douentza.forms import BasicInformationForm
 
 def display_event(request, event_id):
 
@@ -20,4 +20,18 @@ def display_event(request, event_id):
 
     context = get_default_context(page="display_event")
     context.update({'event': event})
+
+
+    if request.method == "POST":
+        form = BasicInformationForm(request.POST)
+        if form.is_valid():
+            print("VALID !!!!!")
+            from pprint import pprint as pp ; pp(form.cleaned_data)
+        else:
+            print("PAS VALIDE")
+    else:
+        form = BasicInformationForm()
+
+    context.update({"form": form})
+
     return render(request, "event.html", context)

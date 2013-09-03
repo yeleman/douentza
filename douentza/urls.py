@@ -14,7 +14,7 @@ urlpatterns = patterns('',
     # API
     url(r'^api/all_events/?$', 'douentza.views.event_dashboard.events_json',
         name='all_events_json'),
-    url(r'^api/event_response_counts/$', 'douentza.views.statistics.event_response_counts_json',
+    url(r'^api/event_response_counts/?$', 'douentza.views.statistics.event_response_counts_json',
         name='event_response_counts'),
 
     url(r'^statistics/$', 'douentza.views.statistics.dashboard', name='statistics'),
@@ -23,6 +23,6 @@ urlpatterns = patterns('',
     url(r'^change/(?P<event_id>[0-9]+)/(?P<new_status>[a-zA-Z\_]+)$',
         'douentza.views.event_dashboard.change_event_status', name='change_event'),
 
-    url(r'^event/(?P<event_id>[0-9]+)/?$',
+    url(r'^request/(?P<event_id>[0-9]+)/?$',
         'douentza.views.events.display_event', name='display_event'),
 )

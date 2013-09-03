@@ -77,6 +77,7 @@ class HotlineRequest(models.Model):
     status = models.CharField(max_length=50, choices=STATUSES.items())
     received_on = models.DateTimeField()
     created_on = models.DateTimeField(auto_now_add=True)
+    responded_on = models.DateTimeField(null=True, blank=True)
     age = models.PositiveIntegerField(null=True, blank=True)
     sex = models.CharField(max_length=6, choices=SEXES.items(),
                            default=SEX_UNKNOWN)
@@ -85,6 +86,7 @@ class HotlineRequest(models.Model):
     location = models.ForeignKey('Entity', null=True, blank=True)
     ethnicity = models.ForeignKey('Ethnicity', null=True, blank=True )
     tags = models.ManyToManyField('Tag', null=True, blank=True)
+    project = models.ForeignKey('Project', null=True, blank=True)
     sms_message = models.TextField(null=True, blank=True)
     operator = models.CharField(max_length=50, choices=OPERATORS)
     hotline_user = models.ForeignKey('HotlineUser', null=True, blank=True)
@@ -156,7 +158,7 @@ class HotlineUser(AbstractUser):
 
 @implements_to_string
 class Ethnicity(models.Model):
-    slug = models.SlugField()
+    slug = models.SlugField(primary_key=True)
     name = models.CharField(max_length=40, verbose_name="Nom")
 
     def save(self, *args, **kwargs):

@@ -7,8 +7,6 @@ from __future__ import (unicode_literals, absolute_import,
 import re
 import datetime
 
-from batbelt import to_timestamp
-
 ORANGE = 'orange'
 MALITEL = 'malitel'
 FOREIGN = 'foreign'
@@ -179,3 +177,10 @@ def operator_from_mali_number(number, default=ORANGE):
 
 def to_jstimestamp(adate):
     return int(to_timestamp(adate)) * 1000
+
+
+def to_timestamp(dt):
+    """
+    Return a timestamp for the given datetime object.
+    """
+    return (dt - datetime(1970, 1, 1)).total_seconds()

@@ -183,4 +183,4 @@ def to_timestamp(dt):
     """
     Return a timestamp for the given datetime object.
     """
-    return (dt - datetime(1970, 1, 1)).total_seconds()
+    return (dt - datetime.datetime(1970, 1, 1)).total_seconds()

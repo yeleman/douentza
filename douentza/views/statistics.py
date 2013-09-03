@@ -11,10 +11,8 @@ import datetime
 from django.shortcuts import render
 from django.http import HttpResponse
 
-from batbelt import to_timestamp
-
 from douentza.models import HotlineEvent, HotlineResponse, Project, Survey
-from douentza.utils import get_default_context, datetime_range, start_or_end_day_from_date
+from douentza.utils import get_default_context, datetime_range, start_or_end_day_from_date, to_timestamp
 
 
 def get_event_responses_counts():

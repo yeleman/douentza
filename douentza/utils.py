@@ -134,7 +134,7 @@ def get_phone_number_indicator(number):
 def clean_phone_number(number):
     ''' return (indicator, number) cleaned of space and other '''
     # clean up
-    if not isinstance(number, basestring):
+    if not isinstance(number, str):
         number = number.__str__()
 
     # cleanup markup

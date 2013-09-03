@@ -1,5 +1,9 @@
-# Django settings for douentza project.
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# vim: ai ts=4 sts=4 et sw=4 nu
 
+from __future__ import (unicode_literals, absolute_import,
+                        division, print_function)
 import os
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -168,6 +172,6 @@ LOGGING = {
 }
 
 try:
-    from settings_local import *
+    from douentza.settings_local import *
 except ImportError:
     pass

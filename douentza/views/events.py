@@ -6,7 +6,6 @@ from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 
 from django.shortcuts import render
-from django.shortcuts import redirect
 
 from douentza.models import HotlineEvent
 from douentza.utils import get_default_context

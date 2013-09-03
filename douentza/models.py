@@ -8,9 +8,10 @@ from __future__ import (unicode_literals, absolute_import,
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.template.defaultfilters import slugify
-
 from mptt.models import MPTTModel, TreeForeignKey
 from mptt.managers import TreeManager
+
+from douentza._compat import implements_to_string
 
 ORANGE = 'O'
 MALITEL = 'M'
@@ -26,6 +27,7 @@ class IncomingManager(models.Manager):
                                            .exclude(status=HotlineEvent.STATUS_GAVE_UP)
 
 
+@implements_to_string
 class HotlineEvent(models.Model):
 
     class Meta:
@@ -73,7 +75,7 @@ class HotlineEvent(models.Model):
     objects = models.Manager()
     incoming = IncomingManager()
 
-    def __unicode__(self):
+    def __str__(self):
         return "{event_type}/{number}/{status}".format(event_type=self.event_type,
                                                        status=self.status,
                                                        number=self.identity)
@@ -89,6 +91,7 @@ class HotlineEvent(models.Model):
         self.save()
 
 
+@implements_to_string
 class Callback(models.Model):
     # CallbackAttempt
 
@@ -100,11 +103,12 @@ class Callback(models.Model):
     status = models.CharField(max_length=50,
                               choices=HotlineEvent.STATUSES.items())
 
-    def __unicode__(self):
+    def __str__(self):
         return "{event}/{created_on}".format(event=self.event.__unicode__(),
                                              created_on=self.created_on)
 
 
+@implements_to_string
 class HotlineUser(AbstractUser):
 
     def full_name(self):
@@ -112,7 +116,11 @@ class HotlineUser(AbstractUser):
             return self.get_full_name()
         return self.username
 
+    def __str(self):
+        return self.full_name()
 
+
+@implements_to_string
 class HotlineResponse(models.Model):
 
     class Meta:
@@ -139,12 +147,13 @@ class HotlineResponse(models.Model):
     ethnicity = models.ForeignKey('Ethnicity', null=True, blank=True )
     tags = models.ManyToManyField('Tag', null=True, blank=True)
 
-    def __unicode__(self):
+    def __self__(self):
         return "{event}/{response_date}/{location}".format(event=self.event.__unicode__(),
                                                            response_date=self.response_date,
                                                            location=self.location)
 
 
+@implements_to_string
 class Ethnicity(models.Model):
     slug = models.SlugField()
     name = models.CharField(max_length=40, verbose_name="Nom")
@@ -153,10 +162,11 @@ class Ethnicity(models.Model):
         self.slug = slugify(self.name)
         super(Ethnicity, self).save(*args, **kwargs)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
+@implements_to_string
 class Entity(MPTTModel):
 
     TYPE_REGION = 'region'
@@ -186,7 +196,7 @@ class Entity(MPTTModel):
 
     objects = TreeManager()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def display_name(self):
@@ -204,24 +214,27 @@ class Entity(MPTTModel):
         return self.parent
 
 
+@implements_to_string
 class Project(models.Model):
     name = models.CharField(max_length=70, verbose_name='Nom')
     description = models.TextField(null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
+@implements_to_string
 class Survey(models.Model):
     title = models.CharField(max_length=200, verbose_name='Titre')
     description = models.TextField(null=True, blank=True)
     reponse = models.ForeignKey('HotlineResponse', null=True, blank=True)
 
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
 
+@implements_to_string
 class Question(models.Model):
 
     class Meta:
@@ -248,11 +261,12 @@ class Question(models.Model):
     question_type = models.CharField(max_length=30, choices=TYPES.items())
     survey = models.ForeignKey('Survey', related_name='questions')
 
-    def __unicode__(self):
+    def __str__(self):
         return "{survey}/{label}".format(label=self.label,
                                          survey=self.survey.__unicode__())
 
 
+@implements_to_string
 class QuestionChoice(models.Model):
 
     class Meta:
@@ -262,13 +276,14 @@ class QuestionChoice(models.Model):
     label = models.CharField(max_length=70, verbose_name="Choix")
     question = models.ForeignKey('Question', related_name="choices")
 
-    def __unicode__(self):
+    def __str__(self):
         return "{question}/{label}".format(label=self.label,
                                            question=self.question.__unicode__())
 
 
+@implements_to_string
 class Tag(models.Model):
     slug = models.CharField(max_length=50, primary_key=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.slug

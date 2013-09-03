@@ -7,14 +7,14 @@ from __future__ import (unicode_literals, absolute_import,
 
 from django.shortcuts import render
 
-from douentza.models import HotlineEvent
+from douentza.models import HotlineRequest
 from douentza.utils import get_default_context
 
 
 def display_event(request, event_id):
 
     try:
-        event = HotlineEvent.objects.get(id=int(event_id))
+        event = HotlineRequest.objects.get(id=int(event_id))
     except:
         raise
 

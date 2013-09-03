@@ -11,14 +11,14 @@ import datetime
 from django.shortcuts import render
 from django.http import HttpResponse
 
-from douentza.models import HotlineEvent, Project, Survey
+from douentza.models import HotlineRequest, Project, Survey
 from douentza.utils import get_default_context, datetime_range, start_or_end_day_from_date, to_timestamp
 
 
 def get_event_responses_counts():
 
     try:
-        start = HotlineEvent.objects.order_by('received_on')[0].received_on
+        start = HotlineRequest.objects.order_by('received_on')[0].received_on
     except IndexError:
         start = datetime.datetime.today()
 
@@ -27,9 +27,9 @@ def get_event_responses_counts():
 
     for date in datetime_range(start):
         ts = int(to_timestamp(date)) * 1000
-        qcount = HotlineEvent.objects.filter(received_on__gte=start_or_end_day_from_date(date),
+        qcount = HotlineRequest.objects.filter(received_on__gte=start_or_end_day_from_date(date),
                                              received_on__lt=start_or_end_day_from_date(date, False)).count()
-        scount = HotlineEvent.objects.filter(response_date__gte=start_or_end_day_from_date(date),
+        scount = HotlineRequest.objects.filter(response_date__gte=start_or_end_day_from_date(date),
                                                 response_date__lt=start_or_end_day_from_date(date, False)).count()
         events.append((ts, qcount))
         responses.append((ts, scount))
@@ -41,18 +41,18 @@ def get_event_responses_counts():
 def get_statistics_dict():
     context = {}
     try:
-        last_event = HotlineEvent.objects.latest('received_on')
-    except HotlineEvent.DoesNotExist:
+        last_event = HotlineRequest.objects.latest('received_on')
+    except HotlineRequest.DoesNotExist:
         last_event = []
 
-    nb_total_events = HotlineEvent.objects.count()
+    nb_total_events = HotlineRequest.objects.count()
     nb_projects = Project.objects.count()
     nb_survey = Survey.objects.count()
-    nb_unique_number = HotlineEvent.objects.values('identity').distinct().count()
+    nb_unique_number = HotlineRequest.objects.values('identity').distinct().count()
 
-    sex_unknown = HotlineEvent.objects.filter(sex=HotlineEvent.SEX_UNKNOWN).count()
-    sex_male = HotlineEvent.objects.filter(sex=HotlineEvent.SEX_MALE).count()
-    sex_female = HotlineEvent.objects.filter(sex=HotlineEvent.SEX_FEMALE).count()
+    sex_unknown = HotlineRequest.objects.filter(sex=HotlineRequest.SEX_UNKNOWN).count()
+    sex_male = HotlineRequest.objects.filter(sex=HotlineRequest.SEX_MALE).count()
+    sex_female = HotlineRequest.objects.filter(sex=HotlineRequest.SEX_FEMALE).count()
 
     context.update({'last_event': last_event,
                     'nb_total_events': nb_total_events,

@@ -24,11 +24,11 @@ class IncomingManager(models.Manager):
 
     def get_query_set(self):
         return super(IncomingManager, self).get_query_set() \
-                                           .exclude(status=HotlineEvent.STATUS_GAVE_UP)
+                                           .exclude(status=HotlineRequest.STATUS_GAVE_UP)
 
 
 @implements_to_string
-class HotlineEvent(models.Model):
+class HotlineRequest(models.Model):
 
     class Meta:
         unique_together = [('identity', 'received_on')]
@@ -102,24 +102,27 @@ class HotlineEvent(models.Model):
         callbackattempt.save()
 
         if self.callbackattempts.count() >= 3:
-            self.status = HotlineEvent.STATUS_GAVE_UP
+            self.status = HotlineRequest.STATUS_GAVE_UP
         else:
             self.status = new_status
         self.save()
 
     def add_additional_request(self):
-        if self.status !=  HotlineEvent.STATUS_RESPONDED:
+        if self.status !=  HotlineRequest.STATUS_RESPONDED:
             additionalrequest = AdditionalRequest(event=self)
             additionalrequest.save()
 
 
 @implements_to_string
 class AdditionalRequest(models.Model):
-    event = models.ForeignKey(HotlineEvent, related_name='additionalrequests')
+    event = models.ForeignKey(HotlineRequest, related_name='additionalrequests')
     created_on = models.DateTimeField(auto_now_add=True)
+    request_type = models.CharField(max_length=50,
+                                    choices=HotlineRequest.TYPES.items())
+    sms_message = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return "{event}/{created_on}".format(event=self.event.__str__(),
+        return "{event}/{created_on}".format(event=self.event,
                                              created_on=self.created_on)
 
 
@@ -129,13 +132,13 @@ class CallbackAttempt(models.Model):
     class Meta:
         get_latest_by = "created_on"
 
-    event = models.ForeignKey(HotlineEvent, related_name='callbackattempts')
+    event = models.ForeignKey(HotlineRequest, related_name='callbackattempts')
     created_on = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=50,
-                              choices=HotlineEvent.STATUSES.items())
+                              choices=HotlineRequest.STATUSES.items())
 
     def __str__(self):
-        return "{event}/{created_on}".format(event=self.event.__str__(),
+        return "{event}/{created_on}".format(event=self.event,
                                              created_on=self.created_on)
 
 
@@ -225,7 +228,7 @@ class Project(models.Model):
 class Survey(models.Model):
     title = models.CharField(max_length=200, verbose_name='Titre')
     description = models.TextField(null=True, blank=True)
-    event = models.ForeignKey('HotlineEvent', null=True, blank=True)
+    event = models.ForeignKey('HotlineRequest', null=True, blank=True)
 
 
     def __str__(self):
@@ -261,7 +264,7 @@ class Question(models.Model):
 
     def __str__(self):
         return "{survey}/{label}".format(label=self.label,
-                                         survey=self.survey.__str__())
+                                         survey=self.survey)
 
 
 @implements_to_string
@@ -276,7 +279,7 @@ class QuestionChoice(models.Model):
 
     def __str__(self):
         return "{question}/{label}".format(label=self.label,
-                                           question=self.question.__str__())
+                                           question=self.question)
 
 
 @implements_to_string

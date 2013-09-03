@@ -2,9 +2,9 @@
 
  {% for event in all_events %}
 <tr {% if event.status != 'NEW_REQUEST' %}class="alert-warning"{% endif %}>
-    <td><span class="glyphicon glyphicon-earphone"></span> <strong>({{ event.identity|phone }})</strong> {{ event.received_on }} {{ event.status }} {{ event.event_type }}{% if event.callbacks %}
+    <td><span class="glyphicon glyphicon-earphone"></span> <strong>({{ event.identity|phone }})</strong> {{ event.received_on }} {{ event.status }} {{ event.event_type }}{% if event.callbackattempts %}
         <ul>
-        {% for callback in event.callbacks.all %}
+        {% for callback in event.callbackattempts.all %}
         <li>{{ callback.created_on }} / {{ callback.status }}</li>
         {% endfor %}
     </ul>{% endif %}</td>

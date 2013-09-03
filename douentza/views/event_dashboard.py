@@ -12,7 +12,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.shortcuts import redirect
 
-from douentza.models import HotlineEvent
+from douentza.models import HotlineRequest
 from douentza.utils import start_or_end_day_from_date, get_default_context
 
 
@@ -26,11 +26,11 @@ def all_events():
     today = datetime.date.today()
     yesterday = today - datetime.timedelta(days=1)
 
-    data_event = {'today_events': HotlineEvent.incoming.filter(received_on__gte=start_or_end_day_from_date(today, True),
+    data_event = {'today_events': HotlineRequest.incoming.filter(received_on__gte=start_or_end_day_from_date(today, True),
                                                               received_on__lt=start_or_end_day_from_date(today, False)).all(),
-                  'yesterday_events': HotlineEvent.incoming.filter(received_on__gte=start_or_end_day_from_date(yesterday, True),
+                  'yesterday_events': HotlineRequest.incoming.filter(received_on__gte=start_or_end_day_from_date(yesterday, True),
                                                                  received_on__lt=start_or_end_day_from_date(yesterday, False)).all(),
-                  'ancient_events': HotlineEvent.incoming.filter(received_on__lt=start_or_end_day_from_date(yesterday, True)).all()}
+                  'ancient_events': HotlineRequest.incoming.filter(received_on__lt=start_or_end_day_from_date(yesterday, True)).all()}
     return data_event
 
 
@@ -40,14 +40,14 @@ def events_json(request):
 
 def change_event_status(request, event_id, new_status):
 
-    if not new_status in HotlineEvent.STATUSES.keys():
+    if not new_status in HotlineRequest.STATUSES.keys():
         return 0
 
     try:
-        event = HotlineEvent.objects \
-                            .exclude(status=HotlineEvent.STATUS_RESPONDED) \
+        event = HotlineRequest.objects \
+                            .exclude(status=HotlineRequest.STATUS_RESPONDED) \
                             .get(id=int(event_id))
-    except (HotlineEvent.DoesNotExist, ValueError):
+    except (HotlineRequest.DoesNotExist, ValueError):
         raise Exception()
 
     event.add_busy_call(new_status)

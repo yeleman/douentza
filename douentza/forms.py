@@ -38,13 +38,13 @@ class BasicInformationForm(forms.Form):
                                        help_text="Format: JJ/MM/AAAA",
                                        widget=wSplitDateTimeWidget)
 
-    age = forms.IntegerField(required=False, widget=wTextInput)
-    sex = forms.ChoiceField(required=False,
+    age = forms.IntegerField(label="Age", required=False, widget=wTextInput)
+    sex = forms.ChoiceField(label="Sexe", required=False,
                             choices=HotlineRequest.SEXES.items(),
                             widget=wSelect)
-    duration = forms.IntegerField(widget=wTextInput)
-    ethinicty = forms.ChoiceField(required=False, choices=[], widget=wSelect)
-    project = forms.ChoiceField(required=False, choices=[], widget=wSelect)
+    duration = forms.IntegerField(label="Durée", widget=wTextInput)
+    ethnicity = forms.ChoiceField(label="Ethnie", required=False, choices=[], widget=wSelect)
+    project = forms.ChoiceField(label="Projet", required=False, choices=[], widget=wSelect)
 
     region = forms.ChoiceField(label="Région", choices=[], widget=wSelect)
     cercle = forms.CharField(label="Cercle", widget=wSelect, required=False)
@@ -58,7 +58,7 @@ class BasicInformationForm(forms.Form):
         all_region = [(EMPTY_ENTITY, "INCONNUE")] + [(e.slug, e.name)
                       for e in Entity.objects.filter(entity_type=Entity.TYPE_REGION)]
 
-        self.fields['ethinicty'] = forms.ChoiceField(required=False,
+        self.fields['ethnicity'] = forms.ChoiceField(required=False,
                                                      choices=all_ethnicity,
                                                      widget=wSelect)
         self.fields['project'] = forms.ChoiceField(required=False,

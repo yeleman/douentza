@@ -29,8 +29,8 @@ def get_event_responses_counts():
         ts = int(to_timestamp(date)) * 1000
         qcount = HotlineRequest.objects.filter(received_on__gte=start_or_end_day_from_date(date),
                                              received_on__lt=start_or_end_day_from_date(date, False)).count()
-        scount = HotlineRequest.objects.filter(response_date__gte=start_or_end_day_from_date(date),
-                                                response_date__lt=start_or_end_day_from_date(date, False)).count()
+        scount = HotlineRequest.objects.filter(responded_on__gte=start_or_end_day_from_date(date),
+                                                responded_on__lt=start_or_end_day_from_date(date, False)).count()
         events.append((ts, qcount))
         responses.append((ts, scount))
     event_response_data = {'events': events,

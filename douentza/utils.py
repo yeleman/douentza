@@ -9,16 +9,15 @@ import datetime
 
 from douentza._compat import string_types
 
+NB_CHARS_VALID_NUMBER = 8  # bellow, number is considered invalid
+COUNTRY_PREFIX = '223'  # home phone prefix
+EMPTY_ENTITY = '00000000'  # must not exist in fixtures
 ORANGE = 'orange'
 MALITEL = 'malitel'
 FOREIGN = 'foreign'
-NB_NUMBERS = 5
-NB_CHARS_HOTLINE = 45
-NB_CHARS_VALID_NUMBER = 8
-COUNTRY_PREFIX = '223'
-ANSWER = "Merci de votre appel. On vous rappelle bientôt."
-EMPTY_ENTITY = '00000000'
-
+OPERATORS = {ORANGE: "Orange MALI",
+             MALITEL: "Malitel",
+             FOREIGN: "Extérieur"}
 ALL_COUNTRY_CODES = [1242, 1246, 1264, 1268, 1284, 1340, 1345, 1441, 1473,
                      1599, 1649, 1664, 1670, 1671, 1684, 1758, 1767, 1784,
                      1809, 1868, 1869, 1876, 1, 20, 212, 213, 216, 218, 220,
@@ -39,6 +38,29 @@ ALL_COUNTRY_CODES = [1242, 1246, 1264, 1268, 1284, 1340, 1345, 1441, 1473,
                      880, 886, 90, 91, 92, 93, 94, 95, 960, 961, 962, 963,
                      964, 965, 966, 967, 968, 970, 971, 972, 973, 974, 975,
                      976, 977, 98, 992, 993, 994, 995, 996, 998]
+
+
+def event_type_from_message(message):
+    from douentza.models import HotlineRequest
+    if message is None:
+        return HotlineRequest.TYPE_RING
+
+    message = message.strip()
+    call_me_tpl_orange = "Peux-tu me rappeler au numero suivant"
+    charge_me_tpl_orange = "Peux-tu recharger mon compte au numero suivant"
+    call_me_tpl_malitel = "Rappellez moi s'il vous plait au numero suivant"
+    am_tpl_orange = "Messagerie Vocale:"
+
+    if message.startswith(call_me_tpl_orange) \
+       or message.startswith(call_me_tpl_malitel):
+        return HotlineRequest.TYPE_CALL_ME
+    if message.startswith(charge_me_tpl_orange):
+        return HotlineRequest.TYPE_CHARGE_ME
+    if message.startswith(am_tpl_orange):
+        return HotlineRequest.TYPE_RING
+    if not message:
+        return HotlineRequest.TYPE_RING
+    return HotlineRequest.TYPE_SMS
 
 
 def get_default_context(page='', **kwargs):
@@ -105,10 +127,10 @@ def is_valid_number(number):
 
 
 def number_is_blacklisted(number):
-    from dispatcher.models import BlackList
+    from douentza.models import BlacklistedNumber
     identity = join_phone_number(*clean_phone_number(number))
-    if BlackList.objects.filter(identity=identity).count():
-        b = BlackList.objects.get(identity=identity)
+    if BlacklistedNumber.objects.filter(identity=identity).count():
+        b = BlacklistedNumber.objects.get(identity=identity)
         b.call_count += 1
         b.save()
         return True

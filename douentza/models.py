@@ -12,12 +12,7 @@ from mptt.models import MPTTModel, TreeForeignKey
 from mptt.managers import TreeManager
 
 from douentza._compat import implements_to_string
-
-ORANGE = 'O'
-MALITEL = 'M'
-
-OPERATORS = ((ORANGE, 'Orange'),
-             (MALITEL, 'Malitel'))
+from douentza.utils import OPERATORS
 
 
 class IncomingManager(models.Manager):
@@ -44,39 +39,45 @@ class HotlineRequest(models.Model):
     }
 
     STATUS_NEW_REQUEST = 'NEW_REQUEST'
-    STATUS_NOT_RESPONDED = 'NOT_RESPONDED'
-    STATUS_RESPONDED = 'RESPONDED'
-    STATUS_BUSY = 'BUSY'
+    STATUS_NOT_ANSWERING = 'NOT_ANSWERING'
+    STATUS_HANDLED = 'HANDLED'
+    STATUS_IS_BUSY = 'IS_BUSY'
     STATUS_GAVE_UP = 'GAVE_UP'
 
     STATUSES = {
-        STATUS_NEW_REQUEST: "A appeler",
-        STATUS_NOT_RESPONDED: "Ne repond pas",
-        STATUS_RESPONDED: "Repondu",
-        STATUS_BUSY: "Occupé",
-        STATUS_GAVE_UP: "Ne répond jamais"}
+        STATUS_NEW_REQUEST: "Nouveau",
+        STATUS_NOT_ANSWERING: "Ne réponds pas",
+        STATUS_HANDLED: "Traité",
+        STATUS_IS_BUSY: "Indisponible",
+        STATUS_GAVE_UP: "Ne réponds jamais"}
 
     TYPE_CALL_ME = 'CALL_ME'
     TYPE_CHARGE_ME = 'CHARGE_ME'
     TYPE_RING = 'RING'
-    TYPE_SMS_HOTLINE = 'SMS_HOTLINE'
+    TYPE_SMS = 'SMS'
     TYPE_SMS_SPAM = 'SMS_SPAM'
 
     TYPES = {
         TYPE_CALL_ME: "Peux-tu me rappeler?",
         TYPE_CHARGE_ME: "Peux-tu recharger mon compte?",
         TYPE_RING: "Bip.",
-        TYPE_SMS_HOTLINE: "SMS (Hotline).",
+        TYPE_SMS: "SMS",
         TYPE_SMS_SPAM: "SMS (SPAM)"}
 
-    HOTLINE_TYPES = (TYPE_CALL_ME, TYPE_CHARGE_ME, TYPE_SMS_HOTLINE, TYPE_RING)
-    SMS_TYPES = (TYPE_SMS_HOTLINE, TYPE_SMS_SPAM)
+    HOTLINE_TYPES = (TYPE_CALL_ME, TYPE_CHARGE_ME, TYPE_SMS, TYPE_RING)
+    SMS_TYPES = (TYPE_SMS, TYPE_SMS_SPAM)
 
-    identity = models.CharField(max_length=30)
-    event_type = models.CharField(max_length=50, choices=TYPES.items())
-    status = models.CharField(max_length=50, choices=STATUSES.items())
-    received_on = models.DateTimeField()
     created_on = models.DateTimeField(auto_now_add=True)
+    identity = models.CharField(max_length=30)
+    operator = models.CharField(max_length=50, choices=OPERATORS.items())
+    hotline_number = models.CharField(max_length=30, blank=True, null=True)
+    status = models.CharField(max_length=50, choices=STATUSES.items(),
+                              default=STATUS_NEW_REQUEST)
+    received_on = models.DateTimeField()
+    event_type = models.CharField(max_length=50, choices=TYPES.items())
+    sms_message = models.TextField(null=True, blank=True)
+
+    hotline_user = models.ForeignKey('HotlineUser', null=True, blank=True)
     responded_on = models.DateTimeField(null=True, blank=True)
     age = models.PositiveIntegerField(null=True, blank=True)
     sex = models.CharField(max_length=6, choices=SEXES.items(),
@@ -87,15 +88,12 @@ class HotlineRequest(models.Model):
     ethnicity = models.ForeignKey('Ethnicity', null=True, blank=True )
     tags = models.ManyToManyField('Tag', null=True, blank=True)
     project = models.ForeignKey('Project', null=True, blank=True)
-    sms_message = models.TextField(null=True, blank=True)
-    operator = models.CharField(max_length=50, choices=OPERATORS)
-    hotline_user = models.ForeignKey('HotlineUser', null=True, blank=True)
 
     objects = models.Manager()
     incoming = IncomingManager()
 
     def __str__(self):
-        return "{event_type}/{number}/{status}".format(event_type=self.event_type,
+        return "{event_type}-{number}-{status}".format(event_type=self.event_type,
                                                        status=self.status,
                                                        number=self.identity)
 
@@ -109,10 +107,12 @@ class HotlineRequest(models.Model):
             self.status = new_status
         self.save()
 
-    def add_additional_request(self):
-        if self.status !=  HotlineRequest.STATUS_RESPONDED:
-            additionalrequest = AdditionalRequest(event=self)
-            additionalrequest.save()
+    def add_additional_request(self, request_type, sms_message=None):
+        if self.status != HotlineRequest.STATUS_HANDLED:
+            AdditionalRequest.objects.create(
+                event=self,
+                request_type=request_type,
+                sms_message=sms_message)
 
 
 @implements_to_string
@@ -124,8 +124,8 @@ class AdditionalRequest(models.Model):
     sms_message = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return "{event}/{created_on}".format(event=self.event,
-                                             created_on=self.created_on)
+        return "{event}/{type}".format(event=self.event,
+                                         type=self.request_type)
 
 
 @implements_to_string
@@ -280,7 +280,7 @@ class QuestionChoice(models.Model):
     question = models.ForeignKey('Question', related_name="choices")
 
     def __str__(self):
-        return "{question}/{label}".format(label=self.label,
+        return "{question}-{label}".format(label=self.label,
                                            question=self.question)
 
 
@@ -290,3 +290,13 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.slug
+
+
+@implements_to_string
+class BlacklistedNumber(models.Model):
+
+    identity = models.CharField(max_length=30, unique=True)
+    call_count = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return self.identity

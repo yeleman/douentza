@@ -171,6 +171,11 @@ LOGGING = {
     }
 }
 
+# douentza settings
+FONDA_SEND_AUTOMATIC_REPLY = False
+FONDA_SEND_AUTOMATIC_REPLY_VIA_HANDLER = False
+FONDA_AUTOMATIC_REPLY_TEXT = None
+
 try:
     from douentza.settings_local import *
 except ImportError:

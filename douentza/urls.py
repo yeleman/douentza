@@ -11,6 +11,12 @@ urlpatterns = patterns('',
     url(r'^logout/$', 'django.contrib.auth.views.logout',
         {'next_page': '/'}, name='logout'),
 
+    # Android API
+    url(r'^fondasms/?$', 'douentza.views.fondasms.fondasms_handler',
+        name='fondasms'),
+    url(r'^fondasms/tester?$', 'douentza.views.fondasms.fondasms_tester',
+        name='fondasms_tester'),
+
     # API
     url(r'^api/all_events/?$', 'douentza.views.event_dashboard.events_json',
         name='all_events_json'),

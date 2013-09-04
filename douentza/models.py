@@ -66,27 +66,29 @@ class HotlineRequest(models.Model):
         TYPE_CALL_ME: "Peux-tu me rappeler?",
         TYPE_CHARGE_ME: "Peux-tu recharger mon compte?",
         TYPE_RING: "Bip.",
-        TYPE_SMS_HOTLINE: "SMS (Hotline).",
+        TYPE_SMS_HOTLINE: "SMS.",
         TYPE_SMS_SPAM: "SMS (SPAM)"}
 
     HOTLINE_TYPES = (TYPE_CALL_ME, TYPE_CHARGE_ME, TYPE_SMS_HOTLINE, TYPE_RING)
     SMS_TYPES = (TYPE_SMS_HOTLINE, TYPE_SMS_SPAM)
 
-    identity = models.CharField(max_length=30)
+    identity = models.CharField(max_length=30, verbose_name="Numéro")
     event_type = models.CharField(max_length=50, choices=TYPES.items())
     status = models.CharField(max_length=50, choices=STATUSES.items())
     received_on = models.DateTimeField()
     created_on = models.DateTimeField(auto_now_add=True)
-    responded_on = models.DateTimeField(null=True, blank=True)
-    age = models.PositiveIntegerField(null=True, blank=True)
+    responded_on = models.DateTimeField(null=True, blank=True,
+                                        verbose_name="Date de l'appel")
+    age = models.PositiveIntegerField(null=True, blank=True, verbose_name="Age")
     sex = models.CharField(max_length=6, choices=SEXES.items(),
-                           default=SEX_UNKNOWN)
+                           default=SEX_UNKNOWN, verbose_name="Sexe")
     duration = models.PositiveIntegerField(max_length=4, null=True, blank=True,
-                                           help_text="Donnez la durée en seconde")
-    location = models.ForeignKey('Entity', null=True, blank=True)
-    ethnicity = models.ForeignKey('Ethnicity', null=True, blank=True )
-    tags = models.ManyToManyField('Tag', null=True, blank=True)
-    project = models.ForeignKey('Project', null=True, blank=True)
+                                           help_text="Donnez la durée en seconde",
+                                           verbose_name="Durée")
+    location = models.ForeignKey('Entity', null=True, blank=True, verbose_name="Localité")
+    ethnicity = models.ForeignKey('Ethnicity', null=True, blank=True, verbose_name="Ethnie")
+    tags = models.ManyToManyField('Tag', null=True, blank=True, verbose_name="Tags")
+    project = models.ForeignKey('Project', null=True, blank=True, verbose_name="Projet")
     sms_message = models.TextField(null=True, blank=True)
     operator = models.CharField(max_length=50, choices=OPERATORS)
     hotline_user = models.ForeignKey('HotlineUser', null=True, blank=True)

@@ -10,25 +10,46 @@ from django import forms
 from douentza.models import HotlineRequest, Project, Ethnicity, Entity
 from douentza.utils import EMPTY_ENTITY
 
+attrs = {'class': 'form-control'}
+
+wTextInput = forms.TextInput(attrs=attrs)
+wPasswordInput = forms.PasswordInput(attrs=attrs)
+wHiddenInput = forms.HiddenInput(attrs=attrs)
+wDateInput = forms.DateInput(attrs=attrs)
+wDateTimeInput = forms.DateTimeInput(attrs=attrs)
+wTimeInput = forms.TimeInput(attrs=attrs)
+wTextarea = forms.Textarea(attrs=attrs)
+wCheckboxInput = forms.CheckboxInput(attrs=attrs)
+wSelect = forms.Select(attrs=attrs)
+wNullBooleanSelect = forms.NullBooleanSelect(attrs=attrs)
+wSelectMultiple = forms.SelectMultiple(attrs=attrs)
+wRadioSelect = forms.RadioSelect(attrs=attrs)
+wCheckboxSelectMultiple = forms.CheckboxSelectMultiple(attrs=attrs)
+wFileInput = forms.FileInput(attrs=attrs)
+wClearableFileInput = forms.ClearableFileInput(attrs=attrs)
+wMultipleHiddenInput = forms.MultipleHiddenInput(attrs=attrs)
+wSplitDateTimeWidget = forms.SplitDateTimeWidget(attrs=attrs)
+
 
 class BasicInformationForm(forms.Form):
 
-    request_id = forms.IntegerField(widget=forms.HiddenInput)
+    request_id = forms.IntegerField(widget=wHiddenInput)
     responded_on = forms.DateTimeField(label="Date de l'appel",
                                        help_text="Format: JJ/MM/AAAA",
-                                       widget=forms.SplitDateTimeWidget)
+                                       widget=wSplitDateTimeWidget)
 
-    age = forms.IntegerField(required=False)
+    age = forms.IntegerField(required=False, widget=wTextInput)
     sex = forms.ChoiceField(required=False,
-                            choices=HotlineRequest.SEXES.items())
-    duration = forms.IntegerField()
-    ethinicty = forms.ChoiceField(required=False, choices=[])
-    project = forms.ChoiceField(required=False, choices=[])
+                            choices=HotlineRequest.SEXES.items(),
+                            widget=wSelect)
+    duration = forms.IntegerField(widget=wTextInput)
+    ethinicty = forms.ChoiceField(required=False, choices=[], widget=wSelect)
+    project = forms.ChoiceField(required=False, choices=[], widget=wSelect)
 
-    region = forms.ChoiceField(label="Région", choices=[])
-    cercle = forms.CharField(label="Cercle", widget=forms.Select, required=False)
-    commune = forms.CharField(label="Commune", widget=forms.Select, required=False)
-    village = forms.CharField(label="Village", widget=forms.Select, required=False)
+    region = forms.ChoiceField(label="Région", choices=[], widget=wSelect)
+    cercle = forms.CharField(label="Cercle", widget=wSelect, required=False)
+    commune = forms.CharField(label="Commune", widget=wSelect, required=False)
+    village = forms.CharField(label="Village", widget=wSelect, required=False)
 
     def __init__(self, *args, **kwargs):
         super(BasicInformationForm, self).__init__(*args, **kwargs)
@@ -37,9 +58,15 @@ class BasicInformationForm(forms.Form):
         all_region = [(EMPTY_ENTITY, "INCONNUE")] + [(e.slug, e.name)
                       for e in Entity.objects.filter(entity_type=Entity.TYPE_REGION)]
 
-        self.fields['ethinicty'] = forms.ChoiceField(required=False, choices=all_ethnicity)
-        self.fields['project'] = forms.ChoiceField(required=False, choices=all_project)
-        self.fields['region'] = forms.ChoiceField(required=False, choices=all_region)
+        self.fields['ethinicty'] = forms.ChoiceField(required=False,
+                                                     choices=all_ethnicity,
+                                                     widget=wSelect)
+        self.fields['project'] = forms.ChoiceField(required=False,
+                                                   choices=all_project,
+                                                   widget=wSelect)
+        self.fields['region'] = forms.ChoiceField(required=False,
+                                                  choices=all_region,
+                                                  widget=wSelect)
 
     def clean_village(self):
             ''' Returns a Village Entity from the multiple selects '''

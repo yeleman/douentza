@@ -42,3 +42,9 @@ function graph_event_response_counts(data_url) {
         });
     });
 }
+
+
+function styleFormElements() {
+    // bootstrap3 requires form elements to have the `form-control` CSS class
+    $("form * select, form * input, form * textarea").addClass("form-control");
+}

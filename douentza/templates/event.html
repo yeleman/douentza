@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% load douentza %}
 
+{% block extra_js %}
+styleFormElements();
+{% endblock %}
+
 {% block content %}
 <h1>{{ event.identity|phone }}</h1>
 

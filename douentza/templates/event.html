@@ -3,13 +3,16 @@
 
 {% block extra_js %}
 styleFormElements();
-{% endblock %}
+s{% endblock %}
 
 {% block content %}
-<h1>{{ event.identity|phone }}</h1>
+<h1>{{ event.identity|phone }} <span class="badge pull">{{event.additionalrequests.count}} essais</span></h1>
+<div id="alou">
+    <h2>Historiques des appels</h2>
 
-<div>
-    <h2>Historiques</h2>
+    {% for historic in historics %}
+        <p class="col-lg-offset-1"><span title="Durée: {{historic.duration}} s">{{historic.responded_on}}</span> <span class="badge"><span class="glyphicon glyphicon-map-marker"></span> <spam>{{historic.location}}</span></span> <span class="badge">{{historic.age}} ans</span> {% if historic.sex == "female" %}<span class="badge"><span class="glyphicon glyphicon-user"></span> {% else %}<span class="glyphicon glyphicon-ban-circle">{% endif %}</span> </span><span class="badge badge-info">{{historic.project}}</span> {% if historic.tags.count <= 3 %}<span class="badge">{% for tag in historic.tags.all %} {{tag}}{% endfor %}</span>{% else %}<span class="badge" title="{% for tag in historic.tags.all %} {{tag}}{% endfor %}">...</span>{% endif %} <span class="badge" title="{% for survey in historic.surveys.all %} {{survey}} {% endfor %}">Questionnires</span></p>
+    {% endfor %}
 </div>
 
 
@@ -63,7 +66,7 @@ styleFormElements();
 </div>
 
 <div>
-    <h2>Menu Questionnaires</h2>
+    <h2>Mini Questionnaires</h2>
 </div>
 
 {% endblock %}

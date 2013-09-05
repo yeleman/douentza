@@ -18,8 +18,11 @@ def display_event(request, event_id):
     except:
         raise
 
+    historics = HotlineRequest.objects.filter(identity=event.identity,
+                                              status=HotlineRequest.STATUS_HANDLED)
+
     context = get_default_context(page="display_event")
-    context.update({'event': event})
+    context.update({'event': event, 'historics': historics})
 
 
     if request.method == "POST":

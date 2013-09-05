@@ -1,10 +1,6 @@
 {% extends "base.html" %}
 {% load douentza %}
 
-{% block extra_js %}
-styleFormElements();
-{% endblock %}
-
 {% block content %}
 <h1>{{ event.identity|phone }}</h1>
 
@@ -13,51 +9,53 @@ styleFormElements();
 </div>
 
 
+<div class="modal-body">
 <form  class="form-horizontal" role="form" action="{% url 'display_event' event.id %}" method="post">
     {% csrf_token %}
+    {{ form.request_id }}
     <div class="row">
         <div class="col-md-6">
-            <div class="form-group">
+            <div class="form-group {% if form.responded_on.errors %} has-error {% endif %}" >
                 <label class="col-lg-3 control-label">{{ form.responded_on.label }}</label><div class="col-lg-9">{{ form.responded_on }}</div>
             </div>
-            <div class="form-group">
+            <div class="form-group {% if form.ethnicity.errors %} has-error {% endif %}">
                 <label class="col-lg-3 control-label">{{ form.ethnicity.label }}</label><div class="col-lg-9">{{ form.ethnicity }}</div>
             </div>
-            <div class="form-group">
+            <div class="form-group {% if form.sex.errors %} has-error {% endif %}">
                 <label class="col-lg-3 control-label">{{ form.sex.label }}</label><div class="col-lg-9">{{ form.sex }}</div>
             </div>
-            <div class="form-group ">
+            <div class="form-group  {% if form.age.errors %} has-error {% endif %}">
                 <label class="col-lg-3 control-label">{{ form.age.label }}</label><div class="col-lg-9">{{ form.age }}</div>
             </div>
-            <div class="form-group">
+            <div class="form-group {% if form.project.errors %} has-error {% endif %}">
+                <label class="col-lg-3 control-label">{{ form.project.label }}</label> <div class="col-lg-9">{{ form.project }}</div>
+            </div>
+            <div class="form-group {% if form.duration.errors %} has-error {% endif %}">
                 <label class="col-lg-3 control-label">{{ form.duration.label }}</label><div class="col-lg-9">{{ form.duration }}</div>
             </div>
         </div>
 
         <div class="col-md-6">
-            <div class="form-group">
-                <label class="col-lg-3 control-label">{{ form.project.label }}</label> <div class="col-lg-9">{{ form.project }}</div>
-            </div>
-            <div class="form-group">
+            <div class="form-group {% if form.region.errors %} has-error {% endif %}">
                 <label class="col-lg-3 control-label">{{ form.region.label }}</label> <div class="col-lg-9">{{ form.region }}</div>
             </div>
-            <div class="form-group">
+            <div class="form-group {% if form.cercle.errors %} has-error {% endif %}">
                 <label class="col-lg-3 control-label">{{ form.cercle.label }}</label> <div class="col-lg-9">{{ form.cercle }}</div>
             </div>
-            <div class="form-group">
+            <div class="form-group {% if form.commune.errors %} has-error {% endif %}">
                 <label class="col-lg-3 control-label">{{ form.commune.label }}</label> <div class="col-lg-9">{{ form.commune }}</div>
             </div>
-            <div class="form-group">
+            <div class="form-group {% if form.village.errors %} has-error {% endif %}">
                 <label class="col-lg-3 control-label">{{ form.village.label }}</label> <div class="col-lg-9">{{ form.village }}</div>
             </div>
         </div>
     </div>
-     <div class="row">
+    <div class="row">
          <div class="col-md-3"></div><div class="col-md-6"><button type="submit" class="form-control btn btn-default">Sauvegarder</button></div><div class="col-md-3"></div>
     </div>
 </form>
 
-
+</div>
 <div>
     <h2>Tags</h2>
 </div>
@@ -66,4 +64,9 @@ styleFormElements();
     <h2>Menu Questionnaires</h2>
 </div>
 
+{% endblock %}
+
+{% block extra_js %}
+    styleFormElements();
+    fill_from_previous();
 {% endblock %}

@@ -23,6 +23,7 @@ urlpatterns = patterns('',
     url(r'^api/event_response_counts/?$', 'douentza.views.statistics.event_response_counts_json',
         name='event_response_counts'),
 
+    url(r'^entities/(?P<parent_slug>\d{8})/?$', 'douentza.views.events.entities_api', name='entities'),
     url(r'^statistics/$', 'douentza.views.statistics.dashboard', name='statistics'),
     url(r'^test$', 'douentza.views.form_test.tester', name='tester'),
     url(r'^$', 'douentza.views.event_dashboard.dashboard', name='event_dashboard'),

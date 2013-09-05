@@ -47,7 +47,7 @@ class HotlineRequest(models.Model):
     STATUSES = {
         STATUS_NEW_REQUEST: "Nouveau",
         STATUS_NOT_ANSWERING: "Ne réponds pas",
-        STATUS_HANDLED: "TraitÃ©",
+        STATUS_HANDLED: "Traité",
         STATUS_IS_BUSY: "Indisponible",
         STATUS_GAVE_UP: "Ne réponds jamais"}
 

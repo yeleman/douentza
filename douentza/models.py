@@ -232,7 +232,8 @@ class Project(models.Model):
 class Survey(models.Model):
     title = models.CharField(max_length=200, verbose_name="Titre")
     description = models.TextField(null=True, blank=True)
-    event = models.ForeignKey('HotlineRequest', null=True, blank=True)
+    event = models.ForeignKey('HotlineRequest', null=True, blank=True,
+                              related_name='surveys')
 
 
     def __str__(self):

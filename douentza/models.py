@@ -47,7 +47,7 @@ class HotlineRequest(models.Model):
     STATUSES = {
         STATUS_NEW_REQUEST: "Nouveau",
         STATUS_NOT_ANSWERING: "Ne réponds pas",
-        STATUS_HANDLED: "TraitÃ©",
+        STATUS_HANDLED: "Traité",
         STATUS_IS_BUSY: "Indisponible",
         STATUS_GAVE_UP: "Ne réponds jamais"}
 
@@ -85,7 +85,7 @@ class HotlineRequest(models.Model):
                            default=SEX_UNKNOWN, verbose_name="Sexe")
     duration = models.PositiveIntegerField(max_length=4, null=True, blank=True,
                                            help_text="Durée de l'appel en seconde",
-					   verbose_name="Durée appel")
+					                       verbose_name="Durée appel")
     location = models.ForeignKey('Entity', null=True, blank=True, verbose_name="Localité")
     ethnicity = models.ForeignKey('Ethnicity', null=True, blank=True, verbose_name="Éthnie")
     tags = models.ManyToManyField('Tag', null=True, blank=True, verbose_name="Tags")
@@ -221,7 +221,7 @@ class Entity(MPTTModel):
 
 @implements_to_string
 class Project(models.Model):
-    name = models.CharField(max_length=70, verbose_name='Nom')
+    name = models.CharField(max_length=70, verbose_name="Nom")
     description = models.TextField(null=True, blank=True)
 
     def __str__(self):
@@ -254,10 +254,10 @@ class Question(models.Model):
 
     TYPES = {
         TYPE_STRING: "ChaÃ®ne",
-        TYPE_BOOLEAN: "BoolÃ©en",
+        TYPE_BOOLEAN: "Booléen",
         TYPE_DATE: "Date",
         TYPE_INTEGER: "Entier",
-        TYPE_FLOAT: "RÃ©el",
+        TYPE_FLOAT: "Réel",
         TYPE_CHOICES: "Choix"
     }
 

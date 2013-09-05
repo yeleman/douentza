@@ -47,7 +47,7 @@ class HotlineRequest(models.Model):
     STATUSES = {
         STATUS_NEW_REQUEST: "Nouveau",
         STATUS_NOT_ANSWERING: "Ne réponds pas",
-        STATUS_HANDLED: "Traité",
+        STATUS_HANDLED: "TraitÃ©",
         STATUS_IS_BUSY: "Indisponible",
         STATUS_GAVE_UP: "Ne réponds jamais"}
 
@@ -68,7 +68,7 @@ class HotlineRequest(models.Model):
     SMS_TYPES = (TYPE_SMS, TYPE_SMS_SPAM)
 
     created_on = models.DateTimeField(auto_now_add=True)
-    identity = models.CharField(max_length=30, verbose_name="Num�ro")
+    identity = models.CharField(max_length=30, verbose_name="Numéro")
     operator = models.CharField(max_length=50, choices=OPERATORS.items())
     hotline_number = models.CharField(max_length=30, blank=True, null=True)
     status = models.CharField(max_length=50, choices=STATUSES.items(),
@@ -78,15 +78,16 @@ class HotlineRequest(models.Model):
     sms_message = models.TextField(null=True, blank=True)
 
     hotline_user = models.ForeignKey('HotlineUser', null=True, blank=True)
-    responded_on = models.DateTimeField(null=True, blank=True, verbose_name="Date de l'appel")
+    responded_on = models.DateTimeField(null=True, blank=True,
+                                        verbose_name="Date de l'appel")
     age = models.PositiveIntegerField(null=True, blank=True, verbose_name="Age")
     sex = models.CharField(max_length=6, choices=SEXES.items(),
                            default=SEX_UNKNOWN, verbose_name="Sexe")
     duration = models.PositiveIntegerField(max_length=4, null=True, blank=True,
-                                           help_text="Dur�e de l'appel en seconde",
-					   verbose_name="Dur�e appel")
-    location = models.ForeignKey('Entity', null=True, blank=True, verbose_name="Localit�")
-    ethnicity = models.ForeignKey('Ethnicity', null=True, blank=True, verbose_name="�thnie")
+                                           help_text="Durée de l'appel en seconde",
+					   verbose_name="Durée appel")
+    location = models.ForeignKey('Entity', null=True, blank=True, verbose_name="Localité")
+    ethnicity = models.ForeignKey('Ethnicity', null=True, blank=True, verbose_name="Éthnie")
     tags = models.ManyToManyField('Tag', null=True, blank=True, verbose_name="Tags")
     project = models.ForeignKey('Project', null=True, blank=True, verbose_name="Projet")
 
@@ -229,7 +230,7 @@ class Project(models.Model):
 
 @implements_to_string
 class Survey(models.Model):
-    title = models.CharField(max_length=200, verbose_name='Titre')
+    title = models.CharField(max_length=200, verbose_name="Titre")
     description = models.TextField(null=True, blank=True)
     event = models.ForeignKey('HotlineRequest', null=True, blank=True)
 
@@ -252,16 +253,16 @@ class Question(models.Model):
     TYPE_CHOICES = 'choice'
 
     TYPES = {
-        TYPE_STRING: "Chaîne",
-        TYPE_BOOLEAN: "Booléen",
+        TYPE_STRING: "ChaÃ®ne",
+        TYPE_BOOLEAN: "BoolÃ©en",
         TYPE_DATE: "Date",
         TYPE_INTEGER: "Entier",
-        TYPE_FLOAT: "Réel",
+        TYPE_FLOAT: "RÃ©el",
         TYPE_CHOICES: "Choix"
     }
 
     order = models.PositiveIntegerField(default=0, verbose_name="Ordre")
-    label = models.CharField(max_length=200, verbose_name='Question')
+    label = models.CharField(max_length=200, verbose_name="Question")
     question_type = models.CharField(max_length=30, choices=TYPES.items())
     survey = models.ForeignKey('Survey', related_name='questions')
 
@@ -278,7 +279,7 @@ class QuestionChoice(models.Model):
 
     slug = models.CharField(max_length=20)
     label = models.CharField(max_length=70, verbose_name="Choix")
-    question = models.ForeignKey('Question', related_name="choices")
+    question = models.ForeignKey('Question', related_name='choices')
 
     def __str__(self):
         return "{question}-{label}".format(label=self.label,

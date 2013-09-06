@@ -117,3 +117,4 @@ $('#id_cercle').change(function () {
 $('#id_commune').change(function () {
     changeCommune($(this));
 });
+

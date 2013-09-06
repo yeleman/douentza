@@ -7,7 +7,7 @@ styleFormElements();
 
 {% block content %}
 <h1>{{ event.identity|phone }} <span class="badge pull">{{event.additionalrequests.count}} essais</span></h1>
-<div id="alou">
+<div>
     <h2>Historiques des appels</h2>
     {% if historics %}
         {% for historic in historics %}

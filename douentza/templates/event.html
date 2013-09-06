@@ -9,10 +9,11 @@ styleFormElements();
 <h1>{{ event.identity|phone }} <span class="badge pull">{{event.additionalrequests.count}} essais</span></h1>
 <div id="alou">
     <h2>Historiques des appels</h2>
-
-    {% for historic in historics %}
-        <p class="col-lg-offset-1"><span title="Durée: {{historic.duration}} s">{{historic.responded_on}}</span> <span class="badge"><span class="glyphicon glyphicon-map-marker"></span> <spam>{{historic.location}}</span></span> <span class="badge">{{historic.age}} ans</span> {% if historic.sex == "female" %}<span class="badge"><span class="glyphicon glyphicon-user"></span> {% else %}<span class="glyphicon glyphicon-ban-circle">{% endif %}</span> </span><span class="badge badge-info">{{historic.project}}</span> {% if historic.tags.count <= 3 %}<span class="badge">{% for tag in historic.tags.all %} {{tag}}{% endfor %}</span>{% else %}<span class="badge" title="{% for tag in historic.tags.all %} {{tag}}{% endfor %}">...</span>{% endif %} <span class="badge" title="{% for survey in historic.surveys.all %} {{survey}} {% endfor %}">Questionnires</span></p>
-    {% endfor %}
+    {% if historics %}
+        {% for historic in historics %}
+            <p class="col-lg-offset-1"><span title="Durée: {{historic.duration}} s">{{historic.responded_on}}</span> <span class="badge"><span class="glyphicon glyphicon-map-marker"></span> <spam>{{historic.location}}</span></span> <span class="badge">{{historic.age}} ans</span> {% if historic.sex == "female" %}<span class="badge"><span class="glyphicon glyphicon-user"></span></span> {% else %}<span class="badge"><span class="glyphicon glyphicon-ban-circle"></span></span> {% endif %}<span class="badge">{{historic.project}}</span> {% if historic.tags.count <= 3 %}<span class="badge">{% for tag in historic.tags.all %} {{tag}}{% endfor %}</span>{% else %}<span class="badge" title="{% for tag in historic.tags.all %} {{tag}}{% endfor %}">...</span>{% endif %} <span class="badge" title="{% for survey in historic.surveys.all %} {{survey}} {% endfor %}">Questionnires</span></p>
+        {% endfor %}
+    {% endif %}
 </div>
 
 

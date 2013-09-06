@@ -11,7 +11,7 @@ from douentza.models import HotlineRequest, Project, Ethnicity, Entity
 from douentza.utils import EMPTY_ENTITY
 
 help_duration = "La durée est en seconde"
-help_age = "Lâge en année"
+help_age = "L'âge en année"
 
 class BasicInformationForm(forms.Form):
 

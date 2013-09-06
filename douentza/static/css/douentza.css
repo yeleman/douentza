@@ -87,3 +87,7 @@
     vertical-align: middle;
     white-space: nowrap;
 }
+
+.display_event #accordion{
+    margin-bottom: 16px
+}

@@ -3,51 +3,78 @@
 
 {% block extra_js %}
 styleFormElements();
+var mod = $('#eventModal');
+// update date
+var eventModal = new Date();
+//$('#id_responded_on_0').datetimepicker({pickTime: false});
+updateFormUI(mod, false, eventModal);
+$('#surveys').popover({html: true}).popover('show')
+$('#surveys').popover({html: true}).popover('show')
 {% endblock %}
 
 {% block content %}
-<h1>{{ event.identity|phone }}</h1>
+<h1>{{ event.identity|phone }} <span class="badge_alert">{{event.additionalrequests.count}} <span class="glyphicon glyphicon-earphone"></span></span></h1>
 
-<div>
-    <h2>Historiques</h2>
+<div class="panel-group" id="accordion">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h2 class="panel-title">
+        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+          <span class="badge pull-right"><span class="glyphicon glyphicon-chevron-down"></span></span>
+        </a>
+        Historique des appels
+      </h2>
+    </div>
+    <div id="collapseThree" class="panel-collapse collapse">
+      <div class="panel-body">
+        {% if historics %}
+            {% for historic in historics %}
+                <p><span title="Durée: {{historic.duration}} s">{{historic.responded_on}}</span>  <span class="badge_location"><span class="glyphicon glyphicon-map-marker"></span> <spam>{{historic.location}}</span></span> <span class="badge">{{historic.age}} ans</span> {% if historic.sex == "female" %}<span class="badge_woman"><span class="glyphicon glyphicon-user"></span></span></span> {% else %}<span class="badge_man"><span class="glyphicon glyphicon-user"></span></span> {% endif %}<span class="badge_project">{{historic.project}}</span> {% if historic.tags.count <= 3 %} {% for tag in historic.tags.all %} <span class="badge_tag"> {{tag}}</span> {% endfor %} {% else %} <span class="badge" title="{% for tag in historic.tags.all %} {{tag}} {% endfor %}">...</span>{% endif %} <span data-placement="top" data-toggle="popover" data-container="body" type="button" data-original-title="" title="Questionnaire" id='surveys' class="badge" data-content="{% for survey in historic.surveys.all %}<p>{{survey}}</p>{% endfor %}"><span class="glyphicon glyphicon-book"></span></span></p>
+            {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
 </div>
-
 
 <form  class="form-horizontal" role="form" action="{% url 'display_event' event.id %}" method="post">
     {% csrf_token %}
+    {{ form.request_id }}
     <div class="row">
         <div class="col-md-6">
-            <div class="form-group">
-                <label class="col-lg-3 control-label">{{ form.responded_on.label }}</label><div class="col-lg-9">{{ form.responded_on }}</div>
+            <div id="eventModal">
+                <div class="form-group {% if form.responded_on.errors %} has-error {% endif %}" >
+                    <label class="col-lg-3 control-label">{{ form.responded_on.label }}</label><div class="col-lg-9">{{ form.responded_on }}</div>
+                </div>
             </div>
-            <div class="form-group">
+            <div class="form-group {% if form.ethnicity.errors %} has-error {% endif %}">
                 <label class="col-lg-3 control-label">{{ form.ethnicity.label }}</label><div class="col-lg-9">{{ form.ethnicity }}</div>
             </div>
-            <div class="form-group">
+            <div class="form-group {% if form.sex.errors %} has-error {% endif %}">
                 <label class="col-lg-3 control-label">{{ form.sex.label }}</label><div class="col-lg-9">{{ form.sex }}</div>
             </div>
-            <div class="form-group ">
+            <div class="form-group  {% if form.age.errors %} has-error {% endif %}">
                 <label class="col-lg-3 control-label">{{ form.age.label }}</label><div class="col-lg-9">{{ form.age }}</div>
             </div>
-            <div class="form-group">
+            <div class="form-group {% if form.project.errors %} has-error {% endif %}">
+                <label class="col-lg-3 control-label">{{ form.project.label }}</label> <div class="col-lg-9">{{ form.project }}</div>
+            </div>
+            <div class="form-group {% if form.duration.errors %} has-error {% endif %}">
                 <label class="col-lg-3 control-label">{{ form.duration.label }}</label><div class="col-lg-9">{{ form.duration }}</div>
             </div>
         </div>
 
         <div class="col-md-6">
-            <div class="form-group">
-                <label class="col-lg-3 control-label">{{ form.project.label }}</label> <div class="col-lg-9">{{ form.project }}</div>
-            </div>
-            <div class="form-group">
+            <div class="form-group {% if form.region.errors %} has-error {% endif %}">
                 <label class="col-lg-3 control-label">{{ form.region.label }}</label> <div class="col-lg-9">{{ form.region }}</div>
             </div>
-            <div class="form-group">
+            <div class="form-group {% if form.cercle.errors %} has-error {% endif %}">
                 <label class="col-lg-3 control-label">{{ form.cercle.label }}</label> <div class="col-lg-9">{{ form.cercle }}</div>
             </div>
-            <div class="form-group">
+            <div class="form-group {% if form.commune.errors %} has-error {% endif %}">
                 <label class="col-lg-3 control-label">{{ form.commune.label }}</label> <div class="col-lg-9">{{ form.commune }}</div>
             </div>
-            <div class="form-group">
+            <div class="form-group {% if form.village.errors %} has-error {% endif %}">
                 <label class="col-lg-3 control-label">{{ form.village.label }}</label> <div class="col-lg-9">{{ form.village }}</div>
             </div>
         </div>
@@ -57,13 +84,12 @@ styleFormElements();
     </div>
 </form>
 
-
 <div>
     <h2>Tags</h2>
 </div>
 
 <div>
-    <h2>Menu Questionnaires</h2>
+    <h2>Mini Questionnaires</h2>
 </div>
 
 {% endblock %}

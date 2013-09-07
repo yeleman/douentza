@@ -72,6 +72,35 @@ function styleFormElements() {
     $("form * select, form * input, form * textarea").addClass("form-control");
 }
 
+function changeSelectContent(selectElement, content) {
+    selectElement.empty();
+    $.each(content, function (idx, entity) {
+        selectElement.append($("<option value='"+entity.slug +"'>" + entity.name + "</option>"));
+    });
+}
+
+function changeRegion(regionElem, cercle_id, commune_id, village_id) {
+    var region_id = regionElem.val();
+    var cercle = $('#id_cercle');
+    $.getJSON('/entities/' + region_id).done(function (response) {
+        changeSelectContent(cercle, response);
+        if (cercle_id !== undefined && cercle_id !== null) {
+            cercle.val(cercle_id);
+        }
+        changeCercle(cercle, commune_id, village_id);
+    });
+}
+
+function changeCercle(cercleElem, commune_id, village_id) {
+    var cercle_id = cercleElem.val();
+    var commune = $('#id_commune');
+    $.getJSON('/entities/' + cercle_id).done(function (response) {
+        changeSelectContent(commune, response);
+        if (commune_id !== undefined && commune_id !== null) {
+            commune.val(commune_id);
+        }
+        changeCommune(commune, village_id);
+
 // Tag Manager
 var tagManagers = {};
 

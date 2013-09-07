@@ -10,6 +10,8 @@ from django import forms
 from douentza.models import HotlineRequest, Project, Ethnicity, Entity
 from douentza.utils import EMPTY_ENTITY
 
+help_duration = "La durée est en seconde"
+help_age = "L'âge en année"
 
 class BasicInformationForm(forms.Form):
 
@@ -18,11 +20,11 @@ class BasicInformationForm(forms.Form):
                                        help_text="Format: JJ/MM/AAAA",
                                        widget=forms.SplitDateTimeWidget)
 
-    age = forms.IntegerField(label="Age", required=False, widget=forms.TextInput)
+    age = forms.IntegerField(label="Âge", required=False, widget=forms.TextInput(attrs={'placeholder': help_age}))
     sex = forms.ChoiceField(label="Sexe", required=False,
                             choices=HotlineRequest.SEXES.items(),
                             widget=forms.Select)
-    duration = forms.IntegerField(label="Durée", widget=forms.TextInput)
+    duration = forms.IntegerField(label="Durée", widget=forms.TextInput(attrs={'placeholder': help_duration}))
     ethnicity = forms.ChoiceField(label="Ethnie", required=False, widget=forms.Select)
     project = forms.ChoiceField(label="Projet", required=False, widget=forms.Select)
 

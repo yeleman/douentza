@@ -19,7 +19,7 @@ class IncomingManager(models.Manager):
 
     def get_query_set(self):
         return super(IncomingManager, self).get_query_set() \
-                                           .exclude(status=HotlineRequest.STATUS_GAVE_UP)
+            .exclude(status=HotlineRequest.STATUS_GAVE_UP)
 
 
 @implements_to_string
@@ -88,7 +88,7 @@ class HotlineRequest(models.Model):
 					   verbose_name="Durée appel")
     location = models.ForeignKey('Entity', null=True, blank=True, verbose_name="Localité")
     ethnicity = models.ForeignKey('Ethnicity', null=True, blank=True, verbose_name="Éthnie")
-    tags = models.ManyToManyField('Tag', null=True, blank=True, verbose_name="Tags")
+    tags = models.ManyToManyField('Tag', null=True, blank=True, verbose_name="Tags", related_name='requests')
     project = models.ForeignKey('Project', null=True, blank=True, verbose_name="Projet")
 
     objects = models.Manager()
@@ -253,11 +253,11 @@ class Question(models.Model):
     TYPE_CHOICES = 'choice'
 
     TYPES = {
-        TYPE_STRING: "ChaÃ®ne",
-        TYPE_BOOLEAN: "BoolÃ©en",
+        TYPE_STRING: "Chaîne",
+        TYPE_BOOLEAN: "Booléen",
         TYPE_DATE: "Date",
         TYPE_INTEGER: "Entier",
-        TYPE_FLOAT: "RÃ©el",
+        TYPE_FLOAT: "Réel",
         TYPE_CHOICES: "Choix"
     }
 

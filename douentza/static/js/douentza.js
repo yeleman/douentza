@@ -100,6 +100,8 @@ function changeCercle(cercleElem, commune_id, village_id) {
             commune.val(commune_id);
         }
         changeCommune(commune, village_id);
+    });
+}
 
 // Tag Manager
 var tagManagers = {};

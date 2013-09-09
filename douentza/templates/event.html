@@ -8,8 +8,14 @@ var mod = $('#eventModal');
 var eventModal = new Date();
 //$('#id_responded_on_0').datetimepicker({pickTime: false});
 updateFormUI(mod, false, eventModal);
-$('#surveys').popover({html: true}).popover('show')
-$('#surveys').popover({html: true}).popover('show')
+
+// UI popovers
+$('#surveys').popover({html: true}).popover('show');
+$('#surveys').popover({html: true}).popover('show');
+
+// tags
+var request_id = {{event.id}};
+$('.tags_container').append(getTagManager({request_id: request_id, readonly: false}).container);
 {% endblock %}
 
 {% block content %}
@@ -84,7 +90,7 @@ $('#surveys').popover({html: true}).popover('show')
     </div>
 </form>
 
-<div>
+<div class="tags_container">
     <h2>Tags</h2>
 </div>
 

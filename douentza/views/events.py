@@ -38,7 +38,10 @@ def display_event(request, event_id):
             # event.hotline_user = HotlineUser.objects.get(username=request.user)
             event.responded_on = form.cleaned_data.get('responded_on')
             event.age = form.cleaned_data.get('age')
-            event.project = Project.objects.get(id=int(form.cleaned_data.get('project')))
+            try:
+                event.project = Project.objects.get(id=int(form.cleaned_data.get('project')))
+            except ValueError:
+                pass
             event.sex = form.cleaned_data.get('sex')
             event.ethnicity = Ethnicity.objects.get(slug=form.cleaned_data.get('ethnicity'))
             event.duration = form.cleaned_data.get('duration')

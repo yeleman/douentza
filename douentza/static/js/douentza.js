@@ -103,6 +103,44 @@ function changeCercle(cercleElem, commune_id, village_id) {
     });
 }
 
+function changeCommune(communeElem, village_id) {
+    var commune_id = communeElem.val();
+    var village = $('#id_village');
+    $.getJSON('/entities/' + commune_id).done(function (response) {
+        changeSelectContent(village, response);
+        if (village_id !== undefined && village_id !== null) {
+            village.val(village_id);
+        }
+    });
+}
+
+function fill_from_previous() {
+    var cercle_id = $('#previous_cercle').val();
+    var commune_id = $('#previous_commune').val();
+    var village_id = $('#previous_village').val();
+    if (cercle_id !== undefined && cercle_id !== null) {
+        changeRegion($('#id_region'), cercle_id, commune_id, village_id);
+    }
+}
+
+$('#id_region').change(function () {
+    var region_id = $(this).val();
+    var cercle = $('#id_cercle');
+    console.log("Changed region: " + region_id);
+    $.getJSON('/entities/' + region_id).done(function (response) {
+        changeSelectContent(cercle, response);
+        changeCercle($("#id_cercle"));
+    });
+});
+
+$('#id_cercle').change(function () {
+    changeCercle($(this));
+});
+
+$('#id_commune').change(function () {
+    changeCommune($(this));
+});
+
 // Tag Manager
 var tagManagers = {};
 

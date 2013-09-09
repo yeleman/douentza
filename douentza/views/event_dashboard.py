@@ -8,6 +8,7 @@ from __future__ import (unicode_literals, absolute_import,
 import json
 import datetime
 
+from django.http import Http404
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.shortcuts import redirect
@@ -39,17 +40,14 @@ def events_json(request):
 
 
 def change_event_status(request, event_id, new_status):
-
     if not new_status in HotlineRequest.STATUSES.keys():
-        return 0
-
+        raise Http404
     try:
         event = HotlineRequest.objects \
-                            .exclude(status=HotlineRequest.STATUS_RESPONDED) \
-                            .get(id=int(event_id))
+                              .exclude(status=HotlineRequest.STATUS_HANDLED) \
+                              .get(id=int(event_id))
+        event.add_busy_call(new_status)
     except (HotlineRequest.DoesNotExist, ValueError):
-        raise Exception()
-
-    event.add_busy_call(new_status)
+        raise Http404
 
     return redirect('event_dashboard')

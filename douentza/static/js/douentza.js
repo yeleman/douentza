@@ -115,9 +115,9 @@ function getTagManager(options) {
         this.local_items = [];
         this.all_items = [];
         this.remaining_items = [];
-        this.update_url = '/api/tags/1/update';
+        this.update_url = '/api/tags/{0}/update'.format(this.request_id);
         this.all_tags_url = '/api/all_tags';
-        this.tags_for_url = '/api/tags/{0}';
+        this.tags_for_url = '/api/tags/{0}'.format(this.request_id);
         this.container = null;
         this.manager_id = this._random_id();
         this.autocomple_options = {
@@ -164,7 +164,7 @@ function getTagManager(options) {
     };
 
     TagManager.prototype.update_local_from_database = function() {
-        this.local_items = this._parse_json_url(this.tags_for_url.format(this.request_id));
+        this.local_items = this._parse_json_url(this.tags_for_url);
         this.update_remaining_tags();
     };
 

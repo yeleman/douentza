@@ -69,7 +69,18 @@ function graph_event_response_counts(data_url) {
 
 function styleFormElements() {
     // bootstrap3 requires form elements to have the `form-control` CSS class
-    $("form * select, form * input, form * textarea").addClass("form-control");
+    $("form * select, form * input, form * textarea").each(function (){
+        $(this).addClass("form-control");
+        var parent = $(this).parent();
+        var error_content = parent.find('.errors').html();
+        if (error_content !== undefined && error_content !== null && error_content.length > 0) {
+            $(this).popover({
+                html: false,
+                placement: 'top',
+                trigger: 'hover',
+                content: error_content}).popover('show');
+        }
+    });
 }
 
 function changeSelectContent(selectElement, content) {

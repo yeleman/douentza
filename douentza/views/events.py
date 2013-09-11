@@ -7,7 +7,8 @@ from __future__ import (unicode_literals, absolute_import,
 
 import json
 
-from django.shortcuts import render, redirect
+from django.http import Http404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 
 from douentza.models import (HotlineRequest, Ethnicity, Project, HotlineUser,
@@ -19,15 +20,12 @@ from douentza.forms import BasicInformationForm
 def display_event(request, event_id):
 
     try:
-        event = HotlineRequest.objects.get(id=int(event_id))
+        event = get_object_or_404(HotlineRequest, id=int(event_id))
     except:
-        raise
-
-    historics = HotlineRequest.objects.filter(identity=event.identity,
-                                              status=HotlineRequest.STATUS_HANDLED)
+        raise Http404
 
     context = get_default_context(page="display_event")
-    context.update({'event': event, 'historics': historics})
+    context.update({'event': event})
 
     if request.method == "POST":
         form = BasicInformationForm(request.POST)
@@ -48,8 +46,6 @@ def display_event(request, event_id):
             event.location = form.cleaned_data.get('village')
             event.save()
             return redirect('event_dashboard')
-        else:
-            print("PAS VALIDE")
     else:
         form = BasicInformationForm(initial={'request_id': event_id})
 

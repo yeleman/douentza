@@ -9,8 +9,7 @@ var has_errors = {% if form.errors %}true{% else %}false{% endif %};
 updateFormUI(mod, has_errors);
 
 // UI popovers
-$('#surveys').popover({html: true}).popover('show');
-$('#surveys').popover({html: true}).popover('show');
+$('.surveys').popover({html: true}).popover('show');
 
 // tags
 var request_id = {{event.id}};
@@ -37,9 +36,23 @@ fill_from_previous();
     </div>
     <div id="collapseThree" class="panel-collapse collapse">
       <div class="panel-body">
-        {% if historics %}
-            {% for historic in historics %}
-                <p><span title="Durée: {{historic.duration}} s">{{historic.responded_on}}</span>  <span class="badge_location"><span class="glyphicon glyphicon-map-marker"></span> <spam>{{historic.location}}</span></span> <span class="badge">{{historic.age}} ans</span> {% if historic.sex == "female" %}<span class="badge_woman"><span class="glyphicon glyphicon-user"></span></span></span> {% else %}<span class="badge_man"><span class="glyphicon glyphicon-user"></span></span> {% endif %}<span class="badge_project">{{historic.project}}</span> {% if historic.tags.count <= 3 %} {% for tag in historic.tags.all %} <span class="badge_tag"> {{tag}}</span> {% endfor %} {% else %} <span class="badge" title="{% for tag in historic.tags.all %} {{tag}} {% endfor %}">...</span>{% endif %} <span data-placement="top" data-toggle="popover" data-container="body" type="button" data-original-title="" title="Questionnaire" id='surveys' class="badge" data-content="{% for survey in historic.surveys.all %}<p>{{survey}}</p>{% endfor %}"><span class="glyphicon glyphicon-book"></span></span></p>
+        {% if event.historics %}
+            {% for historic in event.historics %}
+                <p><span title="Durée: {{historic.duration}} s">{{historic.responded_on}}</span>
+                    <span class="badge_location"><span class="glyphicon glyphicon-map-marker"></span>
+                    <spam>{{historic.location}}</span></span>
+                    <span class="badge">{{historic.age}} ans</span>
+                    {% if historic.sex == "female" %}
+                        <span class="badge_woman"><span class="glyphicon glyphicon-user"></span></span></span>
+                    {% else %}
+                        <span class="badge_man"><span class="glyphicon glyphicon-user"></span></span>
+                    {% endif %}<span class="badge_project">{{historic.project}}</span>
+                    {% if historic.tags.count <= 3 %}
+                        {% for tag in historic.tags.all %}<span class="badge_tag"> {{tag}}</span> {% endfor %}
+                    {% else %} <span class="badge" title="{% for tag in historic.tags.all %} {{tag}} {% endfor %}">...</span>{% endif %}
+                    <span data-placement="top" data-toggle="popover" data-container="body" type="button" data-original-title="" title="Questionnaire" class='surveys' class="badge" data-content="<ul>{% for survey in historic.surveys.all %}<li>{{survey}}</li>{% endfor %}<ul>">
+                        <span class="glyphicon glyphicon-book"></span>
+                    </span></p>
             {% endfor %}
         {% endif %}
       </div>

@@ -1,6 +1,6 @@
 var form_error = false;
 
-function updateFormUI(mod, form_error, event_date) {
+function updateFormUI(mod, form_error) {
     console.log("updateFormUI");
 
     function zeroEd(value) {
@@ -24,20 +24,20 @@ function updateFormUI(mod, form_error, event_date) {
 
     // datepicker
     var existing_date_picker = $("#datepicker");
+    var existing_time_picker = $("#timepicker");
     var existing_date = $('#id_responded_on_0');
+    var existing_time = $('#id_responded_on_1');
 
     if (!form_error) {
+        var event_date = new Date();
         var date_fmt = getDateFormat(event_date);
         var time_fmt = getTimeFormat(event_date);
-
-        var existing_date = $('#id_responded_on_0');
-        var existing_time = $('#id_responded_on_1');
 
         existing_date.val(date_fmt);
         existing_time.val(time_fmt);
     }
 
-    if (existing_date_picker.length == 0) {
+    if (existing_date_picker.length === 0) {
         var new_date_picker = $('<div id="datepicker" class="input-group"><input id="id_responded_on_0" class="form-control" name="responded_on_0" data-format="dd/MM/yyyy" type="text" value="'+
                                 existing_date.val() +
                                 '"></input><span class="input-group-addon add-on glyphicon glyphicon-calendar"></span></div>');
@@ -48,8 +48,6 @@ function updateFormUI(mod, form_error, event_date) {
     });
 
     // timepicker
-    var existing_time_picker = $("#timepicker");
-    var existing_time = $('#id_responded_on_1');
 
     if (!existing_time_picker.length) {
         var new_time_picker = $('<div id="timepicker" class="input-group"><input id="id_responded_on_1" name="responded_on_1" class="form-control" data-format="hh:mm:ss" type="text" value="'+

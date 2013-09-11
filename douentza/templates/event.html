@@ -15,6 +15,11 @@ $('#surveys').popover({html: true}).popover('show');
 // tags
 var request_id = {{event.id}};
 $('.tags_container').append(getTagManager({request_id: request_id, readonly: false}).container);
+
+{% if form.errors %}
+updateFormUI($("#eventModal"), true, null);
+fill_from_previous();
+{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -87,6 +92,11 @@ $('.tags_container').append(getTagManager({request_id: request_id, readonly: fal
      <div class="row">
          <div class="col-md-3"></div><div class="col-md-6"><button type="submit" class="form-control btn btn-default">Sauvegarder</button></div><div class="col-md-3"></div>
     </div>
+{% if form.errors %}
+    <input type="hidden" id="previous_cercle" value="{{ form.cercle.value }}" />
+    <input type="hidden" id="previous_commune" value="{{ form.commune.value }}" />
+    <input type="hidden" id="previous_village" value="{{ form.village.value }}" />
+{% endif %}
 </form>
 
 <div class="tags_container">

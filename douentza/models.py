@@ -20,7 +20,8 @@ class IncomingManager(models.Manager):
 
     def get_query_set(self):
         return super(IncomingManager, self).get_query_set() \
-            .exclude(status=HotlineRequest.STATUS_GAVE_UP)
+                                           .exclude(status__in=(HotlineRequest.STATUS_GAVE_UP,
+                                                                HotlineRequest.STATUS_HANDLED))
 
 
 @implements_to_string
@@ -112,10 +113,13 @@ class HotlineRequest(models.Model):
 
     def add_additional_request(self, request_type, sms_message=None):
         if self.status != HotlineRequest.STATUS_HANDLED:
-            AdditionalRequest.objects.create(
-                event=self,
-                request_type=request_type,
-                sms_message=sms_message)
+            AdditionalRequest.objects.create(event=self,
+                                             request_type=request_type,
+                                             sms_message=sms_message)
+
+    def historics(self):
+        return HotlineRequest.objects.filter(identity=self.identity,
+                                             status=HotlineRequest.STATUS_HANDLED)
 
 
 @implements_to_string

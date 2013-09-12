@@ -9,16 +9,20 @@ var has_errors = {% if form.errors %}true{% else %}false{% endif %};
 updateFormUI(mod, has_errors);
 
 // UI popovers
-$('#surveys').popover({html: true}).popover('show');
-$('#surveys').popover({html: true}).popover('show');
+$('.surveys').popover({html: true}).popover('show');
 
 // tags
 var request_id = {{event.id}};
 $('.tags_container').append(getTagManager({request_id: request_id, readonly: false}).container);
+
+{% if form.errors %}
+updateFormUI($("#eventModal"), true, null);
+fill_from_previous();
+{% endif %}
 {% endblock %}
 
 {% block content %}
-<h1>{{ event.identity|phone }} <span class="badge_alert">{{event.additionalrequests.count}} <span class="glyphicon glyphicon-earphone"></span></span></h1>
+<h1>{{ event.identity|phone }} <span class="badge badge_alert">{{event.additionalrequests.count}} <span class="glyphicon glyphicon-earphone"></span></span></h1>
 
 <div class="panel-group" id="accordion">
   <div class="panel panel-default">
@@ -32,9 +36,25 @@ $('.tags_container').append(getTagManager({request_id: request_id, readonly: fal
     </div>
     <div id="collapseThree" class="panel-collapse collapse">
       <div class="panel-body">
-        {% if historics %}
-            {% for historic in historics %}
-                <p><span title="Durée: {{historic.duration}} s">{{historic.responded_on}}</span>  <span class="badge_location"><span class="glyphicon glyphicon-map-marker"></span> <spam>{{historic.location}}</span></span> <span class="badge">{{historic.age}} ans</span> {% if historic.sex == "female" %}<span class="badge_woman"><span class="glyphicon glyphicon-user"></span></span></span> {% else %}<span class="badge_man"><span class="glyphicon glyphicon-user"></span></span> {% endif %}<span class="badge_project">{{historic.project}}</span> {% if historic.tags.count <= 3 %} {% for tag in historic.tags.all %} <span class="badge_tag"> {{tag}}</span> {% endfor %} {% else %} <span class="badge" title="{% for tag in historic.tags.all %} {{tag}} {% endfor %}">...</span>{% endif %} <span data-placement="top" data-toggle="popover" data-container="body" type="button" data-original-title="" title="Questionnaire" id='surveys' class="badge" data-content="{% for survey in historic.surveys.all %}<p>{{survey}}</p>{% endfor %}"><span class="glyphicon glyphicon-book"></span></span></p>
+        {% if event.historics %}
+            {% for historic in event.historics %}
+                <p><span title="Durée: {{historic.duration}} s">{{historic.responded_on}}</span>
+                    {% if historic.location %}<span class="badge badge_location"><span class="glyphicon glyphicon-map-marker"></span>{{historic.location}}</span>{% endif %}
+                    {% if historic.age %}<span class="badge">{{historic.age}} ans</span>{% endif %}
+                    {% if historic.sex %}
+                        {% if historic.sex == "female" %}<span class="badge badge_woman"><span class="glyphicon glyphicon-user"></span></span></span>
+                        {% else %}<span class="badge badge_man"><span class="glyphicon glyphicon-user"></span></span>{% endif %}
+                    {% endif %}
+                    {% if historic.project %}<span class="badge badge_project">{{historic.project}}</span>{% endif %}
+                    {% if historic.tags %}
+                        {% if historic.tags.count <= 3 %}
+                        {% for tag in historic.tags.all %}<span class="badge badge_tag"> {{tag}}</span> {% endfor %}
+                        {% else %}<span class="badge badge_tag" title="{% for tag in historic.tags.all %} {{tag}} {% endfor %}">
+                            ...</span><span class="hidden errors">Ce champ est obligatoire. </span>{% for tag in historic.tags.all %} {{tag}} {% endfor %}{% endif %}
+                    {% endif %}
+                    <span data-placement="top" data-toggle="popover" data-container="body" type="button" data-original-title="" title="Questionnaire" class='surveys' class="badge" data-content="<ul>{% for survey in historic.surveys.all %}<li>{{survey}}</li>{% endfor %}<ul>">
+                        <span class="glyphicon glyphicon-book"></span>
+                    </span></p>
             {% endfor %}
         {% endif %}
       </div>
@@ -87,6 +107,11 @@ $('.tags_container').append(getTagManager({request_id: request_id, readonly: fal
      <div class="row">
          <div class="col-md-3"></div><div class="col-md-6"><button type="submit" class="form-control btn btn-default">Sauvegarder</button></div><div class="col-md-3"></div>
     </div>
+{% if form.errors %}
+    <input type="hidden" id="previous_cercle" value="{{ form.cercle.value }}" />
+    <input type="hidden" id="previous_commune" value="{{ form.commune.value }}" />
+    <input type="hidden" id="previous_village" value="{{ form.village.value }}" />
+{% endif %}
 </form>
 
 <div class="tags_container">

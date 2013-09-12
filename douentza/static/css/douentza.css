@@ -1,91 +1,31 @@
 .badge_project {
     background-color: #ED7638;
-    border-radius: 10px 10px 10px 10px;
-    color: #FFFFFF;
-    display: inline-block;
     font-size: 12px;
-    font-weight: bold;
-    line-height: 1;
-    min-width: 10px;
-    padding: 3px 7px;
-    text-align: center;
-    vertical-align: middle;
-    white-space: nowrap;
 }
 
 .badge_woman {
     background-color: #FFC0CB;
-    border-radius: 10px 10px 10px 10px;
-    color: #FFFFFF;
-    display: inline-block;
     font-size: 12px;
-    font-weight: bold;
-    line-height: 1;
-    min-width: 10px;
-    padding: 3px 7px;
-    text-align: center;
-    vertical-align: middle;
-    white-space: nowrap;
 }
 
 .badge_man {
     background-color: #0000FF;
-    border-radius: 10px 10px 10px 10px;
-    color: #FFFFFF;
-    display: inline-block;
     font-size: 12px;
-    font-weight: bold;
-    line-height: 1;
-    min-width: 10px;
-    padding: 3px 7px;
-    text-align: center;
-    vertical-align: middle;
-    white-space: nowrap;
 }
 
 .badge_alert {
     background-color: #999999;
-    border-radius: 10px 10px 10px 10px;
-    color: #FFFFFF;
-    display: inline-block;
     font-size: 18px;
-    font-weight: bold;
-    line-height: 1;
-    min-width: 10px;
-    padding: 3px 7px;
-    text-align: center;
-    vertical-align: middle;
-    white-space: nowrap;
 }
 
 .badge_location {
     background-color: #EA9D43;
-    border-radius: 10px 10px 10px 10px;
-    color: #FFFFFF;
-    display: inline-block;
     font-size: 12px;
-    font-weight: bold;
-    line-height: 1;
-    min-width: 10px;
-    padding: 3px 7px;
-    text-align: center;
-    vertical-align: middle;
-    white-space: nowrap;
 }
 
 .badge_tag {
     background-color: #00ACED;
-    border-radius: 10px 10px 10px 10px;
-    color: #FFFFFF;
-    display: inline-block;
     font-size: 12px;
-    font-weight: bold;
-    line-height: 1;
-    min-width: 10px;
-    padding: 3px 7px;
-    text-align: center;
-    vertical-align: middle;
-    white-space: nowrap;
 }
 
 .display_event #accordion{
@@ -115,7 +55,6 @@
 .autocomplete .selected, .autocomplete-selected  { background:#F0F0F0; }
 .autocomplete div, .autocomplete-suggestion { padding:2px 5px; white-space:nowrap; overflow:hidden; }
 .autocomplete, .autocomplete-suggestions strong { font-weight:normal; color:#3399FF; }
-
 .autocomplete-suggestions { border: 1px solid #999; background: #FFF; cursor: default; overflow: auto; -webkit-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); -moz-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); }
 /*.autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }*/
 /*.autocomplete-selected { background: #F0F0F0; }*/

@@ -32,7 +32,6 @@
     margin-bottom: 16px
 }
 
-
 .tags_container .tag_elem:last-of-type {
     margin-right: auto;
 }
@@ -57,6 +56,7 @@
 .autocomplete, .autocomplete-suggestions strong { font-weight:normal; color:#3399FF; }
 .autocomplete-suggestions { border: 1px solid #999; background: #FFF; cursor: default; overflow: auto; -webkit-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); -moz-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); }
 
-.input-group-addon.glyphicon-calendar, .input-group-addon.glyphicon-time {
+.input-group-addon.glyphicon-calendar, .input-group-addon.glyphicon-time, .display_event .panel-heading {
     cursor: pointer;
 }
+

@@ -20,43 +20,40 @@ fill_from_previous();
 {% block content %}
 <h1>{{ event.identity|phone }} <span class="badge badge_alert">{{event.additionalrequests.count}} <span class="glyphicon glyphicon-earphone"></span></span></h1>
 
-<div class="panel-group" id="accordion">
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h2 class="panel-title">
-        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
-          <span class="badge pull-right"><span class="glyphicon glyphicon-chevron-down"></span></span>
-        </a>
-        Historique des appels
-      </h2>
+{% if event.historics %}
+    <div class="panel-group" id="accordion" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+              <h2 class="panel-title"><span class="glyphicon glyphicon-circle-arrow-down"></span>
+                Historique des appels
+              </h2>
+            </div>
+            <div id="collapseThree" class="panel-collapse collapse">
+                <div class="panel-body">
+                    {% for historic in event.historics %}
+                        <p><span title="Durée: {{historic.duration}} s">{{historic.responded_on}}</span>
+                            {% if historic.location %}<span class="badge badge_location"><span class="glyphicon glyphicon-map-marker"></span>{{historic.location}}</span>{% endif %}
+                            {% if historic.age %}<span class="badge">{{historic.age}} ans</span>{% endif %}
+                            {% if historic.sex %}
+                                {% if historic.sex == "female" %}<span class="badge badge_woman"><span class="glyphicon glyphicon-user"></span></span></span>
+                                {% else %}<span class="badge badge_man"><span class="glyphicon glyphicon-user"></span></span>{% endif %}
+                            {% endif %}
+                            {% if historic.project %}<span class="badge badge_project">{{historic.project}}</span>{% endif %}
+                            {% if historic.tags %}
+                                {% if historic.tags.count <= 3 %}
+                                {% for tag in historic.tags.all %}<span class="badge badge_tag"> {{tag}}</span> {% endfor %}
+                                {% else %}<span class="badge badge_tag" title="{% for tag in historic.tags.all %} {{tag}} {% endfor %}">
+                                    ...</span>{% endif %}
+                            {% endif %}
+                            <span data-placement="top" data-toggle="popover" data-container="body" type="button" data-original-title="" title="Questionnaire" class='surveys' class="badge" data-content="<ul>{% for survey in historic.surveys.all %}<li>{{survey}}</li>{% endfor %}<ul>">
+                                <span class="glyphicon glyphicon-book"></span>
+                            </span></p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
     </div>
-    <div id="collapseThree" class="panel-collapse collapse">
-      <div class="panel-body">
-        {% if event.historics %}
-            {% for historic in event.historics %}
-                <p><span title="Durée: {{historic.duration}} s">{{historic.responded_on}}</span>
-                    {% if historic.location %}<span class="badge badge_location"><span class="glyphicon glyphicon-map-marker"></span>{{historic.location}}</span>{% endif %}
-                    {% if historic.age %}<span class="badge">{{historic.age}} ans</span>{% endif %}
-                    {% if historic.sex %}
-                        {% if historic.sex == "female" %}<span class="badge badge_woman"><span class="glyphicon glyphicon-user"></span></span></span>
-                        {% else %}<span class="badge badge_man"><span class="glyphicon glyphicon-user"></span></span>{% endif %}
-                    {% endif %}
-                    {% if historic.project %}<span class="badge badge_project">{{historic.project}}</span>{% endif %}
-                    {% if historic.tags %}
-                        {% if historic.tags.count <= 3 %}
-                        {% for tag in historic.tags.all %}<span class="badge badge_tag"> {{tag}}</span> {% endfor %}
-                        {% else %}<span class="badge badge_tag" title="{% for tag in historic.tags.all %} {{tag}} {% endfor %}">
-                            ...</span>{% endif %}
-                    {% endif %}
-                    <span data-placement="top" data-toggle="popover" data-container="body" type="button" data-original-title="" title="Questionnaire" class='surveys' class="badge" data-content="<ul>{% for survey in historic.surveys.all %}<li>{{survey}}</li>{% endfor %}<ul>">
-                        <span class="glyphicon glyphicon-book"></span>
-                    </span></p>
-            {% endfor %}
-        {% endif %}
-      </div>
-    </div>
-  </div>
-</div>
+{% endif %}
 
 <form  class="form-horizontal" role="form" action="{% url 'display_event' event.id %}" method="post">
     {% csrf_token %}

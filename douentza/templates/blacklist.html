@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load douentza %}
+
+{% block content %}
+
+<div class="alert alert-info">Tout événement venant de ces numéros ne serons pas afficher parmi les derniers appels.</div>
+
+<table class="table table-hover table-bordered ancient_events_table">
+    <thead>
+        <tr><th colspan=5>La liste noire</th></tr>
+    </thead>
+    <tbody>
+        {% for blacknum in blacknums %}
+        <tr>
+            <td><span class="badge">{{ blacknum.call_count }} <span class="glyphicon glyphicon-earphone"></span></span><strong>  ({{ blacknum.identity|phone }})</strong></td>
+            <td>
+                <a href="{% url 'blacklist' blacknum.id %}">
+                    <button type="button" class="btn btn-xs btn-info"><span class="glyphicon glyphicon-ok-sign"> </span> Retirer de la liste noire</button>
+                </a>
+            </td>
+        </tr>
+        {% empty %}
+        <td colspan=3>Aucun numéro dans la liste !</td>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+

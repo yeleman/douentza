@@ -67,3 +67,40 @@ class BasicInformationForm(forms.Form):
             return HotlineRequest.objects.get(id=int(self.cleaned_data.get('request_id')))
         except HotlineRequest.DoesNotExist:
             raise forms.ValidationError("Évennement incorrect")
+
+
+def get_form_property(question_dict):
+    from douentza.models import Question
+    from django import forms
+
+    question_type = question_dict.get('type', Question.TYPE_STRING)
+
+    if question_type == Question.TYPE_CHOICES:
+        field = forms.ChoiceField(choices=[(c.get('slug'), c.get('label'))
+                                           for c in question_dict.get('choices')])
+    elif question_type == Question.TYPE_STRING:
+        field = forms.CharField(max_length=250)
+    elif question_type == Question.TYPE_TEXT:
+        field = forms.CharField(widget=forms.Textarea)
+    elif question_type == Question.TYPE_BOOLEAN:
+        field = forms.ChoiceField(choices=[('false', "Faux"),
+                                           ('true', "Vrai")])
+    else:
+        field = Question.TYPES_CLS.get(question_type)
+    field.label = question_dict.get('label')
+    return field
+
+
+class MiniSurveyForm(forms.Form):
+
+    def __init__(self, *args, **kwargs):
+        survey = kwargs.pop('survey')
+        super(MiniSurveyForm, self).__init__(*args, **kwargs)
+
+        questions = sorted(survey.get('questions', []),
+                           key=lambda x: x['order'], reverse=True)
+        if not questions:
+            return
+
+        for idx, question in enumerate(questions):
+            self.fields["question_{}".format(idx)] = get_form_property(question)

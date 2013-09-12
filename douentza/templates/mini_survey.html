@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% load douentza %}
+
+{% block extra_js %}
+styleFormElements();
+{% for field in form %}
+{{ field|datepickerjs|safe }}
+{% endfor %}
+{% endblock %}
+
+{% block content %}
+<h1>{{ survey.title }}</h1>
+<p>{{ survey.description }}</p>
+<form action="{% url 'mini_survey' survey.id %}" method="post">
+{% csrf_token %}
+{% for field in form %}
+<div class="form-group {% if field.errors %}has-error{% endif %}">
+     {{ field.label_tag }}
+     <span class="hidden errors">{% for error in field.errors %}{{ error }} {% endfor %}</span>
+    {{ field }}
+</div>
+{% endfor %}
+<input type="submit" class="form-control btn btn-default" value="Enregistrer" />
+</form>
+
+{% endblock %}

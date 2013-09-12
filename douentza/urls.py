@@ -31,11 +31,11 @@ urlpatterns = patterns('',
 
     url(r'^entities/(?P<parent_slug>\d{8})/?$', 'douentza.views.events.entities_api', name='entities'),
     url(r'^statistics/$', 'douentza.views.statistics.dashboard', name='statistics'),
-    url(r'^test$', 'douentza.views.form_test.tester', name='tester'),
     url(r'^$', 'douentza.views.event_dashboard.dashboard', name='event_dashboard'),
     url(r'^change/(?P<event_id>[0-9]+)/(?P<new_status>[a-zA-Z\_]+)$',
         'douentza.views.event_dashboard.change_event_status', name='change_event'),
 
     url(r'^request/(?P<event_id>[0-9]+)/?$',
         'douentza.views.events.display_event', name='display_event'),
+    url(r'^survey/(?P<survey_id>[0-9]+)/form/?$', 'douentza.views.surveys.survey_form', name='mini_survey'),
 )

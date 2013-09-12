@@ -121,4 +121,7 @@
 /*.autocomplete-selected { background: #F0F0F0; }*/
 /*.autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }*/
 
-.display_event #datepicker, .display_event #timepicker span {cursor: pointer;}
+.input-group-addon.glyphicon-calendar {
+    cursor: pointer;
+}
+

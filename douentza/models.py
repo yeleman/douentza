@@ -6,6 +6,7 @@ from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 
 from django.db import models
+from django import forms
 from django.contrib.auth.models import AbstractUser
 from django.template.defaultfilters import slugify
 from mptt.models import MPTTModel, TreeForeignKey
@@ -236,12 +237,17 @@ class Project(models.Model):
 class Survey(models.Model):
     title = models.CharField(max_length=200, verbose_name="Titre")
     description = models.TextField(null=True, blank=True)
-    event = models.ForeignKey('HotlineRequest', null=True, blank=True,
-                              related_name='surveys')
-
 
     def __str__(self):
         return self.title
+
+    def to_dict(self):
+        d = {'title': self.title,
+             'description': self.description,
+             'questions': []}
+        for question in self.questions.order_by('id'):
+            d['questions'].append(question.to_dict())
+        return d
 
 
 @implements_to_string
@@ -256,24 +262,48 @@ class Question(models.Model):
     TYPE_INTEGER = 'int'
     TYPE_FLOAT = 'float'
     TYPE_CHOICES = 'choice'
+    TYPE_TEXT = 'text'
 
     TYPES = {
-        TYPE_STRING: "Chaîne",
-        TYPE_BOOLEAN: "Booléen",
+        TYPE_STRING: "Texte court",
+        TYPE_TEXT: "Texte",
+        TYPE_BOOLEAN: "Vrai/Faux",
         TYPE_DATE: "Date",
-        TYPE_INTEGER: "Entier",
-        TYPE_FLOAT: "Réel",
-        TYPE_CHOICES: "Choix"
+        TYPE_INTEGER: "Nombre (entier)",
+        TYPE_FLOAT: "Nombre (réel)",
+        TYPE_CHOICES: "Liste de choix"
+    }
+
+    TYPES_CLS = {
+        TYPE_STRING: forms.CharField(),
+        TYPE_TEXT: forms.CharField(),
+        TYPE_BOOLEAN: forms.BooleanField(),
+        TYPE_DATE : forms.DateField(),
+        TYPE_INTEGER: forms.IntegerField(),
+        TYPE_FLOAT: forms.FloatField(),
+        TYPE_CHOICES: forms.ChoiceField(),
     }
 
     order = models.PositiveIntegerField(default=0, verbose_name="Ordre")
     label = models.CharField(max_length=200, verbose_name="Question")
     question_type = models.CharField(max_length=30, choices=TYPES.items())
+    required = models.BooleanField(verbose_name="Réponse requise")
     survey = models.ForeignKey('Survey', related_name='questions')
 
     def __str__(self):
         return "{survey}/{label}".format(label=self.label,
                                          survey=self.survey)
+
+    def to_dict(self):
+        d = {'order': self.order,
+             'label': self.label,
+             'type': self.question_type,
+             'required': self.required,
+             'choices': []}
+        for choice in self.questionchoices.order_by('id'):
+            d['choices'].append(choice.to_dict())
+        return d
+
 
 
 @implements_to_string
@@ -284,11 +314,15 @@ class QuestionChoice(models.Model):
 
     slug = models.CharField(max_length=20)
     label = models.CharField(max_length=70, verbose_name="Choix")
-    question = models.ForeignKey('Question', related_name='choices')
+    question = models.ForeignKey('Question', related_name='questionchoices')
 
     def __str__(self):
         return "{question}-{label}".format(label=self.label,
                                            question=self.question)
+
+    def to_dict(self):
+        return {'slug': self.slug,
+                'label': self.label}
 
 
 @implements_to_string

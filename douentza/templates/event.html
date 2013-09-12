@@ -3,10 +3,7 @@
 
 {% block extra_js %}
 styleFormElements();
-var mod = $('#eventModal');
-// update date
-var has_errors = {% if form.errors %}true{% else %}false{% endif %};
-updateFormUI(mod, has_errors);
+setupDatetimePicker({split_widget: true, split_selector: "responded_on", parent_selector: "#eventModal", dirty: {% if form.errors %}true{% else %}false{% endif %}});
 
 // UI popovers
 $('.surveys').popover({html: true}).popover('show');
@@ -16,7 +13,6 @@ var request_id = {{event.id}};
 $('.tags_container').append(getTagManager({request_id: request_id, readonly: false}).container);
 
 {% if form.errors %}
-updateFormUI($("#eventModal"), true, null);
 fill_from_previous();
 {% endif %}
 {% endblock %}
@@ -120,6 +116,7 @@ fill_from_previous();
 
 <div>
     <h2>Mini Questionnaires</h2>
+
 </div>
 
 {% endblock %}

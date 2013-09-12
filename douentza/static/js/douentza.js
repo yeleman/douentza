@@ -69,7 +69,7 @@ function graph_event_response_counts(data_url) {
 
 function styleFormElements() {
     // bootstrap3 requires form elements to have the `form-control` CSS class
-    $("form * select, form * input, form * textarea").each(function (){
+    $("form * select, form * input[type!=checkbox], form * textarea").each(function (){
         $(this).addClass("form-control");
         var parent = $(this).parent();
         var error_content = parent.find('.errors').html();
@@ -358,4 +358,122 @@ function getTagManager(options) {
     var manager = new TagManager(options);
     tagManagers[manager.manager_id] = manager;
     return manager;
+}
+
+
+function setupDatetimePicker(options) {
+
+    function zeroEd(value) {
+        if (value < 10)
+            return '0' + value;
+        return value;
+    }
+
+    function getDateFormat(d) {
+        var day = zeroEd(d.getUTCDate());
+        var month = zeroEd(d.getUTCMonth() + 1);
+        var year = d.getUTCFullYear();
+        return day + '/' + month + '/' + year;
+    }
+
+    function getTimeFormat(d) {
+        var hours = zeroEd(d.getHours());
+        var minutes = zeroEd(d.getMinutes());
+        return hours + ':' + minutes + ':00';
+    }
+
+    /* options = {
+        date_selector: "#adateid", // selector for date-only input
+        time_selector: "#atimeid", // selector for time-only input
+        split_widget: false, // whether to use a DateTimeSplitWidget
+        split_selector: "adattime", // common part of selector for split widget.
+                                    // _0 and _1 will be appended.
+        dirty: false, // whether form is clean (fresh) or contains data
+        parent_selector: "#parentid" // selector from which to look for. Else document
+    } */
+
+    var date_selector = options.date_selector || null;
+    var time_selector = options.time_selector || null;
+    var split_widget = options.split_widget || false;
+    var split_selector = options.split_selector || null;
+    var dirty = options.dirty || false;
+    var parent_selector = options.parent_selector || null;
+    var has_date = false;
+    var has_time = false;
+
+    var parent = $(document);
+    if (parent_selector !== null)
+        parent = $(parent_selector);
+
+    var existing_date = parent.find('#id_' + date_selector);
+    var existing_time = parent.find('#id_' + time_selector);
+
+    if (split_widget) {
+        has_date = true;
+        has_time = true;
+        if (split_selector === null) {
+            console.log("split is null");
+            return false;
+        }
+        date_selector = split_selector + '_0';
+        time_selector = split_selector + '_1';
+        existing_date = parent.find('#id_' + date_selector);
+        existing_time = parent.find('#id_' + time_selector);
+    } else {
+        has_date = existing_date !== null;
+        has_time = existing_time !== null;
+    }
+    if (!has_date && !has_time) {
+        console.log("has no date nor time elements. Exiting");
+        return false;
+    }
+
+    var datepicker_selector = date_selector + '_datepicker';
+    var timepicker_selector = time_selector + '_timepicker';
+
+    // datepicker
+    var existing_date_picker = parent.find('#' + datepicker_selector);
+    var existing_time_picker = parent.find('#' + timepicker_selector);
+
+    if (!dirty) {
+        var event_date = new Date();
+        var date_fmt = getDateFormat(event_date);
+        var time_fmt = getTimeFormat(event_date);
+
+        existing_date.val(date_fmt);
+        existing_time.val(time_fmt);
+    }
+
+    if (existing_date_picker.length === 0) {
+        var new_date_picker = $('<div id="' + datepicker_selector +
+                                '" class="input-group"><input id="id_' +
+                                date_selector +
+                                '" class="form-control" name="' +
+                                date_selector +
+                                '" data-format="dd/MM/yyyy" type="text" value="' +
+                                existing_date.val() +
+                                '"></input><span class="input-group-addon add-on ' +
+                                'glyphicon glyphicon-calendar"></span></div>');
+        existing_date.replaceWith(new_date_picker);
+    }
+    parent.find('#' + datepicker_selector).each(function () {
+        $(this).datetimepicker({pickTime: false});
+    });
+
+    // timepicker
+    if (!existing_time_picker.length) {
+        var new_time_picker = $('<div id="' + timepicker_selector +
+                                '" class="input-group"><input id="id_' +
+                                time_selector +
+                                '" class="form-control"  name="' +
+                                time_selector +
+                                '" data-format="hh:mm:ss" type="text" value="'+
+                                existing_time.val() +
+                                '"></input><span class="input-group-addon add-on ' +
+                                'glyphicon glyphicon-time"></i></span></div>');
+        existing_time.replaceWith(new_time_picker);
+    }
+    parent.find('#' + timepicker_selector).each(function () {
+        $(this).datetimepicker({pickDate: false});
+    });
 }

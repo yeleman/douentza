@@ -50,7 +50,7 @@ fill_from_previous();
                         {% if historic.tags.count <= 3 %}
                         {% for tag in historic.tags.all %}<span class="badge badge_tag"> {{tag}}</span> {% endfor %}
                         {% else %}<span class="badge badge_tag" title="{% for tag in historic.tags.all %} {{tag}} {% endfor %}">
-                            ...</span><span class="hidden errors">Ce champ est obligatoire. </span>{% for tag in historic.tags.all %} {{tag}} {% endfor %}{% endif %}
+                            ...</span>{% endif %}
                     {% endif %}
                     <span data-placement="top" data-toggle="popover" data-container="body" type="button" data-original-title="" title="Questionnaire" class='surveys' class="badge" data-content="<ul>{% for survey in historic.surveys.all %}<li>{{survey}}</li>{% endfor %}<ul>">
                         <span class="glyphicon glyphicon-book"></span>

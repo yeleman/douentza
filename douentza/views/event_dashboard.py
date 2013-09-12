@@ -8,15 +8,15 @@ from __future__ import (unicode_literals, absolute_import,
 import json
 import datetime
 
-from django.http import Http404
-from django.http import HttpResponse
-from django.shortcuts import render
-from django.shortcuts import redirect
+from django.http import Http404, HttpResponse
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 
 from douentza.models import HotlineRequest
 from douentza.utils import start_or_end_day_from_date, get_default_context
 
 
+@login_required()
 def dashboard(request):
     context = get_default_context(page="event_dashboard")
     context.update({'all_events': all_events()})
@@ -35,10 +35,12 @@ def all_events():
     return data_event
 
 
+@login_required()
 def events_json(request):
     return HttpResponse(json.dumps(all_events()), mimetype='application/json')
 
 
+@login_required()
 def change_event_status(request, event_id, new_status):
     if not new_status in HotlineRequest.STATUSES.keys():
         raise Http404

@@ -10,6 +10,7 @@ import json
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 
 from douentza.models import (HotlineRequest, Ethnicity, Project, HotlineUser,
                              Entity)
@@ -17,6 +18,7 @@ from douentza.utils import get_default_context, EMPTY_ENTITY
 from douentza.forms import BasicInformationForm
 
 
+@login_required()
 def display_event(request, event_id):
 
     try:
@@ -33,7 +35,7 @@ def display_event(request, event_id):
             event = form.cleaned_data.get('request_id')
 
             event.status = HotlineRequest.STATUS_HANDLED
-            # event.hotline_user = HotlineUser.objects.get(username=request.user)
+            event.hotline_user = HotlineUser.objects.get(username=request.user)
             event.responded_on = form.cleaned_data.get('responded_on')
             event.age = form.cleaned_data.get('age')
             try:
@@ -54,6 +56,7 @@ def display_event(request, event_id):
     return render(request, "event.html", context)
 
 
+@login_required()
 def entities_api(request, parent_slug=None):
     ''' JSON list of Entity whose parent has the slug provided '''
 

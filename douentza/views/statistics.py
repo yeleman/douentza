@@ -10,6 +10,7 @@ import datetime
 
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 
 from douentza.models import HotlineRequest, Project, Survey
 from douentza.utils import get_default_context, datetime_range, start_or_end_day_from_date, to_timestamp
@@ -38,6 +39,7 @@ def get_event_responses_counts():
 
     return event_response_data
 
+
 def get_statistics_dict():
     context = {}
     try:
@@ -65,6 +67,7 @@ def get_statistics_dict():
     return context
 
 
+@login_required()
 def dashboard(request):
     context = get_default_context(page='statistics')
 
@@ -73,6 +76,7 @@ def dashboard(request):
     return render(request, "statistics.html", context)
 
 
+@login_required()
 def event_response_counts_json(request):
 
     return HttpResponse(json.dumps(get_event_responses_counts()),

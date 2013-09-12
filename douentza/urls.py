@@ -5,11 +5,6 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^login/$', 'django.contrib.auth.views.login',
-        {'template_name': 'login.html'}, name='login'),
-    url(r'^logout/$', 'django.contrib.auth.views.logout',
-        {'next_page': '/'}, name='logout'),
 
     # Android API
     url(r'^fondasms/?$', 'douentza.views.fondasms.fondasms_handler',
@@ -38,4 +33,8 @@ urlpatterns = patterns('',
 
     url(r'^request/(?P<event_id>[0-9]+)/?$',
         'douentza.views.events.display_event', name='display_event'),
+
+    url(r'^admin/', include(admin.site.urls)),
+    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'login.html'}, name='login'),
+    url(r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}, name='logout'),
 )

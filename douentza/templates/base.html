@@ -24,6 +24,7 @@
                 <li {% ifequal page 'statistics' %} class="active"{% endifequal %}><a href="{% url 'statistics' %}">Statistiques</a></li>
                 <li {% ifequal page 'survey_statistics' %} class="active"{% endifequal %}><a href="{% url 'statistics' %}">Statistiques Questionnaires</a></li>
                 <li {% ifequal page 'configuration' %} class="active"{% endifequal %}><a href="{% url 'statistics' %}">Configuration</a></li>
+                <li ><a href="{% url 'logout' %}"> Déconnexion <strong>({{ user }})</strong></a></li>
             </ul>
           </div>
         </nav>

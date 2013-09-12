@@ -12,7 +12,7 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
-from douentza.models import HotlineRequest
+from douentza.models import HotlineRequest, BlacklistedNumber
 from douentza.utils import start_or_end_day_from_date, get_default_context
 
 
@@ -52,4 +52,7 @@ def change_event_status(request, event_id, new_status):
     except (HotlineRequest.DoesNotExist, ValueError):
         raise Http404
 
+    if new_status == HotlineRequest.STATUS_BLACK_LIST:
+        BlacklistedNumber.objects.create(identity=event.identity,
+                                         call_count=1)
     return redirect('event_dashboard')

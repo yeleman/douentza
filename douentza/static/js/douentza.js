@@ -362,7 +362,6 @@ function getTagManager(options) {
 
 
 function setupDatetimePicker(options) {
-    console.log("setupDatetimePicker");
 
     function zeroEd(value) {
         if (value < 10)
@@ -402,8 +401,6 @@ function setupDatetimePicker(options) {
     var has_date = false;
     var has_time = false;
 
-    console.log(options);
-
     var parent = $(document);
     if (parent_selector !== null)
         parent = $(parent_selector);
@@ -411,13 +408,17 @@ function setupDatetimePicker(options) {
     var existing_date = parent.find('#id_' + date_selector);
     var existing_time = parent.find('#id_' + time_selector);
 
-    if (split_selector) {
+    if (split_widget) {
         has_date = true;
         has_time = true;
-        if (split_selector === null)
+        if (split_selector === null) {
+            console.log("split is null");
             return false;
+        }
         date_selector = split_selector + '_0';
         time_selector = split_selector + '_1';
+        existing_date = parent.find('#id_' + date_selector);
+        existing_time = parent.find('#id_' + time_selector);
     } else {
         has_date = existing_date !== null;
         has_time = existing_time !== null;
@@ -473,6 +474,6 @@ function setupDatetimePicker(options) {
         existing_time.replaceWith(new_time_picker);
     }
     parent.find('#' + timepicker_selector).each(function () {
-        datetimepicker({pickDate: false});
+        $(this).datetimepicker({pickDate: false});
     });
 }

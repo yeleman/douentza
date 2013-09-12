@@ -4,9 +4,7 @@
 
 {% block extra_js %}
 styleFormElements();
-{% for field in form %}
-{{ field|datepickerjs|safe }}
-{% endfor %}
+{% for field in form %}{{ field|datepickerjs|safe }}{% endfor %}
 {% endblock %}
 
 {% block content %}

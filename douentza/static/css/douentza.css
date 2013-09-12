@@ -28,7 +28,7 @@
     font-size: 12px;
 }
 
-.display_event #accordion{
+.display_event #accordion {
     margin-bottom: 16px
 }
 
@@ -56,11 +56,7 @@
 .autocomplete div, .autocomplete-suggestion { padding:2px 5px; white-space:nowrap; overflow:hidden; }
 .autocomplete, .autocomplete-suggestions strong { font-weight:normal; color:#3399FF; }
 .autocomplete-suggestions { border: 1px solid #999; background: #FFF; cursor: default; overflow: auto; -webkit-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); -moz-box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); box-shadow: 1px 4px 3px rgba(50, 50, 50, 0.64); }
-/*.autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }*/
-/*.autocomplete-selected { background: #F0F0F0; }*/
-/*.autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }*/
 
-.input-group-addon.glyphicon-calendar {
+.input-group-addon.glyphicon-calendar, .input-group-addon.glyphicon-time {
     cursor: pointer;
 }
-

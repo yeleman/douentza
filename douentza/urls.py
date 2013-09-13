@@ -31,6 +31,9 @@ urlpatterns = patterns('',
 
     url(r'^entities/(?P<parent_slug>\d{8})/?$', 'douentza.views.events.entities_api', name='entities'),
     url(r'^statistics/$', 'douentza.views.statistics.dashboard', name='statistics'),
+    url(r'^survey_stats/$', 'douentza.views.surveys.survey_stats', name='survey_stats'),
+    url(r'^archives/?$', 'douentza.views.events.archives', name='archives'),
+
     url(r'^$', 'douentza.views.event_dashboard.dashboard', name='event_dashboard'),
     url(r'^change/(?P<event_id>[0-9]+)/(?P<new_status>[a-zA-Z\_]+)$',
         'douentza.views.event_dashboard.change_event_status', name='change_event'),
@@ -39,5 +42,4 @@ urlpatterns = patterns('',
         'douentza.views.events.display_event', name='display_event'),
     url(r'^survey/(?P<survey_id>[0-9]+)-(?P<request_id>[0-9]+)/form/?$', 'douentza.views.surveys.survey_form', name='mini_survey_form'),
     url(r'^survey/(?P<survey_id>[0-9]+)-(?P<request_id>[0-9]+)/data/?$', 'douentza.views.surveys.survey_data', name='mini_survey_data'),
-    url(r'^survey/(?P<survey_id>[0-9]+)-(?P<request_id>[0-9]+)/exists/?$', 'douentza.views.surveys.survey_exists', name='mini_survey_exists'),
 )

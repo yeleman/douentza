@@ -35,3 +35,16 @@ def auto_datetimepicker(field):
         return 'setupDatetimePicker({split_widget: true, split_selector: "'+field.name+'", dirty: '+dirty+'});'
 
     return ''
+
+
+@register.filter(name='available_for')
+def survey_is_available(survey, request):
+    return survey.available_for(request)
+
+
+@register.filter(name='taken')
+def survey_is_available(survey, request):
+    try:
+        return survey.taken(request)
+    except:
+        return ''

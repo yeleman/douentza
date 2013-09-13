@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base_modal.html" %}
 
 {% load douentza %}
 
@@ -8,9 +8,9 @@ styleFormElements();
 {% endblock %}
 
 {% block content %}
-<h1>{{ survey.title }}</h1>
+<div class="frameside">
 <p>{{ survey.description }}</p>
-<form action="{% url 'mini_survey' survey.id %}" method="post">
+<form action="{% url 'mini_survey_form' survey.id request.id %}" method="post">
 {% csrf_token %}
 {% for field in form %}
 <div class="form-group {% if field.errors %}has-error{% endif %}">
@@ -19,7 +19,7 @@ styleFormElements();
     {{ field }}
 </div>
 {% endfor %}
-<input type="submit" class="form-control btn btn-default" value="Enregistrer" />
+<input type="submit" class="form-control btn btn-primary" value="Enregistrer" />
 </form>
-
+</div>
 {% endblock %}

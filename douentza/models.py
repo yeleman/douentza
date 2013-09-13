@@ -11,6 +11,7 @@ from django.contrib.auth.models import AbstractUser
 from django.template.defaultfilters import slugify
 from mptt.models import MPTTModel, TreeForeignKey
 from mptt.managers import TreeManager
+from picklefield.fields import PickledObjectField
 
 from douentza._compat import implements_to_string
 from douentza.utils import OPERATORS
@@ -249,6 +250,16 @@ class Survey(models.Model):
             d['questions'].append(question.to_dict())
         return d
 
+    @classmethod
+    def availables(cls, request):
+        return cls.objects.exclude(id__in=request.survey_takens.values('id')).order_by('title')
+
+    def available_for(self, request):
+        return not request.survey_takens.filter(id=self.id).count()
+
+    def taken(self, request):
+        return request.survey_takens.get(id=self.id)
+
 
 @implements_to_string
 class Question(models.Model):
@@ -295,7 +306,8 @@ class Question(models.Model):
                                          survey=self.survey)
 
     def to_dict(self):
-        d = {'order': self.order,
+        d = {'id': self.id,
+             'order': self.order,
              'label': self.label,
              'type': self.question_type,
              'required': self.required,
@@ -341,3 +353,50 @@ class BlacklistedNumber(models.Model):
 
     def __str__(self):
         return self.identity
+
+
+@implements_to_string
+class SurveyTaken(models.Model):
+
+    class Meta:
+        unique_together = ('survey', 'request')
+
+    survey = models.ForeignKey('Survey', related_name='survey_takens')
+    request = models.ForeignKey('HotlineRequest', related_name='survey_takens')
+    taken_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.survey)
+
+    def data_for(self, question):
+        try:
+            return SurveyTakenData.objects.get(survey_taken=self,
+                                               question=question).value
+        except SurveyTakenData.DoesNotExist:
+            return None
+
+    def to_dict(self):
+        data = {'taken_on': self.taken_on,
+                'request': self.request,
+                'survey': self.survey,
+                'questions': []}
+        for question in self.survey.questions.order_by('order'):
+            question_data = question.to_dict()
+            question_data.update({'value': self.data_for(question)})
+            data['questions'].append(question_data)
+        return data
+
+
+
+@implements_to_string
+class SurveyTakenData(models.Model):
+
+    class Meta:
+        unique_together = ('survey_taken', 'question')
+
+    survey_taken = models.ForeignKey('SurveyTaken', related_name='survey_taken_data')
+    question = models.ForeignKey('Question', related_name='survey_taken_data')
+    value = PickledObjectField(null=True, blank=True)
+
+    def __str__(self):
+        return str(self.value)

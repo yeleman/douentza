@@ -83,11 +83,12 @@ def get_form_property(question_dict):
     elif question_type == Question.TYPE_TEXT:
         field = forms.CharField(widget=forms.Textarea)
     elif question_type == Question.TYPE_BOOLEAN:
-        field = forms.ChoiceField(choices=[('false', "Faux"),
-                                           ('true', "Vrai")])
+        field = forms.NullBooleanField()
     else:
+
         field = Question.TYPES_CLS.get(question_type)
     field.label = question_dict.get('label')
+    field.required = question_dict.get('required')
     return field
 
 
@@ -103,4 +104,4 @@ class MiniSurveyForm(forms.Form):
             return
 
         for idx, question in enumerate(questions):
-            self.fields["question_{}".format(idx)] = get_form_property(question)
+            self.fields["question_{}".format(question.get('id'))] = get_form_property(question)

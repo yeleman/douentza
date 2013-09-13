@@ -15,6 +15,13 @@ $('.tags_container').append(getTagManager({request_id: request_id, readonly: fal
 {% if form.errors %}
 fill_from_previous();
 {% endif %}
+
+// popovers survey data
+{% for survey in surveys %}
+{% if not survey|available_for:event %}
+changeSurveyButton($('.btn-survey[survey-id={{survey.id}}]'));
+{% endif %}
+{% endfor %}
 {% endblock %}
 
 {% block content %}
@@ -101,7 +108,7 @@ fill_from_previous();
         </div>
     </div>
      <div class="row">
-         <div class="col-md-3"></div><div class="col-md-6"><button type="submit" class="form-control btn btn-default">Sauvegarder</button></div><div class="col-md-3"></div>
+         <div class="col-md-3"></div><div class="col-md-6"><button type="submit" class="form-control btn btn-primary">Sauvegarder</button></div><div class="col-md-3"></div>
     </div>
 {% if form.errors %}
     <input type="hidden" id="previous_cercle" value="{{ form.cercle.value }}" />
@@ -116,7 +123,12 @@ fill_from_previous();
 
 <div>
     <h2>Mini Questionnaires</h2>
-
+    <ul>
+    {% for survey in surveys %}
+    {% include "mini_survey_data.html" with survey_taken=survey|taken:event %}
+    <li>{{ survey.title }} <buton class="btn btn-default btn-xs btn-survey" survey-id="{{ survey.id }}" request-id="{{ event.id }}" title="{{ survey.title }}">Remplir le questionnaire</button></li>
+    {% endfor %}
+    </ul>
 </div>
 
 {% endblock %}

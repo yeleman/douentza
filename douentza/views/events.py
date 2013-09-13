@@ -12,7 +12,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 
 from douentza.models import (HotlineRequest, Ethnicity, Project, HotlineUser,
-                             Entity)
+                             Entity, Survey)
 from douentza.utils import get_default_context, EMPTY_ENTITY
 from douentza.forms import BasicInformationForm
 
@@ -26,6 +26,7 @@ def display_event(request, event_id):
 
     context = get_default_context(page="display_event")
     context.update({'event': event})
+    context.update({'surveys': Survey.objects.all()})
 
     if request.method == "POST":
         form = BasicInformationForm(request.POST)

@@ -1,0 +1,16 @@
+{% extends "base_modal.html" %}
+
+{% block content %}
+{% if error %}
+<div class="frameside alert alert-danger">
+    <h2>Erreur. Impossible d'enregistrer le questionnaire</h2>
+    <p>Il semblerait que ce questionnaire ai déjà été saisi (pour cette requête).</p>
+    <p>Il n'a donc pas été enregistré à nouveau.</p>
+</div>
+{% else %}
+<div class="frameside">
+    <h2>Terminé !</h2>
+    <p>Le questionnaire a bien été enregistré.</p>
+</div>
+{% endif %}
+{% endblock %}

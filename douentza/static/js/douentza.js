@@ -477,3 +477,66 @@ function setupDatetimePicker(options) {
         $(this).datetimepicker({pickDate: false});
     });
 }
+
+function createMiniSurvey(options) {
+    var survey_id = options.survey_id || null;
+    var request_id = options.request_id || null;
+    var title = options.title || "Mini Questionnaire";
+
+    if (!survey_id)
+        return $('<h2>failed</h2>');
+
+    var url = '/survey/'+ survey_id + '-'+ request_id +'/form';
+
+    var aframe = $('<iframe src="' + url + '" frameborder="0"/>');
+
+    var container = $('<div class="modal fade" tabindex="-1" role="dialog"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title">Modal title</h4></div><div class="modal-body"></div></div></div></div>');
+    container.attr('survey-id', survey_id);
+    container.attr('request-id', request_id);
+    container.find('.modal-title').html(title);
+    container.find('.modal-body').append(aframe);
+
+    return container;
+}
+
+$('.btn-survey').on('click', function () {
+    var survey_id = $(this).attr('survey-id');
+    var request_id = $(this).attr('request-id');
+    var title = $(this).attr('title');
+    var container = createMiniSurvey({survey_id: survey_id,
+                                      request_id: request_id,
+                                      title: title});
+    container.on('hide.bs.modal', function () {
+        var survey_id = $(this).attr('survey-id');
+        var request_id = $(this).attr('request-id');
+        $.get('/survey/'+ survey_id + '-'+ request_id +'/data').done(function (data){
+            // var data_url = '/survey/'+ survey_id + '-'+ request_id +'/data';
+            $('.container').append($(data));
+            var data_button = $('.btn-survey[survey-id='+survey_id+']');
+            changeSurveyButton($('.btn-survey[survey-id='+survey_id+']'));
+            // data_button.off('click');
+            // data_button.html("Voir les données");
+            // data_button.popover({html: true,
+            //                      trigger: 'hover',
+            //                      title: "Data",
+            //                      content: data});
+
+            // $('.btn-survey[survey-id='+survey_id+']').remove();
+        }).fail(function (error) {
+            console.log("SurveyTaken not created.");
+        });
+    });
+
+    container.modal({show: true});
+});
+
+
+function changeSurveyButton(button) {
+    var survey_id = button.attr('survey-id');
+    button.off('click');
+    button.html("Voir les données");
+    button.popover({html: true,
+                    trigger: 'hover',
+                    content: $('.survey-data[survey-id='+survey_id+']').html(),
+                    placement: 'top'});
+}

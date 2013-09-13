@@ -37,5 +37,7 @@ urlpatterns = patterns('',
 
     url(r'^request/(?P<event_id>[0-9]+)/?$',
         'douentza.views.events.display_event', name='display_event'),
-    url(r'^survey/(?P<survey_id>[0-9]+)/form/?$', 'douentza.views.surveys.survey_form', name='mini_survey'),
+    url(r'^survey/(?P<survey_id>[0-9]+)-(?P<request_id>[0-9]+)/form/?$', 'douentza.views.surveys.survey_form', name='mini_survey_form'),
+    url(r'^survey/(?P<survey_id>[0-9]+)-(?P<request_id>[0-9]+)/data/?$', 'douentza.views.surveys.survey_data', name='mini_survey_data'),
+    url(r'^survey/(?P<survey_id>[0-9]+)-(?P<request_id>[0-9]+)/exists/?$', 'douentza.views.surveys.survey_exists', name='mini_survey_exists'),
 )

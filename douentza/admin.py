@@ -13,7 +13,7 @@ from douentza.models import (HotlineRequest, HotlineUser,
                              Entity, Survey, Question, QuestionChoice,
                              Ethnicity, CallbackAttempt, Tag, Project,
                              AdditionalRequest, SurveyTaken, SurveyTakenData,
-			     BlacklistedNumber)
+                             BlacklistedNumber)
 
 
 class UserModificationForm(forms.ModelForm):
@@ -38,19 +38,18 @@ class UserCreationForm(forms.ModelForm):
 class CustomUserAdmin(UserAdmin):
     form = UserModificationForm
     add_form = UserCreationForm
-    list_display = ("username", "first_name", "last_name", "operator")
+    list_display = ("username", "first_name", "last_name")
     ordering = ("username",)
 
     fieldsets = (
         (None, {'fields': ('username', 'email', 'password', 'first_name',
-                           'last_name', 'is_superuser', 'is_staff', 'is_active',
-                           'operator', 'phone_number')}),
+                           'last_name', 'is_superuser', 'is_staff', 'is_active')}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
             'fields': ('username', 'email', 'password', 'first_name', 'last_name',
-                       'is_superuser', 'is_staff', 'is_active', 'operator')}),
+                       'is_superuser', 'is_staff', 'is_active')}),
     )
 
 
@@ -78,7 +77,7 @@ admin.site.register(Survey)
 admin.site.register(Question)
 admin.site.register(QuestionChoice)
 admin.site.register(Ethnicity, CustomEthnicity)
-admin.site.register(HotlineUser)
+admin.site.register(HotlineUser, CustomUserAdmin)
 admin.site.register(CallbackAttempt)
 admin.site.register(Project)
 admin.site.register(Tag)

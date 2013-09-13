@@ -30,14 +30,14 @@ def display_event(request, event_id):
     context = get_default_context(page="display_event")
     context.update({'event': event})
     context.update({'surveys': Survey.objects.all()})
-
     if request.method == "POST":
         form = BasicInformationForm(request.POST)
         if form.is_valid():
             event = form.cleaned_data.get('request_id')
 
             event.status = HotlineRequest.STATUS_HANDLED
-            event.hotline_user = HotlineUser.objects.get(username=request.user)
+            event.hotline_user = get_object_or_404(HotlineUser,
+                                                   username=request.user)
             event.responded_on = form.cleaned_data.get('responded_on')
             event.age = form.cleaned_data.get('age')
             try:

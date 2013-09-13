@@ -92,7 +92,7 @@ class HotlineRequest(models.Model):
                            default=SEX_UNKNOWN, verbose_name="Sexe")
     duration = models.PositiveIntegerField(max_length=4, null=True, blank=True,
                                            help_text="Durée de l'appel en seconde",
-					                       verbose_name="Durée appel")
+                                           verbose_name="Durée appel")
     location = models.ForeignKey('Entity', null=True, blank=True, verbose_name="Localité")
     ethnicity = models.ForeignKey('Ethnicity', null=True, blank=True, verbose_name="Éthnie")
     tags = models.ManyToManyField('Tag', null=True, blank=True, verbose_name="Tags", related_name='requests')
@@ -172,7 +172,7 @@ class HotlineUser(AbstractUser):
             return self.get_full_name()
         return self.username
 
-    def __str(self):
+    def __str__(self):
         return self.full_name()
 
 

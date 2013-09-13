@@ -171,6 +171,7 @@ LOGGING = {
     }
 }
 
+AUTH_USER_MODEL = 'douentza.HotlineUser'
 LOGIN_URL = '/login/'
 
 # douentza settings

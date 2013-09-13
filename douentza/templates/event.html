@@ -2,63 +2,43 @@
 {% load douentza %}
 
 {% block extra_js %}
+// Form CSS
 styleFormElements();
+
+// Basic Infos DatePicker
 setupDatetimePicker({split_widget: true, split_selector: "responded_on", parent_selector: "#eventModal", dirty: {% if form.errors %}true{% else %}false{% endif %}});
 
-// UI popovers
-$('.surveys').popover({html: true}).popover('show');
-
-// tags
+// Editor Tag Manager
 var request_id = {{event.id}};
 $('.tags_container').append(getTagManager({request_id: request_id, readonly: false}).container);
 
-{% if form.errors %}
-fill_from_previous();
-{% endif %}
+// previous requests tags
+$('.request-tags').each(function () {
+    $(this).replaceWith(getTagManager({request_id: $(this).attr('request-id'), readonly: true, holder_tag: 'span', max_items: 3}).container);
+});
+
+// Basic Infos Location Tricks
+{% if form.errors %}fill_from_previous();{% endif %}
 
 // popovers survey data
 {% for survey in surveys %}
-{% if not survey|available_for:event %}
-changeSurveyButton($('.btn-survey[survey-id={{survey.id}}]'));
-{% endif %}
+    {% if not survey|available_for:event %}
+        changeSurveyButton($('.btn-survey[survey-id={{survey.id}}][request-id={{event.id}}]'));
+    {% endif %}
 {% endfor %}
+
+// popovers survey data in history/previous
+$('#accordion .btn-survey').each(function (){
+    changeSurveyButton($(this));
+});
+
+
 {% endblock %}
 
 {% block content %}
-<h1>{{ event.identity|phone }} <span class="badge badge_alert">{{event.additionalrequests.count}} <span class="glyphicon glyphicon-earphone"></span></span></h1>
+<h1>{{ event.identity|phone }} <span class="badge badge_alert badge-xs"><span class="glyphicon glyphicon-earphone"></span> {{event.additionalrequests.count}} </span></h1>
 
-{% if event.historics %}
-    <div class="panel-group" id="accordion">
-        <div class="panel panel-default">
-            <div class="panel-heading" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
-              <h2 class="panel-title">Historique des appels <span class="caret"></span></h2>
-            </div>
-            <div id="collapseThree" class="panel-collapse collapse">
-                <div class="panel-body">
-                    {% for historic in event.historics %}
-                        <p><span title="Durée: {{historic.duration}} s">{{historic.responded_on}}</span>
-                            {% if historic.location %}<span class="badge badge_location"><span class="glyphicon glyphicon-map-marker"></span>{{historic.location}}</span>{% endif %}
-                            {% if historic.age %}<span class="badge">{{historic.age}} ans</span>{% endif %}
-                            {% if historic.sex %}
-                                {% if historic.sex == "female" %}<span class="badge badge_woman"><span class="glyphicon glyphicon-user"></span></span></span>
-                                {% else %}<span class="badge badge_man"><span class="glyphicon glyphicon-user"></span></span>{% endif %}
-                            {% endif %}
-                            {% if historic.project %}<span class="badge badge_project">{{historic.project}}</span>{% endif %}
-                            {% if historic.tags %}
-                                {% if historic.tags.count <= 3 %}
-                                {% for tag in historic.tags.all %}<span class="badge badge_tag"> {{tag}}</span> {% endfor %}
-                                {% else %}<span class="badge badge_tag" title="{% for tag in historic.tags.all %} {{tag}} {% endfor %}">
-                                    ...</span>{% endif %}
-                            {% endif %}
-                            <span data-placement="top" data-toggle="popover" data-container="body" type="button" data-original-title="" title="Questionnaire" class='surveys' class="badge" data-content="<ul>{% for survey in historic.surveys.all %}<li>{{survey}}</li>{% endfor %}<ul>">
-                                <span class="glyphicon glyphicon-book"></span>
-                            </span></p>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-    </div>
-{% endif %}
+{% include "event_history_panel.html" with event=event %}
 
 <form  class="form-horizontal" role="form" action="{% url 'display_event' event.id %}" method="post">
     {% csrf_token %}
@@ -118,12 +98,10 @@ changeSurveyButton($('.btn-survey[survey-id={{survey.id}}]'));
 
 <div>
     <h2>Mini Questionnaires</h2>
-    <ul>
     {% for survey in surveys %}
     {% include "mini_survey_data.html" with survey_taken=survey|taken:event %}
-    <li>{{ survey.title }} <buton class="btn btn-default btn-xs btn-survey" survey-id="{{ survey.id }}" request-id="{{ event.id }}" title="{{ survey.title }}">Remplir le questionnaire</button></li>
+    <p>{{ survey.title }} <buton class="btn btn-default btn-xs btn-survey popover-data" survey-id="{{ survey.id }}" request-id="{{ event.id }}" title="{{ survey.title }}">Remppr le questionnaire</button></li>
     {% endfor %}
-    </ul>
 </div>
 
 {% endblock %}

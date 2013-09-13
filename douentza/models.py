@@ -4,6 +4,7 @@
 
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
+import datetime
 
 from django.db import models
 from django import forms
@@ -33,7 +34,7 @@ class HotlineRequest(models.Model):
         unique_together = [('identity', 'received_on')]
         get_latest_by = "received_on"
 
-    SEX_UNKNOWN = 'unknow'
+    SEX_UNKNOWN = 'unknown'
     SEX_MALE = 'male'
     SEX_FEMALE = 'female'
     SEXES = {
@@ -121,9 +122,17 @@ class HotlineRequest(models.Model):
                                              request_type=request_type,
                                              sms_message=sms_message)
 
-    def historics(self):
-        return HotlineRequest.objects.filter(identity=self.identity,
-                                             status=HotlineRequest.STATUS_HANDLED)
+    def previous_requests(self):
+        return HotlineRequest.objects \
+            .filter(identity=self.identity,
+                    status=HotlineRequest.STATUS_HANDLED) \
+            .exclude(id=self.id)
+
+    def gender(self):
+        return self.SEXES.get(self.sex, self.SEX_UNKNOWN)
+
+    def duration_delta(self):
+        return datetime.timedelta(seconds=self.duration)
 
 
 @implements_to_string

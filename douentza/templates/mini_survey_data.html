@@ -1,5 +1,5 @@
 <div class="hidden survey-data" survey-id="{{ survey_taken.survey.id }}" request-id="{{ survey_taken.request.id }}">
-<table class="table table-striped table-hover table-condensed">
+<table class="table table-striped table-hover table-condensed table-data">
 <caption>Taken on {{ survey_taken.taken_on }}</caption>
 {% for question in survey_taken.to_dict.questions %}
 <tr><th>{{ question.label }}</th><td>{{ question.value }}</td></tr>

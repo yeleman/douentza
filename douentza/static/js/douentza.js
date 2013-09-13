@@ -161,6 +161,7 @@ function getTagManager(options) {
         this.request_id = options.request_id || null;
         this.readonly = options.readonly || false;
         this.max_items = options.max_items || 10;
+        this.holder_tag = options.holder_tag || 'p';
         this.local_items = [];
         this.all_items = [];
         this.remaining_items = [];
@@ -306,7 +307,7 @@ function getTagManager(options) {
     };
 
     TagManager.prototype.create_basic_container = function() {
-        this.container = $('<p class="tags_container" />');
+        this.container = $('<' + this.holder_tag + ' class="tags_container" />');
         this.container.attr('request_id', this.request_id);
         this.container.attr('readonly', this.readonly);
         this.container.attr('manager_id', this.manager_id);
@@ -509,8 +510,8 @@ $('.btn-survey').on('click', function () {
     container.on('hide.bs.modal', function () {
         var survey_id = $(this).attr('survey-id');
         var request_id = $(this).attr('request-id');
-        $.get('/survey/'+ survey_id + '-'+ request_id +'/data').done(function (data){
-            // var data_url = '/survey/'+ survey_id + '-'+ request_id +'/data';
+        $.get('/survey/'+ survey_id + '-'+ request_id +'/data')
+         .done(function (data){
             $('.container').append($(data));
             var data_button = $('.btn-survey[survey-id='+survey_id+']');
             changeSurveyButton($('.btn-survey[survey-id='+survey_id+']'));
@@ -525,10 +526,16 @@ $('.btn-survey').on('click', function () {
 
 function changeSurveyButton(button) {
     var survey_id = button.attr('survey-id');
+    var placement = button.attr('data-placement') || 'top';
+    var keep_name = button.attr('data-keep-name') || false;
+    console.log("changeSurveyButton called with " + placement + '//' + survey_id);
+    console.log(button.html());
     button.off('click');
-    button.html("Voir les données");
+    if (!keep_name) {
+        button.text("Voir les données");
+    }
     button.popover({html: true,
                     trigger: 'hover',
                     content: $('.survey-data[survey-id='+survey_id+']').html(),
-                    placement: 'top'});
+                    placement: placement});
 }

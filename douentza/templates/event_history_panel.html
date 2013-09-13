@@ -1,0 +1,37 @@
+{% if event.previous_requests %}
+    <div class="panel-group accordion">
+        <div class="panel panel-default">
+            <div class="panel-heading accordion-toggle" data-toggle="collapse" data-parent=".accordion" href="#collapseThree">
+              <h2 class="panel-title">Appels précédents <span class="caret"></span></h2>
+            </div>
+            <div id="collapseThree" class="panel-collapse collapse">
+                <div class="panel-body">
+                    {% for previous_request in event.previous_requests %}
+                        <p>
+                            {{previous_request.responded_on}}
+
+                            <span class="label label-default label-xs label-duration" title="Durée: {{ previous_request.duration }}s">{{ previous_request.duration_delta }}</span>
+
+                            {% if previous_request.location %}<span class="label label-default label-xs label-location" title="{{previous_request.location.entity_type}}">{{previous_request.location}} <span class="glyphicon glyphicon-map-marker"></span></span>{% endif %}
+
+                            {% if previous_request.age %}<span class="label label-default label-xs label-age" title="{{previous_request.age}} ans">{{previous_request.age}}a.</span>{% endif %}
+
+                            <span class="label label-default label-xs label-gender-{{ previous_request.sex }}" title="{{ previous_request.gender }}">&nbsp;</span>
+
+                            {% if previous_request.project %}<span class="label label-default label-xs label-project" title="Projet: {{previous_request.project}}">{{previous_request.project}}</span>{% endif %}
+
+                            <span class="request-tags" request-id="{{ previous_request.id }}"></span>
+
+                            {% for survey_taken in previous_request.survey_takens.all %}
+                            <span class="btn btn-default btn-xs btn-survey popover-data" survey-id="{{ survey_taken.survey.id }}" request-id="{{ previous_request.id }}" title="{{ survey.title }}" data-keep-name="true" data-placement="bottom">{{ survey_taken.survey.title }}</span>
+                            {% endfor %}
+                        </p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% for survey_taken in previous_request.survey_takens.all %}
+{% include "mini_survey_data.html" with survey_taken=survey_taken %}
+{% endfor %}
+{% endif %}

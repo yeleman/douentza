@@ -1,35 +1,13 @@
-.badge_project {
+.label-project {
     background-color: #ED7638;
-    font-size: 12px;
 }
 
-.badge_woman {
-    background-color: #FFC0CB;
-    font-size: 12px;
-}
-
-.badge_man {
-    background-color: #0000FF;
-    font-size: 12px;
-}
-
-.badge_alert {
-    background-color: #999999;
-    font-size: 18px;
-}
-
-.badge_location {
+.label-location {
     background-color: #EA9D43;
-    font-size: 12px;
 }
 
-.badge_tag {
-    background-color: #00ACED;
-    font-size: 12px;
-}
-
-.display_event #accordion {
-    margin-bottom: 16px
+.accordion {
+    margin-bottom: 2em;
 }
 
 .tags_container .tag_elem:last-of-type {
@@ -85,3 +63,19 @@ iframe {
 .frameside {
     padding: 1em;
 }
+
+.popover {
+    max-width: 500px;
+}
+
+.table-data {
+    min-width: 25em;
+}
+
+.label-gender-unknown:before, .label-gender-unknow:before { content: "⚤"; }
+
+.label-gender-male:before { content: "♂"; }
+.label-gender-male { background-color: #0093e0; }
+
+.label-gender-female:before { content: "♀"; }
+.label-gender-female { background-color: #7f3e98; }

@@ -224,3 +224,12 @@ def communes_located_requests(entity):
     total = HotlineRequest.objects.all().count()
     percent = count * 100 / total
     return entity, count, percent
+
+def stats_per_age(begin=0, end=0):
+    from douentza.models import HotlineRequest
+
+    count = HotlineRequest.objects.filter(age__gte=begin, age__lte=end).count()
+    total = HotlineRequest.objects.all().count()
+
+    percent = (count * 100) / total
+    return count, percent

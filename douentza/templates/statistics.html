@@ -2,7 +2,7 @@
 
 {% block content %}
 
-    <h2>Statistiques</h2>
+    <h2>Statistiques Générales</h2>
     <table class="table table-condensed table-hover table-bordered table-striped table-info">
         <tbody>
             <tr>
@@ -32,8 +32,10 @@
         </tbody>
     </table>
 
+    {% include "stats_per_age.html" %}
     {% include "status_commune_table.html" %}
     {% include "status_ethinicity_table.html" %}
+
     <h2>Graphe des appels</h2>
     <div id="container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
 

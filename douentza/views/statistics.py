@@ -12,8 +12,10 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 
-from douentza.models import HotlineRequest, Project, Survey
-from douentza.utils import get_default_context, datetime_range, start_or_end_day_from_date, to_timestamp
+from douentza.models import (HotlineRequest, Project, Survey, Entity, Ethnicity)
+from douentza.utils import (get_default_context, datetime_range,
+                            start_or_end_day_from_date, to_jstimestamp,
+                            ethinicity_requests)
 
 
 def get_event_responses_counts():
@@ -27,11 +29,11 @@ def get_event_responses_counts():
     responses = []
 
     for date in datetime_range(start):
-        ts = int(to_timestamp(date)) * 1000
+        ts = to_jstimestamp(date)
         qcount = HotlineRequest.objects.filter(received_on__gte=start_or_end_day_from_date(date),
-                                             received_on__lt=start_or_end_day_from_date(date, False)).count()
+                                               received_on__lt=start_or_end_day_from_date(date, False)).count()
         scount = HotlineRequest.objects.filter(responded_on__gte=start_or_end_day_from_date(date),
-                                                responded_on__lt=start_or_end_day_from_date(date, False)).count()
+                                               responded_on__lt=start_or_end_day_from_date(date, False)).count()
         events.append((ts, qcount))
         responses.append((ts, scount))
     event_response_data = {'events': events,
@@ -63,7 +65,9 @@ def get_statistics_dict():
                     'nb_unique_number': nb_unique_number,
                     'sex_unknown': sex_unknown,
                     'sex_male': sex_male,
-                    'sex_female': sex_female})
+                    'sex_female': sex_female,
+                    'nb_ethinicity_requests': [ethinicity_requests(ethinicity)
+                                              for ethinicity in Ethnicity.objects.all()],})
     return context
 
 

@@ -88,7 +88,7 @@ class HotlineRequest(models.Model):
     responded_on = models.DateTimeField(null=True, blank=True,
                                         verbose_name="Date de l'appel")
     age = models.PositiveIntegerField(null=True, blank=True, verbose_name="Age")
-    sex = models.CharField(max_length=6, choices=SEXES.items(),
+    sex = models.CharField(max_length=20, choices=SEXES.items(),
                            default=SEX_UNKNOWN, verbose_name="Sexe")
     duration = models.PositiveIntegerField(max_length=4, null=True, blank=True,
                                            help_text="Durée de l'appel en seconde",

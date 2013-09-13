@@ -1,0 +1,18 @@
+{% load douentza %}
+
+{% if nb_ethinicity_requests %}
+    <h2>Répartition des rappels par éthnie</h2>
+    <table class="table table-condensed table-hover table-bordered table-striped table-info">
+        <thead>
+            <tr><th class="span2">Éthnie</th><th class="span2">Taux (nombre)</th></tr>
+        </thead>
+        <tbody>
+            {% for commune, count, percent in nb_ethinicity_requests %}
+                <tr><td>{{ commune }}</td>
+                    <td><strong>{{ percent|floatformat:2 }}% ({{ count }})</strong></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endif %}

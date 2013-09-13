@@ -208,3 +208,11 @@ def to_timestamp(dt):
     Return a timestamp for the given datetime object.
     """
     return (dt - datetime.datetime(1970, 1, 1)).total_seconds()
+
+
+def ethinicity_requests(ethnicity):
+    from douentza.models import HotlineRequest
+    count = HotlineRequest.objects.filter(ethnicity=ethnicity).count()
+    total = HotlineRequest.objects.all().count()
+    percent = count * 100 / total
+    return ethnicity, count, percent

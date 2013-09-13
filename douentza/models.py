@@ -22,7 +22,8 @@ class IncomingManager(models.Manager):
     def get_query_set(self):
         return super(IncomingManager, self).get_query_set() \
                                            .exclude(status__in=(HotlineRequest.STATUS_GAVE_UP,
-                                                                HotlineRequest.STATUS_HANDLED))
+                                                                HotlineRequest.STATUS_HANDLED,
+                                                                HotlineRequest.STATUS_BLACK_LIST))
 
 
 @implements_to_string
@@ -46,12 +47,14 @@ class HotlineRequest(models.Model):
     STATUS_HANDLED = 'HANDLED'
     STATUS_IS_BUSY = 'IS_BUSY'
     STATUS_GAVE_UP = 'GAVE_UP'
+    STATUS_BLACK_LIST = 'BLACK_LIST'
 
     STATUSES = {
         STATUS_NEW_REQUEST: "Nouveau",
         STATUS_NOT_ANSWERING: "Ne réponds pas",
         STATUS_HANDLED: "Traité",
         STATUS_IS_BUSY: "Indisponible",
+        STATUS_BLACK_LIST: "Liste noire",
         STATUS_GAVE_UP: "Ne réponds jamais"}
 
     TYPE_CALL_ME = 'CALL_ME'
@@ -315,7 +318,6 @@ class Question(models.Model):
         for choice in self.questionchoices.order_by('id'):
             d['choices'].append(choice.to_dict())
         return d
-
 
 
 @implements_to_string

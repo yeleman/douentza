@@ -21,8 +21,14 @@
                 <li {% ifequal page 'event_dashboard' %} class="active"{% endifequal %}><a href="{% url 'event_dashboard' %}">Tableau de bord <span class="new_calls badge pull-right"></span></a></li>
                 <li {% ifequal page 'archives' %} class="active"{% endifequal %}><a href="{% url 'statistics' %}">Archives</a></li>
                 <li {% ifequal page 'statistics' %} class="active"{% endifequal %}><a href="{% url 'statistics' %}">Statistiques</a></li>
-                <li {% ifequal page 'survey_statistics' %} class="active"{% endifequal %}><a href="{% url 'statistics' %}">Statistiques Questionnaires</a></li>
-                <li {% ifequal page 'configuration' %} class="active"{% endifequal %}><a href="{% url 'statistics' %}">Configuration</a></li>
+                <li {% ifequal page 'survey_statistics' %} class="active"{% endifequal %}><a href="{% url 'statistics' %}">Stats Questionnaires</a></li>
+                <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Configuration <span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <li><a href="{% url 'blacklist' %}">Liste noire</a></li>
+                    <li><a href="{% url 'blacklist' %}">Liste bleue</a></li>
+                </ul>
+                </li>
+                <li ><a href="{% url 'logout' %}"> Déconnexion <strong>({{ user }})</strong></a></li>
             </ul>
           </div>
         </nav>

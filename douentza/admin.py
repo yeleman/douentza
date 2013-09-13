@@ -12,7 +12,8 @@ from django import forms
 from douentza.models import (HotlineRequest, HotlineUser,
                              Entity, Survey, Question, QuestionChoice,
                              Ethnicity, CallbackAttempt, Tag, Project,
-                             AdditionalRequest, SurveyTaken, SurveyTakenData)
+                             AdditionalRequest, SurveyTaken, SurveyTakenData,
+			     BlacklistedNumber)
 
 
 class UserModificationForm(forms.ModelForm):
@@ -84,3 +85,4 @@ admin.site.register(Tag)
 admin.site.register(AdditionalRequest)
 admin.site.register(SurveyTaken)
 admin.site.register(SurveyTakenData)
+admin.site.register(BlacklistedNumber)

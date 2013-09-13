@@ -514,14 +514,6 @@ $('.btn-survey').on('click', function () {
             $('.container').append($(data));
             var data_button = $('.btn-survey[survey-id='+survey_id+']');
             changeSurveyButton($('.btn-survey[survey-id='+survey_id+']'));
-            // data_button.off('click');
-            // data_button.html("Voir les données");
-            // data_button.popover({html: true,
-            //                      trigger: 'hover',
-            //                      title: "Data",
-            //                      content: data});
-
-            // $('.btn-survey[survey-id='+survey_id+']').remove();
         }).fail(function (error) {
             console.log("SurveyTaken not created.");
         });

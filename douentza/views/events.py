@@ -10,13 +10,16 @@ import json
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 from douentza.models import (HotlineRequest, Ethnicity, Project, HotlineUser,
-                             Entity, Survey)
+                             Entity, Survey, BlacklistedNumber)
 from douentza.utils import get_default_context, EMPTY_ENTITY
 from douentza.forms import BasicInformationForm
 
 
+@login_required()
 def display_event(request, event_id):
 
     try:
@@ -34,7 +37,7 @@ def display_event(request, event_id):
             event = form.cleaned_data.get('request_id')
 
             event.status = HotlineRequest.STATUS_HANDLED
-            # event.hotline_user = HotlineUser.objects.get(username=request.user)
+            event.hotline_user = HotlineUser.objects.get(username=request.user)
             event.responded_on = form.cleaned_data.get('responded_on')
             event.age = form.cleaned_data.get('age')
             try:
@@ -55,6 +58,7 @@ def display_event(request, event_id):
     return render(request, "event.html", context)
 
 
+@login_required()
 def entities_api(request, parent_slug=None):
     ''' JSON list of Entity whose parent has the slug provided '''
 
@@ -63,3 +67,28 @@ def entities_api(request, parent_slug=None):
             for e in Entity.objects.filter(parent__slug=parent_slug)]
 
     return HttpResponse(json.dumps(response), mimetype='application/json')
+
+
+@login_required()
+def blacklist(request, blacknum_id=None):
+    context = get_default_context(page='blacklist')
+    if blacknum_id:
+        try:
+            blacknum = BlacklistedNumber.objects.get(id=blacknum_id)
+            blacknum.delete()
+        except:
+            raise Http404
+
+        try:
+            hquest = HotlineRequest.objects.get(identity=blacknum.identity)
+        except:
+            raise Http404
+        hquest.status = HotlineRequest.STATUS_NEW_REQUEST
+        hquest.save()
+        return redirect("blacklist")
+
+        messages.success(request,
+                         "{identity} à été retirer la liste noire".format(identity=blacknum.identity))
+    context.update({'blacknums': BlacklistedNumber.objects.all()})
+
+    return render(request, "blacklist.html", context)

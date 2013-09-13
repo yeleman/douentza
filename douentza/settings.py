@@ -171,6 +171,8 @@ LOGGING = {
     }
 }
 
+LOGIN_URL = '/login/'
+
 # douentza settings
 FONDA_SEND_AUTOMATIC_REPLY = False
 FONDA_SEND_AUTOMATIC_REPLY_VIA_HANDLER = False

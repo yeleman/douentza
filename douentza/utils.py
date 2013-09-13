@@ -216,3 +216,11 @@ def ethinicity_requests(ethnicity):
     total = HotlineRequest.objects.all().count()
     percent = count * 100 / total
     return ethnicity, count, percent
+
+
+def communes_located_requests(entity):
+    from douentza.models import HotlineRequest
+    count = HotlineRequest.objects.filter(location__in=entity.get_descendants(True)).count()
+    total = HotlineRequest.objects.all().count()
+    percent = count * 100 / total
+    return entity, count, percent

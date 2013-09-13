@@ -21,9 +21,9 @@ fill_from_previous();
 <h1>{{ event.identity|phone }} <span class="badge badge_alert">{{event.additionalrequests.count}} <span class="glyphicon glyphicon-earphone"></span></span></h1>
 
 {% if event.historics %}
-    <div class="panel-group" id="accordion" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+    <div class="panel-group" id="accordion">
         <div class="panel panel-default">
-            <div class="panel-heading" >
+            <div class="panel-heading" class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
               <h2 class="panel-title bs-title:after"><span class="glyphicon glyphicon-circle-arrow-down"></span>
                 Historique des appels
               </h2>

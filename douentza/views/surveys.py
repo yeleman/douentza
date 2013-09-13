@@ -82,13 +82,7 @@ def survey_data(request, survey_id, request_id):
     return render(request, "mini_survey_data.html", context)
 
 
-def survey_exists(request, survey_id, request_id):
-    try:
-        survey = get_object_or_404(Survey, id=int(survey_id))
-        event = get_object_or_404(HotlineRequest, id=int(request_id))
-        survey_taken = get_object_or_404(SurveyTaken, survey=survey,
-                                                      request=event)
-    except ValueError:
-        raise Http404
+def survey_stats(request):
+    context = get_default_context(page='survey_stats')
 
-    return HttpResponse(survey_taken.id, mimetype='text/plain')
+    return render(request, "survey_stats.html", context)

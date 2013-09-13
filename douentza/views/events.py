@@ -92,3 +92,9 @@ def blacklist(request, blacknum_id=None):
     context.update({'blacknums': BlacklistedNumber.objects.all()})
 
     return render(request, "blacklist.html", context)
+
+
+def archives(request):
+    context = get_default_context(page='archives')
+
+    return render(request, "archives.html", context)

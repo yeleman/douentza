@@ -28,7 +28,7 @@
                     <li><a href="{% url 'blacklist' %}">Liste bleue</a></li>
                 </ul>
                 </li>
-                <li ><a href="{% url 'logout' %}"> Déconnexion <strong>({{ user }})</strong></a></li>
+                {% if user.is_authenticated %}<li><a href="{% url 'logout' %}">Déconnexion <strong>({{ user }})</strong></a></li>{% endif %}
             </ul>
           </div>
         </nav>

@@ -1,6 +1,6 @@
 
 var dashboard_loop;
-var dashboard_interval = 10 * 1000;
+var dashboard_interval = 5 * 1000;
 var lastUpdate = new Date();
 
 Array.prototype.diff = function(a) {

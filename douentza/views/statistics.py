@@ -10,13 +10,14 @@ import datetime
 
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.db.models import Avg, Max, Min, Sum
 from django.contrib.auth.decorators import login_required
 
 from douentza.models import (HotlineRequest, Project, Survey, Entity, Ethnicity)
 from douentza.utils import (get_default_context, datetime_range,
                             start_or_end_day_from_date, to_jstimestamp,
                             ethinicity_requests, communes_located_requests,
-                            stats_per_age)
+                            stats_per_age, percent_calculation)
 
 
 def get_event_responses_counts():
@@ -59,11 +60,18 @@ def get_statistics_dict():
     sex_male = HotlineRequest.objects.filter(sex=HotlineRequest.SEX_MALE).count()
     sex_female = HotlineRequest.objects.filter(sex=HotlineRequest.SEX_FEMALE).count()
 
-    unknown_count = HotlineRequest.objects.filter(location=None).count()
+    unknown_location_count = HotlineRequest.objects.filter(location=None).count()
     total = HotlineRequest.objects.all().count()
-    unknown_percent = unknown_count * 100 / total
+
+    unknown_location_percent = percent_calculation(unknown_location_count, total)
     unknown_age = HotlineRequest.objects.filter(age=None).count()
-    unknown_age_percent = unknown_age * 100 / total
+    unknown_age_percent = percent_calculation(unknown_age, total)
+
+    handled_hotline_request = HotlineRequest.objects.filter(status=HotlineRequest.STATUS_HANDLED)
+    sum_duration = handled_hotline_request.aggregate(Sum("duration"))
+    average_duration = handled_hotline_request.aggregate(Avg("duration"))
+    longest_duration = handled_hotline_request.aggregate(Max("duration"))
+    short_duration = handled_hotline_request.aggregate(Min("duration"))
 
     under_18 = stats_per_age(0, 18)
     stats_19_25 = stats_per_age(19, 25)
@@ -85,12 +93,16 @@ def get_statistics_dict():
                     'stats_41_55': stats_41_55,
                     'other_56': other_56,
                     'unknown_age': unknown_age,
+                    'average_duration': average_duration,
+                    'longest_duration': longest_duration,
+                    'short_duration': short_duration,
                     'unknown_age_percent': unknown_age_percent,
+                    'sum_duration': sum_duration,
                     'nb_ethinicity_requests': [ethinicity_requests(ethinicity)
-                                              for ethinicity in Ethnicity.objects.all()],
+                                               for ethinicity in Ethnicity.objects.all()],
                     'communes_located_requests': [communes_located_requests(commune)
-                                 for commune in list(Entity.objects.filter(entity_type='commune'))] +
-                                 [("Inconnue", unknown_count, unknown_percent)],})
+                                                  for commune in list(Entity.objects.filter(entity_type='commune'))] +
+                                                  [("Inconnue", unknown_location_count, unknown_location_percent)],})
     return context
 
 

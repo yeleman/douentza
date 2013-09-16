@@ -100,7 +100,7 @@ $('#accordion .btn-survey').each(function (){
     <h2>Mini Questionnaires</h2>
     {% for survey in surveys %}
     {% include "mini_survey_data.html" with survey_taken=survey|taken:event %}
-    <p>{{ survey.title }} <buton class="btn btn-default btn-xs btn-survey popover-data" survey-id="{{ survey.id }}" request-id="{{ event.id }}" title="{{ survey.title }}">Remppr le questionnaire</button></li>
+    <p>{{ survey.title }} <buton class="btn btn-default btn-xs btn-survey popover-data" survey-id="{{ survey.id }}" request-id="{{ event.id }}" title="{{ survey.title }}">Remplir le questionnaire</button></li>
     {% endfor %}
 </div>
 

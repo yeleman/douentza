@@ -26,6 +26,7 @@
                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                     <li><a href="{% url 'admin_surveys' %}">Mini questionnaires</a></li>
                     <li><a href="{% url 'blacklist' %}">Liste noire</a></li>
+                    <li><a href="{% url 'admin_projects' %}">Nouveau projet</a></li>
                 </ul>
                 </li>
                 {% if user.is_authenticated %}<li><a href="{% url 'logout' %}">Déconnexion <strong>({{ user }})</strong></a></li>{% endif %}

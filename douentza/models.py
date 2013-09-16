@@ -253,7 +253,7 @@ class Entity(MPTTModel):
 
 @implements_to_string
 class Project(models.Model):
-    name = models.CharField(max_length=70, verbose_name="Nom")
+    name = models.CharField(max_length=70, verbose_name="Nom", unique=True)
     description = models.TextField(null=True, blank=True)
 
     def __str__(self):

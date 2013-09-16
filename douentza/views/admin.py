@@ -9,8 +9,9 @@ from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
-from douentza.models import Survey, QuestionChoice, Question
-from douentza.forms import MiniSurveyInitForm, MiniSurveyAddQuestion
+from douentza.models import Survey, QuestionChoice, Question, Project
+from douentza.forms import (MiniSurveyInitForm, MiniSurveyAddQuestion,
+                            AddProjectForm)
 from douentza.utils import get_default_context
 
 
@@ -114,3 +115,26 @@ def admin_survey_toggle(request, survey_id):
     survey.save()
 
     return redirect('admin_surveys')
+
+
+@login_required
+def admin_projects(request):
+
+    context = get_default_context(page='add_project')
+
+    context.update({'projects': Project.objects.order_by('id')})
+
+    if request.method == "POST":
+        form = AddProjectForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('admin_projects')
+        else:
+            pass
+    else:
+        form = AddProjectForm()
+
+    context.update({'form': form})
+
+    return render(request, "admin_projects.html", context)
+

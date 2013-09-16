@@ -135,3 +135,9 @@ class MiniSurveyAddQuestion(forms.ModelForm):
             if len(choice):
                 choices.update({slugify(choice): choice})
         return choices
+
+
+class AddProjectForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = ['name', 'description']

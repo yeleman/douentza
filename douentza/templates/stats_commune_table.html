@@ -4,13 +4,17 @@
     <h3>Répartition des rappels par commune</h3>
     <table class="table table-condensed table-hover table-bordered table-striped table-info">
         <thead>
-            <tr><th class="span2">Commune</th><th class="span2">Taux (nombre)</th></tr>
+            <tr><th>Commune</th>
+                <th>Taux</th>
+                <th>Nombre</th>
+            </tr>
         </thead>
         <tbody>
             {% for commune, count, percent in communes_located_requests %}
                 <tr>
                     <td>{{ commune }}</td>
-                    <td><strong>{{ percent|floatformat:2 }}% ({{ count }})</strong></td>
+                    <td class='important'>{{ percent|floatformat:2 }}% </td>
+                    <td class='important'> {{ count }}</td>
                 </tr>
             {% endfor %}
         </tbody>

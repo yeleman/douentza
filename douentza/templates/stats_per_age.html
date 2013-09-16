@@ -1,0 +1,38 @@
+{% load douentza %}
+
+<h3>Répartition des rappels par tranche d'âge</h3>
+<table class="table table-condensed table-hover table-bordered table-striped table-info">
+    <thead>
+        <tr>
+            <th class="span2">Tranche d'âge</th>
+            <th class="span2">Taux</th>
+            <th class="span2">Nombre</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr><td>moins de 18</td>
+            <td>{{ under_18.1|floatformat:2 }}% </td>
+            <td>{{ under_18.0 }}</td>
+        </tr>
+        <tr><td>de 19 à 25</td>
+            <td>{{ stats_19_25.1|floatformat:2 }}%</td>
+            <td>{{ stats_19_25.0 }}</td>
+        </tr>
+        <tr><td>de 26 à 40</td>
+            <td>{{ stats_26_40.1|floatformat:2 }}%</td>
+            <td>{{ stats_26_40.0 }}</td>
+        </tr>
+        <tr><td>de 41 à 55</td>
+            <td>{{ stats_41_55.1|floatformat:2 }}%</td>
+            <td>{{ stats_41_55.0 }}</td>
+        </tr>
+        <tr><td>56 et plus</td>
+            <td>{{ other_56.1|floatformat:2 }}%</td>
+            <td>{{ other_56.0 }}</td>
+        </tr>
+        <tr><td>Inconnus</td>
+            <td>{{ unknown_age_percent|floatformat:2 }}%</td>
+            <td>{{ unknown_age }}</td>
+        </tr>
+    </tbody>
+</table>

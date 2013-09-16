@@ -26,8 +26,25 @@
                 <td class="total">{{ nb_unique_number }}</td>
             </tr>
             <tr>
+                <th>Durée des rappels:</th>
+                <td><strong>{{ sum_duration.duration__sum }}</strong> seconde</td>
+            </tr>
+
+            <tr>
+                <th class="ident">Le plus long</th>
+                <td><strong>{{ longest_duration.duration__max }}</strong> seconde</td>
+            </tr>
+            <tr>
+                <th class="ident">La moyenne</th>
+                <td><strong>{{ average_duration.duration__avg|floatformat }}</strong> seconde</td>
+            </tr>
+            <tr>
+                <th class="ident">La minimale</th>
+                <td><strong>{{ short_duration.duration__min }}</strong> seconde</td>
+            </tr>
+            <tr>
                 <th>Total par sexes (Homme/Femme/Inconnu)</th>
-                <td>{{ sex_male }} H, {{sex_female}} F, {{sex_unknown}} Inconnus</td>
+                <td>{{ sex_male }} H/ {{ sex_female }} F/ {{ sex_unknown }} Inconnus</td>
             </tr>
         </tbody>
     </table>

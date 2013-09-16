@@ -20,16 +20,16 @@ from douentza.forms import BasicInformationForm
 
 
 @login_required()
-def display_event(request, event_id):
+def display_event(request, request_id):
 
     try:
-        event = get_object_or_404(HotlineRequest, id=int(event_id))
+        event = get_object_or_404(HotlineRequest, id=int(request_id))
     except:
         raise Http404
 
     context = get_default_context(page="display_event")
     context.update({'event': event})
-    context.update({'surveys': Survey.objects.all()})
+    context.update({'surveys': Survey.validated.order_by('id')})
     if request.method == "POST":
         form = BasicInformationForm(request.POST)
         if form.is_valid():
@@ -51,7 +51,7 @@ def display_event(request, event_id):
             event.save()
             return redirect('event_dashboard')
     else:
-        form = BasicInformationForm(initial={'request_id': event_id})
+        form = BasicInformationForm(initial={'request_id': request_id})
 
     context.update({"form": form})
 

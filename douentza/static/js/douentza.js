@@ -81,8 +81,10 @@ function styleFormElements() {
                 content: error_content}).popover('show');
         }
         var help_text = parent.find(".help-text");
-        if (help_text.text()) {
-            $(this).attr('placeholder', help_text.text());
+        if (help_text.length > 0) {
+            if (help_text.text()) {
+                $(this).attr('placeholder', help_text.text());
+            }
         }
     });
 }
@@ -387,6 +389,20 @@ function setupDatetimePicker(options) {
         return hours + ':' + minutes + ':00';
     }
 
+    function updateDatePickerUIElements() {
+        $('.icon-chevron-up').each(function () {
+            console.log("found icon-chevron-up");
+            $(this).removeClass('icon-chevron-up');
+            $(this).addClass('glyphicon glyphicon-chevron-up');
+            $(this).parent().removeClass('btn');
+        });
+        $('.icon-chevron-down').each(function () {
+            $(this).removeClass('icon-chevron-down');
+            $(this).addClass('glyphicon glyphicon-chevron-down');
+            $(this).parent().removeClass('btn');
+        });
+    }
+
     /* options = {
         date_selector: "#adateid", // selector for date-only input
         time_selector: "#atimeid", // selector for time-only input
@@ -481,6 +497,8 @@ function setupDatetimePicker(options) {
     parent.find('#' + timepicker_selector).each(function () {
         $(this).datetimepicker({pickDate: false});
     });
+
+    updateDatePickerUIElements();
 }
 
 function createMiniSurvey(options) {

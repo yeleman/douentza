@@ -43,7 +43,7 @@ def survey_is_available(survey, request):
 
 
 @register.filter(name='taken')
-def survey_is_available(survey, request):
+def survey_is_taken(survey, request):
     try:
         return survey.taken(request)
     except:

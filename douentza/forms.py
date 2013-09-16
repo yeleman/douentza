@@ -118,7 +118,10 @@ class MiniSurveyInitForm(forms.ModelForm):
 
 class MiniSurveyAddQuestion(forms.ModelForm):
 
-    question_choices = forms.CharField(widget=forms.Textarea, required=False)
+    question_choices = forms.CharField(widget=forms.Textarea,
+                                       required=False,
+                                       help_text="Insérez les choix ici ; "
+                                                 "un par ligne.")
 
     class Meta:
         model = Question

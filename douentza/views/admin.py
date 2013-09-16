@@ -18,13 +18,13 @@ from douentza.utils import get_default_context
 def admin_surveys(request):
     context = get_default_context(page='admin_surveys')
 
-    context.update({'surveys': Survey.objects.all()})
+    context.update({'surveys': Survey.objects.order_by('id')})
 
     if request.method == "POST":
         form = MiniSurveyInitForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('admin_surveys')
+            survey = form.save()
+            return redirect('admin_survey', survey.id)
         else:
             pass
     else:
@@ -92,6 +92,9 @@ def admin_survey_validate(request, survey_id):
 
     survey = get_object_or_404(Survey, id=int(survey_id),
                                status=Survey.STATUS_CREATED)
+
+    if not survey.questions.count():
+        return redirect('admin_survey', survey.id)
 
     survey.status = Survey.STATUS_READY
     survey.save()

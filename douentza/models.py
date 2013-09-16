@@ -27,6 +27,14 @@ class IncomingManager(models.Manager):
                                                                 HotlineRequest.STATUS_BLACK_LIST))
 
 
+class ValidatedManager(models.Manager):
+
+    def get_query_set(self):
+        return super(ValidatedManager, self).get_query_set() \
+                                            .filter(status=Survey.STATUS_READY)
+
+
+
 @implements_to_string
 class HotlineRequest(models.Model):
 
@@ -259,11 +267,18 @@ class Survey(models.Model):
         STATUS_DISABLED: "Désactivé"
     }
 
-    title = models.CharField(max_length=200, verbose_name="Titre")
-    description = models.TextField(null=True, blank=True)
+    title = models.CharField(max_length=200,
+                             verbose_name="Titre",
+                             help_text="Nom du formulaire")
+    description = models.TextField(null=True,
+                                   blank=True,
+                                   verbose_name="Description")
     status = models.CharField(choices=STATUSES.items(),
                               default=STATUS_CREATED,
                               max_length=50)
+
+    objects = models.Manager()
+    validated = ValidatedManager()
 
     def __str__(self):
         return self.title
@@ -278,13 +293,13 @@ class Survey(models.Model):
 
     @classmethod
     def availables(cls, request):
-        return cls.objects.exclude(id__in=request.survey_takens.values('id')).order_by('title')
+        return cls.validated.exclude(id__in=[st.id for st in request.survey_takens.all()]).order_by('id')
 
     def available_for(self, request):
-        return not request.survey_takens.filter(id=self.id).count()
+        return not request.survey_takens.filter(survey__id=self.id).count()
 
     def taken(self, request):
-        return request.survey_takens.get(id=self.id)
+        return request.survey_takens.get(survey__id=self.id)
 
     def status_str(self):
         return self.STATUSES.get(self.status, self.STATUS_CREATED)
@@ -324,8 +339,13 @@ class Question(models.Model):
         TYPE_CHOICES: forms.ChoiceField(),
     }
 
-    order = models.PositiveIntegerField(default=0, verbose_name="Ordre")
-    label = models.CharField(max_length=200, verbose_name="Question")
+    order = models.PositiveIntegerField(default=0,
+        verbose_name="Ordre",
+        help_text="Ordre d'apparition. Le plus élévé en premier. "
+                  "0 égal aucune priorité particulière (ordre d'ajout)")
+    label = models.CharField(max_length=200,
+                             verbose_name="Question",
+                             help_text="Libellé de la question")
     question_type = models.CharField(max_length=30, choices=TYPES.items())
     required = models.BooleanField(verbose_name="Réponse requise")
     survey = models.ForeignKey('Survey', related_name='questions')
@@ -412,7 +432,7 @@ class SurveyTaken(models.Model):
                 'request': self.request,
                 'survey': self.survey,
                 'questions': []}
-        for question in self.survey.questions.order_by('order'):
+        for question in self.survey.questions.order_by('-order', 'id'):
             question_data = question.to_dict()
             question_data.update({'value': self.data_for(question)})
             data['questions'].append(question_data)

@@ -80,6 +80,17 @@ iframe {
 .label-gender-female:before { content: "♀"; }
 .label-gender-female { background-color: #7f3e98; }
 
+h2, h3, h4, h5 {color: #222222; line-height: 1.50; margin: 0; text-shadow: 0 1px 1px rgba(0, 0, 0, 0.12); }
+
 li {
     padding-bottom: .5em;
+}
+
+.questionlist {
+    border-left: 1px solid grey;
+}
+
+.label-inverse {
+    background-color: black;
+    color: white;
 }

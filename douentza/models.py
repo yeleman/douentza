@@ -88,7 +88,7 @@ class HotlineRequest(models.Model):
     responded_on = models.DateTimeField(null=True, blank=True,
                                         verbose_name="Date de l'appel")
     age = models.PositiveIntegerField(null=True, blank=True, verbose_name="Age")
-    sex = models.CharField(max_length=6, choices=SEXES.items(),
+    sex = models.CharField(max_length=20, choices=SEXES.items(),
                            default=SEX_UNKNOWN, verbose_name="Sexe")
     duration = models.PositiveIntegerField(max_length=4, null=True, blank=True,
                                            help_text="Durée de l'appel en seconde",
@@ -272,7 +272,7 @@ class Survey(models.Model):
         d = {'title': self.title,
              'description': self.description,
              'questions': []}
-        for question in self.questions.order_by('id'):
+        for question in self.questions.order_by('-order', 'id'):
             d['questions'].append(question.to_dict())
         return d
 
@@ -334,11 +334,15 @@ class Question(models.Model):
         return "{survey}/{label}".format(label=self.label,
                                          survey=self.survey)
 
+    def type_str(self):
+        return self.TYPES.get(self.question_type)
+
     def to_dict(self):
         d = {'id': self.id,
              'order': self.order,
              'label': self.label,
              'type': self.question_type,
+             'type_str': self.type_str(),
              'required': self.required,
              'choices': []}
         for choice in self.questionchoices.order_by('id'):
@@ -350,7 +354,7 @@ class Question(models.Model):
 class QuestionChoice(models.Model):
 
     class Meta:
-        unique_together = (('label', 'question'),)
+        unique_together = (('slug', 'question'),)
 
     slug = models.CharField(max_length=20)
     label = models.CharField(max_length=70, verbose_name="Choix")

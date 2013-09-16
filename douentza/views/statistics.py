@@ -12,8 +12,11 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 
-from douentza.models import HotlineRequest, Project, Survey
-from douentza.utils import get_default_context, datetime_range, start_or_end_day_from_date, to_timestamp
+from douentza.models import (HotlineRequest, Project, Survey, Entity, Ethnicity)
+from douentza.utils import (get_default_context, datetime_range,
+                            start_or_end_day_from_date, to_jstimestamp,
+                            ethinicity_requests, communes_located_requests,
+                            stats_per_age)
 
 
 def get_event_responses_counts():
@@ -27,11 +30,11 @@ def get_event_responses_counts():
     responses = []
 
     for date in datetime_range(start):
-        ts = int(to_timestamp(date)) * 1000
+        ts = to_jstimestamp(date)
         qcount = HotlineRequest.objects.filter(received_on__gte=start_or_end_day_from_date(date),
-                                             received_on__lt=start_or_end_day_from_date(date, False)).count()
+                                               received_on__lt=start_or_end_day_from_date(date, False)).count()
         scount = HotlineRequest.objects.filter(responded_on__gte=start_or_end_day_from_date(date),
-                                                responded_on__lt=start_or_end_day_from_date(date, False)).count()
+                                               responded_on__lt=start_or_end_day_from_date(date, False)).count()
         events.append((ts, qcount))
         responses.append((ts, scount))
     event_response_data = {'events': events,
@@ -56,6 +59,18 @@ def get_statistics_dict():
     sex_male = HotlineRequest.objects.filter(sex=HotlineRequest.SEX_MALE).count()
     sex_female = HotlineRequest.objects.filter(sex=HotlineRequest.SEX_FEMALE).count()
 
+    unknown_count = HotlineRequest.objects.filter(location=None).count()
+    total = HotlineRequest.objects.all().count()
+    unknown_percent = unknown_count * 100 / total
+    unknown_age = HotlineRequest.objects.filter(age=None).count()
+    unknown_age_percent = unknown_age * 100 / total
+
+    under_18 = stats_per_age(0, 18)
+    stats_19_25 = stats_per_age(19, 25)
+    stats_26_40 = stats_per_age(26, 40)
+    stats_41_55 = stats_per_age(41, 55)
+    other_56 = stats_per_age(56, 180)
+
     context.update({'last_event': last_event,
                     'nb_total_events': nb_total_events,
                     'nb_projects': nb_projects,
@@ -63,7 +78,19 @@ def get_statistics_dict():
                     'nb_unique_number': nb_unique_number,
                     'sex_unknown': sex_unknown,
                     'sex_male': sex_male,
-                    'sex_female': sex_female})
+                    'sex_female': sex_female,
+                    'under_18': under_18,
+                    'stats_19_25': stats_19_25,
+                    'stats_26_40': stats_26_40,
+                    'stats_41_55': stats_41_55,
+                    'other_56': other_56,
+                    'unknown_age': unknown_age,
+                    'unknown_age_percent': unknown_age_percent,
+                    'nb_ethinicity_requests': [ethinicity_requests(ethinicity)
+                                              for ethinicity in Ethnicity.objects.all()],
+                    'communes_located_requests': [communes_located_requests(commune)
+                                 for commune in list(Entity.objects.filter(entity_type='commune'))] +
+                                 [("Inconnue", unknown_count, unknown_percent)],})
     return context
 
 

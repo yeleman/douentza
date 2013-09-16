@@ -1,5 +1,6 @@
  <div class="form-group {% if field.errors %} has-error {% endif %}">
 <label class="control-label">{{ field.label }}</label>
 {% include "form_error_span.html" with errors=field.errors %}
+<span class="help-text hidden">{{ field.help_text }}</span>
 {{ field }}
 </div>

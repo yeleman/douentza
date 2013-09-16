@@ -80,6 +80,10 @@ function styleFormElements() {
                 trigger: 'hover',
                 content: error_content}).popover('show');
         }
+        var help_text = parent.find(".help-text");
+        if (help_text.text()) {
+            $(this).attr('placeholder', help_text.text());
+        }
     });
 }
 

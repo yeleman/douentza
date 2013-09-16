@@ -7,7 +7,7 @@ from __future__ import (unicode_literals, absolute_import,
 
 from django import forms
 
-from douentza.models import HotlineRequest, Project, Ethnicity, Entity
+from douentza.models import HotlineRequest, Project, Ethnicity, Entity, Survey
 from douentza.utils import EMPTY_ENTITY
 
 help_duration = "La durée est en seconde"
@@ -105,3 +105,11 @@ class MiniSurveyForm(forms.Form):
 
         for idx, question in enumerate(questions):
             self.fields["question_{}".format(question.get('id'))] = get_form_property(question)
+
+
+class MiniSurveyInitForm(forms.ModelForm):
+
+    class Meta:
+        model = Survey
+        fields = ['title', 'description']
+

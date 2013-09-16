@@ -1,0 +1,5 @@
+ <div class="form-group {% if field.errors %} has-error {% endif %}">
+<label class="control-label">{{ field.label }}</label>
+{% include "form_error_span.html" with errors=field.errors %}
+{{ field }}
+</div>

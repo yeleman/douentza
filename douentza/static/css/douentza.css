@@ -79,3 +79,7 @@ iframe {
 
 .label-gender-female:before { content: "♀"; }
 .label-gender-female { background-color: #7f3e98; }
+
+li {
+    padding-bottom: .5em;
+}

@@ -34,6 +34,9 @@ urlpatterns = patterns('',
     url(r'^survey_stats/$', 'douentza.views.surveys.survey_stats', name='survey_stats'),
     url(r'^archives/?$', 'douentza.views.events.archives', name='archives'),
 
+    # admin
+    url(r'^admin/surveys/?$', 'douentza.views.admin.admin_surveys', name='admin_surveys'),
+
     url(r'^$', 'douentza.views.event_dashboard.dashboard', name='event_dashboard'),
     url(r'^change/(?P<event_id>[0-9]+)/(?P<new_status>[a-zA-Z\_]+)$',
         'douentza.views.event_dashboard.change_event_status', name='change_event'),

@@ -248,8 +248,22 @@ class Project(models.Model):
 
 @implements_to_string
 class Survey(models.Model):
+
+    STATUS_CREATED = 'created'
+    STATUS_READY = 'ready'
+    STATUS_DISABLED = 'disabled'
+
+    STATUSES = {
+        STATUS_CREATED: "Commencé",
+        STATUS_READY: "Utilisable",
+        STATUS_DISABLED: "Désactivé"
+    }
+
     title = models.CharField(max_length=200, verbose_name="Titre")
     description = models.TextField(null=True, blank=True)
+    status = models.CharField(choices=STATUSES.items(),
+                              default=STATUS_CREATED,
+                              max_length=50)
 
     def __str__(self):
         return self.title
@@ -271,6 +285,9 @@ class Survey(models.Model):
 
     def taken(self, request):
         return request.survey_takens.get(id=self.id)
+
+    def status_str(self):
+        return self.STATUSES.get(self.status, self.STATUS_CREATED)
 
 
 @implements_to_string

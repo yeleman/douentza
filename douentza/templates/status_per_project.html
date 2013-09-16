@@ -1,0 +1,19 @@
+{% load douentza %}
+{% if hotlinerequest_project_count %}
+<h3>Répartition des projets</h3>
+<table class="table table-condensed table-hover table-bordered table-striped table-info">
+    <thead>
+        <tr>
+            <th class="span2">Projet</th>
+            <th class="span2">Taux (nombre)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for name_project, count, percent in hotlinerequest_project_count %}
+        <tr><td>{{ name_project }}</td>
+            <td><strong>{{percent|floatformat:2}} % ({{ count }}) </strong></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}

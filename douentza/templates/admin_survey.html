@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block extra_js %}styleFormElements();
+$('.question-list-choices').each(function (){
+   $(this).popover();
+});
+function display_question_choices() {
+    var elem = $('#id_question_type');
+    var is_choice = (elem.val() == 'choice');
+    var elem_choices = $('#id_question_choices').parent();
+    elem_choices.toggleClass('hidden', !is_choice);
+}
+$('#id_question_type').on('change', display_question_choices);
+display_question_choices();
+{% endblock %}
+
+{% block content %}
+<h2>{{ survey.title }}</h2>
+<div class="row">
+<div class="col-xs-6 col-sm-6 col-md-4">
+<p>Lorsque votre questionnaire est terminé, cliquez ci-dessous pour le valider.</p>
+<p>Attention, <strong>il ne sera plus modifiable</strong>.</p>
+<p><a href="{% url 'admin_survey_validate' survey.id %}"><button class="btn btn-warning">Valider mon questionnaire</button></a></p>
+</div>
+
+<div class="col-xs-12 col-sm-6 col-md-8 questionlist">
+<h3>Questions existantes</h3>
+<ol>
+{% for questiond in survey.to_dict.questions %}
+<li>{{ questiond.label }} [<abbr {% if questiond.type == 'choice' %}class="question-list-choices" data-content="{% for choice in questiond.choices %}<span class='label label-default'>{{ choice.label }}</span> {% endfor %}" data-html="true" data-placement="top" data-trigger="hover"{% endif %}>{{ questiond.type_str }}</abbr>]{% if questiond.required %} <strong>obligatoire</strong>{% endif %}. <a href="{% url 'admin_survey_delete_question' survey.id questiond.id %}"><button class="btn btn-danger btn-xs">supprimer</button></a></li>
+{% endfor %}
+</ol>
+</div>
+</div>
+
+<legend>Ajouter question</legend>
+<form role="form" action="{% url 'admin_survey' survey.id %}" method="post">
+{% csrf_token %}
+    {% include "form_field.html" with field=form.label %}
+    {% include "form_field.html" with field=form.question_type %}
+    {% include "form_field.html" with field=form.question_choices %}
+    {% include "form_field.html" with field=form.required %}
+    {% include "form_field.html" with field=form.order %}
+  <button type="submit" class="btn btn-primary">Ajouter la question</button>
+</form>
+
+{% endblock %}

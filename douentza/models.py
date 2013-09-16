@@ -248,8 +248,22 @@ class Project(models.Model):
 
 @implements_to_string
 class Survey(models.Model):
+
+    STATUS_CREATED = 'created'
+    STATUS_READY = 'ready'
+    STATUS_DISABLED = 'disabled'
+
+    STATUSES = {
+        STATUS_CREATED: "Commencé",
+        STATUS_READY: "Utilisable",
+        STATUS_DISABLED: "Désactivé"
+    }
+
     title = models.CharField(max_length=200, verbose_name="Titre")
     description = models.TextField(null=True, blank=True)
+    status = models.CharField(choices=STATUSES.items(),
+                              default=STATUS_CREATED,
+                              max_length=50)
 
     def __str__(self):
         return self.title
@@ -258,7 +272,7 @@ class Survey(models.Model):
         d = {'title': self.title,
              'description': self.description,
              'questions': []}
-        for question in self.questions.order_by('id'):
+        for question in self.questions.order_by('-order', 'id'):
             d['questions'].append(question.to_dict())
         return d
 
@@ -271,6 +285,9 @@ class Survey(models.Model):
 
     def taken(self, request):
         return request.survey_takens.get(id=self.id)
+
+    def status_str(self):
+        return self.STATUSES.get(self.status, self.STATUS_CREATED)
 
 
 @implements_to_string
@@ -317,11 +334,15 @@ class Question(models.Model):
         return "{survey}/{label}".format(label=self.label,
                                          survey=self.survey)
 
+    def type_str(self):
+        return self.TYPES.get(self.question_type)
+
     def to_dict(self):
         d = {'id': self.id,
              'order': self.order,
              'label': self.label,
              'type': self.question_type,
+             'type_str': self.type_str(),
              'required': self.required,
              'choices': []}
         for choice in self.questionchoices.order_by('id'):
@@ -333,7 +354,7 @@ class Question(models.Model):
 class QuestionChoice(models.Model):
 
     class Meta:
-        unique_together = (('label', 'question'),)
+        unique_together = (('slug', 'question'),)
 
     slug = models.CharField(max_length=20)
     label = models.CharField(max_length=70, verbose_name="Choix")

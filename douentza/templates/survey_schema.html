@@ -1,0 +1,7 @@
+<table class="survey-schema hidden" survey-id="{{ survey.id }}">
+{% for questiond in survey.to_dict.questions %}
+<tr>
+<td>{{ forloop.counter }}</td><td>{{ questiond.label }}{% if questiond.required %}<sup title="Question obligatoire" class="glyphicon glyphicon-asterisk"></sup>{% endif %}</td><td>{{ questiond.type_str }}{% if questiond.type == 'choice' %}<br />
+{% for choice in questiond.choices %}<span class='label label-default'>{{ choice.label }}</span> {% endfor %}{% endif %}</td></tr>
+{% endfor %}
+</table>

@@ -6,8 +6,10 @@ from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 
 from django import forms
+from django.utils.text import slugify
 
-from douentza.models import HotlineRequest, Project, Ethnicity, Entity
+from douentza.models import (HotlineRequest, Project, Ethnicity,
+                             Entity, Survey, Question, QuestionChoice)
 from douentza.utils import EMPTY_ENTITY
 
 help_duration = "La durée est en seconde"
@@ -105,3 +107,28 @@ class MiniSurveyForm(forms.Form):
 
         for idx, question in enumerate(questions):
             self.fields["question_{}".format(question.get('id'))] = get_form_property(question)
+
+
+class MiniSurveyInitForm(forms.ModelForm):
+
+    class Meta:
+        model = Survey
+        fields = ['title', 'description']
+
+
+class MiniSurveyAddQuestion(forms.ModelForm):
+
+    question_choices = forms.CharField(widget=forms.Textarea, required=False)
+
+    class Meta:
+        model = Question
+        fields = ['order', 'label', 'question_type', 'required']
+
+    def clean_question_choices(self):
+        txt_choices = self.cleaned_data.get('question_choices')
+        choices = {}
+        for choice in txt_choices.split('\n'):
+            choice = choice.strip()
+            if len(choice):
+                choices.update({slugify(choice): choice})
+        return choices

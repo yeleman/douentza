@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block extra_js %}
+styleFormElements();
+$('.survey-content-btn').each(function (){
+    var content = $('.survey-schema[survey-id='+$(this).attr('survey-id')+']');
+    $(this).popover({html: true, trigger: 'hover', content: content.html()});
+});
+{% endblock %}
+
+{% block content %}
+<h2>Gestion des questionnaires</h2>
+
+{% if surveys %}
+<legend>Tous les questionnaires</legend>
+<p>Les formulaires suivants sont disponibles pour tous les appels.</p>
+<p>Il n'est pas possible de les modifier, ni de les supprimer ; mais vous pouvez les désactiver pour ne plus les voir apparaître dans le formulaire de saisie des appels.</p>
+<table class="table table-striped table-condensed table-bordered">
+{% for survey in surveys %}
+<tr><th>Questionnaires</th><th>Nb.</th><th>Statut</th><th>Actions</th></tr>
+    <tr>
+        <td>{{ survey.title }}</td>
+        <td>{{ survey.questions.count }}</td>
+        <td><span class="label {% if survey.status = survey.STATUS_CREATED %}label-warning{% elif survey.status = survey.STATUS_DISABLED%}label-inverse{% else %}label-default{% endif %}">{{ survey.status_str }}</span>
+            {% if survey.status = survey.STATUS_CREATED %}
+            <a href="{% url 'admin_survey' survey.id %}"><button class="btn btn-xs btn-default">modifier</button></a>
+            <button class="btn btn-xs btn-danger" title="Attention, vous ne pourrez plus le modifier ensuite!"><span class="glyphicon glyphicon-warning-sign"></span> valider</button>
+            {% endif %}
+        </td>
+        <td>
+            {% include "survey_schema.html" with survey=survey %}
+            <button class="btn btn-xs btn-info survey-content-btn" survey-id="{{ survey.id }}">contenu</button>
+            <button class="btn btn-xs btn-default">stats</button>
+            <a href="{% url 'admin_survey_toggle' survey.id %}"><button class="btn btn-xs btn-danger">{% if survey.status = survey.STATUS_DISABLED %} re-activer{% else %}désactiver{% endif %}</button></a></td>
+    </tr>
+{% endfor %}
+</table>
+<hr />
+{% endif %}
+
+<legend>Nouveau questionnaire</legend>
+<form role="form" action="{% url 'admin_surveys' %}" method="post">
+{% csrf_token %}
+    {% include "form_field.html" with field=form.title %}
+    {% include "form_field.html" with field=form.description %}
+  <button type="submit" class="btn btn-primary">Créer le questionaire</button>
+</form>
+
+{% endblock %}

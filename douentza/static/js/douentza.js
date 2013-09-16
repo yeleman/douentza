@@ -1,4 +1,8 @@
 
+var dashboard_loop;
+var dashboard_interval = 10 * 1000;
+var lastUpdate = new Date();
+
 Array.prototype.diff = function(a) {
     return this.filter(function(i) {
             return !(a.indexOf(i) > -1);
@@ -66,6 +70,44 @@ function graph_event_response_counts(data_url) {
     });
 }
 
+
+function setupPingLoop(since_ts) {
+    console.log("setupPingLoop "+ since_ts);
+    restartPingLoop(since_ts);
+}
+
+function restartPingLoop(since_ts) {
+    if (since_ts !== null)
+        lastUpdate = new Date(parseInt(since_ts));
+    dashboard_loop = setTimeout(_updateUIOnEvents, dashboard_interval);
+}
+
+function getExistingIds() {
+    var ids = [];
+    $('.row-request').each(function() {
+        ids.push($(this).attr('request-id'));
+    });
+    return ids;
+}
+
+function _updateUIOnEvents() {
+    clearTimeout(dashboard_loop);
+
+    $.get('/api/ping_json', {since: lastUpdate.getTime(),
+                             exclude: JSON.stringify(getExistingIds())}).done(function (data) {
+        if (data.events.length > 0) {
+            // we have new events, let them shine
+            for (var i=0; i<data.events.length; i++) {
+                var html = data.events[i].html_row;
+                $('.today_events_table tbody').append($(html));
+            }
+        }
+        restartPingLoop(null);
+    }).fail(function (err) {
+        restartPingLoop(null);
+    });
+
+}
 
 function styleFormElements() {
     // bootstrap3 requires form elements to have the `form-control` CSS class

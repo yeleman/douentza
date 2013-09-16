@@ -15,7 +15,7 @@ from mptt.managers import TreeManager
 from picklefield.fields import PickledObjectField
 
 from douentza._compat import implements_to_string
-from douentza.utils import OPERATORS
+from douentza.utils import OPERATORS, to_jstimestamp
 
 
 class IncomingManager(models.Manager):
@@ -113,6 +113,13 @@ class HotlineRequest(models.Model):
         return "{event_type}-{number}-{status}".format(event_type=self.event_type,
                                                        status=self.status,
                                                        number=self.identity)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'status': self.status,
+            'responded_on': to_jstimestamp(self.responded_on),
+        }
 
     def add_busy_call(self, new_status):
         callbackattempt = CallbackAttempt(event=self, status=new_status)

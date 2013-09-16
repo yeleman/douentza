@@ -200,14 +200,16 @@ def operator_from_mali_number(number, default=ORANGE):
 
 
 def to_jstimestamp(adate):
-    return int(to_timestamp(adate)) * 1000
+    if not adate is None:
+        return int(to_timestamp(adate)) * 1000
 
 
 def to_timestamp(dt):
     """
     Return a timestamp for the given datetime object.
     """
-    return (dt - datetime.datetime(1970, 1, 1)).total_seconds()
+    if not dt is None:
+        return (dt - datetime.datetime(1970, 1, 1)).total_seconds()
 
 
 def ethinicity_requests(ethnicity):

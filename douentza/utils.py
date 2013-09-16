@@ -231,5 +231,13 @@ def stats_per_age(begin=0, end=0):
     count = HotlineRequest.objects.filter(age__gte=begin, age__lte=end).count()
     total = HotlineRequest.objects.all().count()
 
-    percent = (count * 100) / total
+    percent = percent_calculation(count, total)
     return count, percent
+
+
+def percent_calculation(value, total):
+    try:
+        percent = (value * 100) / total
+    except ZeroDivisionError:
+        percent = 0
+    return percent

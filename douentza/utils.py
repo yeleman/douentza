@@ -214,7 +214,7 @@ def ethinicity_requests(ethnicity):
     from douentza.models import HotlineRequest
     count = HotlineRequest.objects.filter(ethnicity=ethnicity).count()
     total = HotlineRequest.objects.all().count()
-    percent = count * 100 / total
+    percent = percent_calculation(count, total)
     return ethnicity, count, percent
 
 

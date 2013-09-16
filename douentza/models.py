@@ -142,6 +142,12 @@ class HotlineRequest(models.Model):
     def duration_delta(self):
         return datetime.timedelta(seconds=self.duration)
 
+    def status_str(self):
+        return self.STATUSES.get(self.status)
+
+    def type_str(self):
+        return self.TYPES.get(self.event_type)
+
 
 @implements_to_string
 class AdditionalRequest(models.Model):

@@ -17,7 +17,7 @@ from douentza.models import (HotlineRequest, Project, Survey, Entity, Ethnicity)
 from douentza.utils import (get_default_context, datetime_range,
                             start_or_end_day_from_date, to_jstimestamp,
                             ethinicity_requests, communes_located_requests,
-                            stats_per_age)
+                            stats_per_age, percent_calculation)
 
 
 def get_event_responses_counts():
@@ -60,11 +60,12 @@ def get_statistics_dict():
     sex_male = HotlineRequest.objects.filter(sex=HotlineRequest.SEX_MALE).count()
     sex_female = HotlineRequest.objects.filter(sex=HotlineRequest.SEX_FEMALE).count()
 
-    unknown_count = HotlineRequest.objects.filter(location=None).count()
+    unknown_location_count = HotlineRequest.objects.filter(location=None).count()
     total = HotlineRequest.objects.all().count()
-    unknown_percent = unknown_count * 100 / total
+
+    unknown_location_percent = percent_calculation(unknown_location_count, total)
     unknown_age = HotlineRequest.objects.filter(age=None).count()
-    unknown_age_percent = unknown_age * 100 / total
+    unknown_age_percent = percent_calculation(unknown_age, total)
 
     handled_hotline_request = HotlineRequest.objects.filter(status=HotlineRequest.STATUS_HANDLED)
     sum_duration = handled_hotline_request.aggregate(Sum("duration"))
@@ -101,7 +102,7 @@ def get_statistics_dict():
                                                for ethinicity in Ethnicity.objects.all()],
                     'communes_located_requests': [communes_located_requests(commune)
                                                   for commune in list(Entity.objects.filter(entity_type='commune'))] +
-                                                  [("Inconnue", unknown_count, unknown_percent)],})
+                                                  [("Inconnue", unknown_location_count, unknown_location_percent)],})
     return context
 
 

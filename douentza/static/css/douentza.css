@@ -80,6 +80,6 @@ iframe {
 .label-gender-female:before { content: "♀"; }
 .label-gender-female { background-color: #7f3e98; }
 
-/*h2, h3, h4, h5 {color: #222222; line-height: 1.50; margin: 0; text-shadow: 0 1px 1px rgba(0, 0, 0, 0.12); }*/
+.statistics h2, .statistics h3, .statistics h4, .statistics h5 {color: #222222; line-height: 1.50; margin: 0; text-shadow: 0 1px 1px rgba(0, 0, 0, 0.12); }
 .statistics .ident{ padding-left: 35px; }
 .statistics .total{ font-weight: bold; }

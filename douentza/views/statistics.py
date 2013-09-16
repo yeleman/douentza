@@ -46,32 +46,40 @@ def get_event_responses_counts():
 
 def get_statistics_dict():
     context = {}
+
+    hotlinerequest = HotlineRequest.objects
+
     try:
-        last_event = HotlineRequest.objects.latest('received_on')
+        last_event = hotlinerequest.latest('received_on')
     except HotlineRequest.DoesNotExist:
         last_event = []
 
-    nb_total_events = HotlineRequest.objects.count()
-    nb_projects = Project.objects.count()
+    nb_total_events = hotlinerequest.count()
     nb_survey = Survey.objects.count()
-    nb_unique_number = HotlineRequest.objects.values('identity').distinct().count()
+    projects = Project.objects.all()
+    nb_projects = projects.count()
 
-    sex_unknown = HotlineRequest.objects.filter(sex=HotlineRequest.SEX_UNKNOWN).count()
-    sex_male = HotlineRequest.objects.filter(sex=HotlineRequest.SEX_MALE).count()
-    sex_female = HotlineRequest.objects.filter(sex=HotlineRequest.SEX_FEMALE).count()
+    nb_unique_number = hotlinerequest.values('identity').distinct().count()
 
-    unknown_location_count = HotlineRequest.objects.filter(location=None).count()
-    total = HotlineRequest.objects.all().count()
+    sex_unknown = hotlinerequest.filter(sex=HotlineRequest.SEX_UNKNOWN).count()
+    sex_male = hotlinerequest.filter(sex=HotlineRequest.SEX_MALE).count()
+    sex_female = hotlinerequest.filter(sex=HotlineRequest.SEX_FEMALE).count()
 
-    unknown_location_percent = percent_calculation(unknown_location_count, total)
-    unknown_age = HotlineRequest.objects.filter(age=None).count()
-    unknown_age_percent = percent_calculation(unknown_age, total)
+    unknown_location_count = hotlinerequest.filter(location=None).count()
+    unknown_location_percent = percent_calculation(unknown_location_count, nb_total_events)
+    unknown_age = hotlinerequest.filter(age=None).count()
+    unknown_age_percent = percent_calculation(unknown_age, nb_total_events)
 
-    handled_hotline_request = HotlineRequest.objects.filter(status=HotlineRequest.STATUS_HANDLED)
+    handled_hotline_request = hotlinerequest.filter(status=HotlineRequest.STATUS_HANDLED)
     sum_duration = handled_hotline_request.aggregate(Sum("duration"))
     average_duration = handled_hotline_request.aggregate(Avg("duration"))
     longest_duration = handled_hotline_request.aggregate(Max("duration"))
     short_duration = handled_hotline_request.aggregate(Min("duration"))
+
+    hotlinerequest_project_count = [(project.name,
+                                     hotlinerequest.filter(project=project).count(),
+                                     percent_calculation(hotlinerequest.filter(project=project).count(), nb_projects))
+                                     for project in projects]
 
     under_18 = stats_per_age(0, 18)
     stats_19_25 = stats_per_age(19, 25)
@@ -97,6 +105,7 @@ def get_statistics_dict():
                     'longest_duration': longest_duration,
                     'short_duration': short_duration,
                     'unknown_age_percent': unknown_age_percent,
+                    'hotlinerequest_project_count': hotlinerequest_project_count,
                     'sum_duration': sum_duration,
                     'nb_ethinicity_requests': [ethinicity_requests(ethinicity)
                                                for ethinicity in Ethnicity.objects.all()],

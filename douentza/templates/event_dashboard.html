@@ -33,4 +33,6 @@
 
 {% endblock %}
 
-
+{% block extra_js %}
+setupPingLoop('{{now}}');
+{% endblock %}

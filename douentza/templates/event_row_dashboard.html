@@ -1,0 +1,12 @@
+{% load douentza %}<tr class="{% if event.status != 'NEW_REQUEST' %}alert-warning{% endif %} row-request" request-id="{{ event.id }}">
+    <td><span class="glyphicon glyphicon-earphone"></span> <strong>{{ event.identity|phone }}</strong> {{ event.received_on }} <span class="label label-default">{{ event.status_str }}</span> <span class="label label-default">{{ event.type_str }}</span>{% if event.callbackattempts %}
+        <ul>
+        {% for callback in event.callbackattempts.all %}
+        <li>{{ callback.created_on }} / {{ callback.status }}</li>
+        {% endfor %}
+    </ul>{% endif %}</td>
+    <td><a href="{% url 'display_event' request_id=event.id %}"><button type="button" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-pencil"></span> Saisir le rappel</button></a></td>
+    <td><a href="{% url 'change_event' event.id 'IS_BUSY' %}"><button type="button" class="btn btn-xs btn-warning"><span class="glyphicon"></span> Occupé</button></a></td>
+    <td><a href="{% url 'change_event' event.id 'NOT_ANSWERING' %}"><button type="button" class="btn btn-xs btn-danger"><span class="glyphicon"></span> Ne répond pas</button></a></td>
+    <td><a href="{% url 'change_event' event.id 'BLACK_LIST'%}"><button type="button" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-minus-sign"></span> Blacklister</button></a></td>
+</tr>

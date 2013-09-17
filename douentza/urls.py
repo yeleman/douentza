@@ -38,6 +38,7 @@ urlpatterns = patterns('',
 
     # admin
     url(r'^admin/surveys/?$', 'douentza.views.admin.admin_surveys', name='admin_surveys'),
+    url(r'^admin/projects/?$', 'douentza.views.admin.admin_projects', name='admin_projects'),
     url(r'^admin/surveys/'+ SURVEY_ID +'/?$', 'douentza.views.admin.admin_survey', name='admin_survey'),
     url(r'^admin/surveys/'+ SURVEY_ID +'/delete-question/(?P<question_id>[0-9]+)/?$',
         'douentza.views.admin.admin_delete_question', name='admin_survey_delete_question'),

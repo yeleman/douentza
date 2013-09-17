@@ -178,6 +178,10 @@ def join_phone_number(prefix, number, force_intl=True):
     return '+%s%s' % (prefix, number)
 
 
+def normalize_phone_number(number_text):
+    return join_phone_number(*clean_phone_number(number_text))
+
+
 def operator_from_mali_number(number, default=ORANGE):
     ''' ORANGE or MALITEL based on the number prefix '''
 

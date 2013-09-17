@@ -38,7 +38,7 @@ $('#accordion .btn-survey').each(function (){
 {% endblock %}
 
 {% block content %}
-<h1>{{ event.identity|phone }} <span class="badge badge_alert badge-xs"><span class="glyphicon glyphicon-earphone"></span> {{event.additionalrequests.count}} </span></h1>
+<h1>{{ event.identity|phone }} <span class="badge badge_alert badge-xs"><span class="glyphicon glyphicon-earphone"></span> {{event.additionalrequests.count|default:"1" }} </span></h1>
 
 {% include "event_history_panel.html" with event=event %}
 

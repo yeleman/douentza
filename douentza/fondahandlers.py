@@ -11,6 +11,7 @@ from douentza.utils import (event_type_from_message,
                             number_is_blacklisted,
                             operator_from_mali_number)
 from douentza.views.fondasms import datetime_from_timestamp
+from douentza.utils import normalize_phone_number
 
 
 class UnableToCreateHotlineRequest(Exception):
@@ -36,7 +37,7 @@ def handle_incoming_call(payload):
 
 
 def handle_sms_call(payload, event_type=None):
-    identity = payload.get('from').strip()
+    identity = normalize_phone_number(payload.get('from').strip())
     if not is_valid_number(identity) or number_is_blacklisted(identity):
         return
 

@@ -48,3 +48,18 @@ def survey_is_taken(survey, request):
         return survey.taken(request)
     except:
         return ''
+
+
+@register.filter(name='statuscss')
+def cssclass_from_status(status):
+    from douentza.models import HotlineRequest
+    status_table = {
+        HotlineRequest.STATUS_NEW_REQUEST: 'default',
+        HotlineRequest.STATUS_NOT_ANSWERING: 'warning',
+        HotlineRequest.STATUS_HANDLED: 'success',
+        HotlineRequest.STATUS_IS_BUSY: 'warning',
+        HotlineRequest.STATUS_BLACK_LIST: 'inverse',
+        HotlineRequest.STATUS_GAVE_UP: 'danger'
+    }
+
+    return "label-{}".format(status_table.get(status, 'default'))

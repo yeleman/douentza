@@ -85,4 +85,6 @@ def survey_data(request, survey_id, request_id):
 def survey_stats(request):
     context = get_default_context(page='survey_stats')
 
+    context.update({'surveys': Survey.validated.order_by('id')})
+
     return render(request, "survey_stats.html", context)

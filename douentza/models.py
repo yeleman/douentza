@@ -73,8 +73,8 @@ class HotlineRequest(models.Model):
     TYPE_SMS_SPAM = 'SMS_SPAM'
 
     TYPES = {
-        TYPE_CALL_ME: "Peux-tu me rappeler?",
-        TYPE_CHARGE_ME: "Peux-tu recharger mon compte?",
+        TYPE_CALL_ME: "Rappele moi",
+        TYPE_CHARGE_ME: "Recharges mon compte",
         TYPE_RING: "Bip.",
         TYPE_SMS: "SMS",
         TYPE_SMS_SPAM: "SMS (SPAM)"}
@@ -168,6 +168,9 @@ class AdditionalRequest(models.Model):
         return "{event}/{type}".format(event=self.event,
                                          type=self.request_type)
 
+    def type_str(self):
+        return HotlineRequest.TYPES.get(self.request_type)
+
 
 @implements_to_string
 class CallbackAttempt(models.Model):
@@ -183,6 +186,9 @@ class CallbackAttempt(models.Model):
     def __str__(self):
         return "{event}/{created_on}".format(event=self.event,
                                              created_on=self.created_on)
+
+    def status_str(self):
+        return HotlineRequest.STATUSES.get(self.status)
 
 
 @implements_to_string

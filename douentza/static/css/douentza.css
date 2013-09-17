@@ -91,3 +91,15 @@ iframe {
     background-color: black;
     color: white;
 }
+
+.table-stats td, .table-stats th {
+    text-align: center;
+}
+
+.table-stats td:first-of-type, .table-stats th:first-of-type {
+    text-align: left;
+}
+
+.table-stats-vertical td {
+    text-align: center;
+}

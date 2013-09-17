@@ -74,16 +74,15 @@ iframe {
 
 .label-gender-unknown:before, .label-gender-unknow:before { content: "⚤"; }
 
-.label-gender-male:before { content: "♂"; }
+.label-gender-male:before { content: "♂"; font-size: 150%; font-weight: bold; }
 .label-gender-male { background-color: #0093e0; }
 
-.label-gender-female:before { content: "♀"; }
+.label-gender-female:before { content: "♀"; font-size: 150%; font-weight: bold; }
 .label-gender-female { background-color: #7f3e98; }
 
 .statistics h2, .statistics h3, .statistics h4, .statistics h5 {color: #222222; line-height: 1.50; margin: 0; text-shadow: 0 1px 1px rgba(0, 0, 0, 0.12); }
 .statistics .ident{ padding-left: 35px; }
-.statistics .total{ font-weight: bold; }
-
+.statistics .important{ font-weight: bold; }
 .questionlist {
     border-left: 1px solid grey;
 }
@@ -91,4 +90,16 @@ iframe {
 .label-inverse {
     background-color: black;
     color: white;
+}
+
+.table-stats td, .table-stats th {
+    text-align: center;
+}
+
+.table-stats td:first-of-type, .table-stats th:first-of-type {
+    text-align: left;
+}
+
+.table-stats-vertical td {
+    text-align: center;
 }

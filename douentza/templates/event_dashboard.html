@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block title %}Tableau de bord{% endblock %}
+
 {% block content %}
 <div><h1> Derniers appels</h1></div>
 <div>
@@ -33,4 +35,6 @@
 
 {% endblock %}
 
-
+{% block extra_js %}
+setupPingLoop('{{now}}');
+{% endblock %}

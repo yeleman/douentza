@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 
+{% block title %}Statistiques{% endblock %}
+
 {% block content %}
 
     <h2>Statistiques Générales</h2>
-    <table class="table table-condensed table-hover table-bordered table-striped table-info">
+    <table class="table table-condensed table-hover table-bordered table-striped table-stats-vertical">
         <tbody>
             <tr>
                 <th class="span8">Dernier appel</th>
@@ -11,36 +13,36 @@
             </tr>
             <tr>
                 <th>Nombre total de projets</th>
-                <td class="total">{{ nb_projects }}</td>
+                <td class="important">{{ nb_projects }}</td>
             </tr>
             <tr>
                 <th>Nombre total d'appels</th>
-                <td class="total">{{ nb_total_events }}</td>
+                <td class="important">{{ nb_total_events }}</td>
             </tr>
             <tr>
                 <th>Nombre total de questionnaire</th>
-                <td class="total">{{ nb_survey }}</td>
+                <td class="important">{{ nb_survey }}</td>
             </tr>
             <tr>
                 <th>Nombre total de numéros uniques</th>
-                <td class="total">{{ nb_unique_number }}</td>
+                <td class="important">{{ nb_unique_number }}</td>
             </tr>
             <tr>
                 <th>Durée des rappels:</th>
-                <td><strong>{{ sum_duration.duration__sum }}</strong> seconde</td>
+                <td><strong>{% if sum_duration.duration__sum %} {{ sum_duration.duration__sum }} {% else %} 0 {% endif %}</strong> seconde</td>
             </tr>
 
             <tr>
                 <th class="ident">Le plus long</th>
-                <td><strong>{{ longest_duration.duration__max }}</strong> seconde</td>
+                <td><strong>{% if longest_duration.duration__max %} {{ longest_duration.duration__max }} {% else %} 0 {% endif %}</strong> seconde</td>
             </tr>
             <tr>
                 <th class="ident">La moyenne</th>
-                <td><strong>{{ average_duration.duration__avg|floatformat }}</strong> seconde</td>
+                <td><strong>{% if average_duration.duration__avg %} {{ average_duration.duration__avg|floatformat }} {% else %} 0 {% endif %}</strong> seconde</td>
             </tr>
             <tr>
                 <th class="ident">La minimale</th>
-                <td><strong>{{ short_duration.duration__min }}</strong> seconde</td>
+                <td><strong>{% if average_duration.duration__avg %} {{ short_duration.duration__min }} {% else %} 0 {% endif %}</strong> seconde</td>
             </tr>
             <tr>
                 <th>Total par sexes (Homme/Femme/Inconnu)</th>
@@ -50,8 +52,9 @@
     </table>
 
     {% include "stats_per_age.html" %}
-    {% include "status_commune_table.html" %}
-    {% include "status_ethinicity_table.html" %}
+    {% include "stats_per_project.html" %}
+    {% include "stats_commune_table.html" %}
+    {% include "stats_ethinicity_table.html" %}
 
     <h2>Graphe des appels</h2>
     <div id="container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>

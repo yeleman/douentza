@@ -11,15 +11,19 @@ import datetime
 from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.template.loader import render_to_string
 
 from douentza.models import HotlineRequest, BlacklistedNumber
-from douentza.utils import start_or_end_day_from_date, get_default_context
+from douentza.utils import (start_or_end_day_from_date,
+                            get_default_context,
+                            to_jstimestamp)
 
 
 @login_required()
 def dashboard(request):
     context = get_default_context(page="event_dashboard")
     context.update({'all_events': all_events()})
+    context.update({'now': to_jstimestamp(datetime.datetime.today())})
     return render(request, "event_dashboard.html", context)
 
 
@@ -36,18 +40,40 @@ def all_events():
 
 
 @login_required()
-def events_json(request):
-    return HttpResponse(json.dumps(all_events()), mimetype='application/json')
+def ping_json(request):
+    try:
+        since = datetime.datetime.fromtimestamp(int(request.GET.get('since')) / 1000)
+    except:
+        raise Http404
+
+    try:
+        excludes = json.loads(request.GET.get('exclude'))
+    except:
+        excludes = []
+
+    def prep_request(request):
+        d = request.to_dict()
+        d.update({'html_row': render_to_string('event_row_dashboard.html',
+                                               {'event': request})})
+        return d
+    events = [prep_request(r)
+              for r in HotlineRequest.incoming.filter(received_on__gte=since)
+                                     .exclude(id__in=excludes)]
+    data = {
+        'now': to_jstimestamp(datetime.datetime.today()),
+        'events': events
+    }
+    return HttpResponse(json.dumps(data), mimetype='application/json')
 
 
 @login_required()
-def change_event_status(request, event_id, new_status):
+def change_event_status(request, request_id, new_status):
     if not new_status in HotlineRequest.STATUSES.keys():
         raise Http404
     try:
         event = HotlineRequest.objects \
                               .exclude(status=HotlineRequest.STATUS_HANDLED) \
-                              .get(id=int(event_id))
+                              .get(id=int(request_id))
         event.add_busy_call(new_status)
     except (HotlineRequest.DoesNotExist, ValueError):
         raise Http404

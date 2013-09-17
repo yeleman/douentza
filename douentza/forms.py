@@ -39,7 +39,7 @@ class BasicInformationForm(forms.Form):
         super(BasicInformationForm, self).__init__(*args, **kwargs)
 
         all_ethinicty = [(e.slug, e.name) for e in Ethnicity.objects.order_by('name')]
-        all_project = [(p.id, p.name) for p in Project.objects.order_by('name')]
+        all_project = [(None, "Aucun")] + [(p.id, p.name) for p in Project.objects.order_by('name')]
         all_region = [(EMPTY_ENTITY, "INCONNUE")] + [(e.slug, e.name)
                       for e in Entity.objects.filter(entity_type=Entity.TYPE_REGION)]
 
@@ -118,7 +118,10 @@ class MiniSurveyInitForm(forms.ModelForm):
 
 class MiniSurveyAddQuestion(forms.ModelForm):
 
-    question_choices = forms.CharField(widget=forms.Textarea, required=False)
+    question_choices = forms.CharField(widget=forms.Textarea,
+                                       required=False,
+                                       help_text="Insérez les choix ici ; "
+                                                 "un par ligne.")
 
     class Meta:
         model = Question
@@ -132,3 +135,9 @@ class MiniSurveyAddQuestion(forms.ModelForm):
             if len(choice):
                 choices.update({slugify(choice): choice})
         return choices
+
+
+class AddProjectForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = ['name', 'description']

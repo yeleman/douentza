@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block title %}Édition questionnaire {{ survey.title }}{% endblock %}
+
 {% block extra_js %}styleFormElements();
 $('.question-list-choices').each(function (){
    $(this).popover();
@@ -28,6 +30,8 @@ display_question_choices();
 <ol>
 {% for questiond in survey.to_dict.questions %}
 <li>{{ questiond.label }} [<abbr {% if questiond.type == 'choice' %}class="question-list-choices" data-content="{% for choice in questiond.choices %}<span class='label label-default'>{{ choice.label }}</span> {% endfor %}" data-html="true" data-placement="top" data-trigger="hover"{% endif %}>{{ questiond.type_str }}</abbr>]{% if questiond.required %} <strong>obligatoire</strong>{% endif %}. <a href="{% url 'admin_survey_delete_question' survey.id questiond.id %}"><button class="btn btn-danger btn-xs">supprimer</button></a></li>
+{% empty %}
+<p>Aucune question pour le môment. Ajoutez-en ci-dessous.</p>
 {% endfor %}
 </ol>
 </div>

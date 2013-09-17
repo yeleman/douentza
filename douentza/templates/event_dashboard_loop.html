@@ -1,18 +1,5 @@
- {% load douentza %}
-
  {% for event in all_events %}
-<tr {% if event.status != 'NEW_REQUEST' %}class="alert-warning"{% endif %}>
-    <td><span class="glyphicon glyphicon-earphone"></span> <strong>({{ event.identity|phone }})</strong> {{ event.received_on }} {{ event.status }} {{ event.event_type }}{% if event.callbackattempts %}
-        <ul>
-        {% for callback in event.callbackattempts.all %}
-        <li>{{ callback.created_on }} / {{ callback.status }}</li>
-        {% endfor %}
-    </ul>{% endif %}</td>
-    <td><a href="{% url 'display_event' event_id=event.id %}"><button type="button" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-pencil"></span> Saisir le rappel</button></a></td>
-    <td><a href="{% url 'change_event' event.id 'IS_BUSY' %}"><button type="button" class="btn btn-xs btn-warning"><span class="glyphicon"></span> Occupé</button></a></td>
-    <td><a href="{% url 'change_event' event.id 'NOT_ANSWERING' %}"><button type="button" class="btn btn-xs btn-danger"><span class="glyphicon"></span> Ne répond pas</button></a></td>
-    <td><a href="{% url 'change_event' event.id 'BLACK_LIST'%}"><button type="button" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-minus-sign"></span> Blacklister</button></a></td>
-</tr>
+{% include "event_row_dashboard.html" with event=event %}
 {% empty %}
 <tr><td colspan="4">Aucun événnement</td></tr>
 {% endfor %}

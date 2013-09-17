@@ -1,4 +1,8 @@
 
+var dashboard_loop;
+var dashboard_interval = 5 * 1000;
+var lastUpdate = new Date();
+
 Array.prototype.diff = function(a) {
     return this.filter(function(i) {
             return !(a.indexOf(i) > -1);
@@ -67,6 +71,44 @@ function graph_event_response_counts(data_url) {
 }
 
 
+function setupPingLoop(since_ts) {
+    console.log("setupPingLoop "+ since_ts);
+    restartPingLoop(since_ts);
+}
+
+function restartPingLoop(since_ts) {
+    if (since_ts !== null)
+        lastUpdate = new Date(parseInt(since_ts));
+    dashboard_loop = setTimeout(_updateUIOnEvents, dashboard_interval);
+}
+
+function getExistingIds() {
+    var ids = [];
+    $('.row-request').each(function() {
+        ids.push($(this).attr('request-id'));
+    });
+    return ids;
+}
+
+function _updateUIOnEvents() {
+    clearTimeout(dashboard_loop);
+
+    $.get('/api/ping_json', {since: lastUpdate.getTime(),
+                             exclude: JSON.stringify(getExistingIds())}).done(function (data) {
+        if (data.events.length > 0) {
+            // we have new events, let them shine
+            for (var i=0; i<data.events.length; i++) {
+                var html = data.events[i].html_row;
+                $('.today_events_table tbody').append($(html));
+            }
+        }
+        restartPingLoop(null);
+    }).fail(function (err) {
+        restartPingLoop(null);
+    });
+
+}
+
 function styleFormElements() {
     // bootstrap3 requires form elements to have the `form-control` CSS class
     $("form * select, form * input[type!=checkbox], form * textarea").each(function (){
@@ -81,8 +123,10 @@ function styleFormElements() {
                 content: error_content}).popover('show');
         }
         var help_text = parent.find(".help-text");
-        if (help_text.text()) {
-            $(this).attr('placeholder', help_text.text());
+        if (help_text.length > 0) {
+            if (help_text.text()) {
+                $(this).attr('placeholder', help_text.text());
+            }
         }
     });
 }
@@ -387,6 +431,20 @@ function setupDatetimePicker(options) {
         return hours + ':' + minutes + ':00';
     }
 
+    function updateDatePickerUIElements() {
+        $('.icon-chevron-up').each(function () {
+            console.log("found icon-chevron-up");
+            $(this).removeClass('icon-chevron-up');
+            $(this).addClass('glyphicon glyphicon-chevron-up');
+            $(this).parent().removeClass('btn');
+        });
+        $('.icon-chevron-down').each(function () {
+            $(this).removeClass('icon-chevron-down');
+            $(this).addClass('glyphicon glyphicon-chevron-down');
+            $(this).parent().removeClass('btn');
+        });
+    }
+
     /* options = {
         date_selector: "#adateid", // selector for date-only input
         time_selector: "#atimeid", // selector for time-only input
@@ -481,6 +539,8 @@ function setupDatetimePicker(options) {
     parent.find('#' + timepicker_selector).each(function () {
         $(this).datetimepicker({pickDate: false});
     });
+
+    updateDatePickerUIElements();
 }
 
 function createMiniSurvey(options) {

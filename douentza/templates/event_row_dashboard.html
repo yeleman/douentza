@@ -1,5 +1,5 @@
 {% load douentza %}<tr class="row-request" request-id="{{ event.id }}">
-    <td><span class="glyphicon glyphicon-earphone"></span> <strong>{{ event.identity|phone }}</strong> {{ event.received_on }} <span class="label {{event.status|statuscss}}">{{ event.status_str }}</span> <span class="label label-default">{{ event.type_str }}</span>{% if event.callbackattempts %}
+    <td><span class="glyphicon glyphicon-earphone"></span> <strong>{{ event.identity|phone }}</strong> {{ event.received_on }} <span class="label {{event.status|statuscss}}">{{ event.status_str }}</span> {% include "event_type.html" with event=event %}{% if event.callbackattempts %}
         <ul>
         {% for callback in event.callbackattempts.all %}
         <li>{{ callback.created_on }} <span class="label {{callback.status|statuscss}}">{{ callback.status_str }}</span></li>

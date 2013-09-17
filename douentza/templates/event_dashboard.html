@@ -12,18 +12,12 @@
         <tbody>
             {% include "event_dashboard_loop.html" with all_events=all_events.ancient_events %}
         </tbody>
-    </table>
-
-    <table class="table table-hover table-bordered yesterday_events_table">
         <thead>
             <tr><th colspan="5">Hier</th></tr>
         </thead>
         <tbody>
             {% include "event_dashboard_loop.html" with all_events=all_events.yesterday_events %}
         </tbody>
-    </table>
-
-    <table class="table table-hover table-bordered today_events_table">
         <thead>
             <tr><th colspan="5">Aujourd'hui</th></tr>
         </thead>

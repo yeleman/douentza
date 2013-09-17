@@ -38,7 +38,7 @@ class BasicInformationForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(BasicInformationForm, self).__init__(*args, **kwargs)
 
-        all_ethinicty = [(e.slug, e.name) for e in Ethnicity.objects.order_by('name')]
+        all_ethinicty = [(None, "Inconnue")] + [(e.slug, e.name) for e in Ethnicity.objects.order_by('name')]
         all_project = [(None, "Aucun")] + [(p.id, p.name) for p in Project.objects.order_by('name')]
         all_region = [(EMPTY_ENTITY, "INCONNUE")] + [(e.slug, e.name)
                       for e in Entity.objects.filter(entity_type=Entity.TYPE_REGION)]

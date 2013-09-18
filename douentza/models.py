@@ -26,6 +26,12 @@ class IncomingManager(models.Manager):
                                                                 HotlineRequest.STATUS_HANDLED,
                                                                 HotlineRequest.STATUS_BLACK_LIST))
 
+class HandledManager(models.Manager):
+
+    def get_query_set(self):
+        return super(HandledManager, self).get_query_set() \
+                                           .filter(status=HotlineRequest.STATUS_HANDLED)
+
 
 class ValidatedManager(models.Manager):
 
@@ -108,6 +114,7 @@ class HotlineRequest(models.Model):
 
     objects = models.Manager()
     incoming = IncomingManager()
+    handled_requests = HandledManager()
 
     def __str__(self):
         return "{event_type}-{number}-{status}".format(event_type=self.event_type,

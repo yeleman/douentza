@@ -53,6 +53,8 @@ urlpatterns = patterns('',
     url(r'^blacklist/(?P<blacknum_id>[0-9]+)?$', 'douentza.views.events.blacklist', name='blacklist'),
     url(r'^request/'+ REQUEST_ID +'/?$',
         'douentza.views.events.display_event', name='display_event'),
+    url(r'^handled_request/'+ REQUEST_ID +'/?$',
+        'douentza.views.events.display_handled_request', name='handled_request'),
     url(r'^survey/'+ SURVEY_ID +'-'+ REQUEST_ID +'/form/?$', 'douentza.views.surveys.survey_form', name='mini_survey_form'),
     url(r'^survey/'+ SURVEY_ID +'-'+ REQUEST_ID +'/data/?$', 'douentza.views.surveys.survey_data', name='mini_survey_data'),
 )

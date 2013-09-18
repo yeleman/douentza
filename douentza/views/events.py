@@ -12,10 +12,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.paginator import EmptyPage, PageNotAnInteger
 
 from douentza.models import (HotlineRequest, Ethnicity, Project, HotlineUser,
-                             Entity, Survey, BlacklistedNumber)
-from douentza.utils import get_default_context, EMPTY_ENTITY
+                             Entity, Survey, BlacklistedNumber,
+                             SurveyTaken)
+from douentza.utils import get_default_context, EMPTY_ENTITY, FlynsarmyPaginator
 from douentza.forms import BasicInformationForm
 
 
@@ -94,7 +96,45 @@ def blacklist(request, blacknum_id=None):
     return render(request, "blacklist.html", context)
 
 
+@login_required()
 def archives(request):
     context = get_default_context(page='archives')
 
+    try:
+        handled_requests = HotlineRequest.handled_requests.all()
+    except:
+        raise Http404
+
+    if request.method == "POST":
+        if request.POST.get('identity'):
+            handled_requests = HotlineRequest.handled_requests.filter(identity__contains=request.POST.get('identity'))
+        else:
+            handled_requests = []
+
+    paginator = FlynsarmyPaginator(handled_requests, 25, adjacent_pages=10)
+
+    page = request.GET.get('page')
+    try:
+        requests_paginator = paginator.page(page)
+    except PageNotAnInteger:
+        requests_paginator = paginator.page(1)
+    except (EmptyPage, InvalidPage):
+        requests_paginator = paginator.page(paginator.num_pages)
+
+    context.update({"requests_paginator": requests_paginator})
+
     return render(request, "archives.html", context)
+
+
+@login_required()
+def display_handled_request(request, request_id):
+
+    try:
+        event = get_object_or_404(HotlineRequest, id=int(request_id))
+    except:
+        raise Http404
+    context = get_default_context(page="display_handled_request")
+    context.update({"surveys": Survey.validated.order_by('id'),
+                    "event": event})
+
+    return render(request, "display_handled_request.html", context)

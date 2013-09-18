@@ -103,3 +103,7 @@ iframe {
 .table-stats-vertical td {
     text-align: center;
 }
+
+body.archives .pagination {
+    margin: 0;
+}

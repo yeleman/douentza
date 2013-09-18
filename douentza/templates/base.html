@@ -21,7 +21,7 @@
                 <li {% ifequal page 'event_dashboard' %} class="active"{% endifequal %}><a href="{% url 'event_dashboard' %}">Tableau de bord <span class="new_calls badge pull-right"></span></a></li>
                 <li {% ifequal page 'archives' %} class="active"{% endifequal %}><a href="{% url 'archives' %}">Archives</a></li>
                 <li {% ifequal page 'statistics' %} class="active"{% endifequal %}><a href="{% url 'statistics' %}">Statistiques</a></li>
-                <li {% ifequal page 'survey_stats' %} class="active"{% endifequal %}><a href="{% url 'survey_stats' %}">Stats Questionnaires</a></li>
+                <li {% ifequal page 'stats_for_surveys' %} class="active"{% endifequal %}><a href="{% url 'stats_for_surveys' %}">Stats Questionnaires</a></li>
                 <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Configuration <span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                     <li><a href="{% url 'admin_surveys' %}">Mini questionnaires</a></li>

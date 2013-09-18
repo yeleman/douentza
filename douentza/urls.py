@@ -33,7 +33,9 @@ urlpatterns = patterns('',
 
     url(r'^entities/(?P<parent_slug>\d{8})/?$', 'douentza.views.events.entities_api', name='entities'),
     url(r'^statistics/$', 'douentza.views.statistics.dashboard', name='statistics'),
-    url(r'^survey_stats/$', 'douentza.views.surveys.survey_stats', name='survey_stats'),
+    url(r'^survey_stats/$', 'douentza.views.surveys.stats_for_surveys', name='stats_for_surveys'),
+    url(r'^survey_stats/'+ SURVEY_ID +r'/?$', 'douentza.views.surveys.stats_for_survey',
+        name='stats_for_survey'),
     url(r'^archives/?$', 'douentza.views.events.archives', name='archives'),
 
     # admin
@@ -48,7 +50,7 @@ urlpatterns = patterns('',
         name='admin_survey_toggle'),
 
     url(r'^$', 'douentza.views.event_dashboard.dashboard', name='event_dashboard'),
-    url(r'^change/'+ REQUEST_ID + '/(?P<new_status>[a-zA-Z\_]+)$',
+    url(r'^change/'+ REQUEST_ID +r'/(?P<new_status>[a-zA-Z\_]+)$',
         'douentza.views.event_dashboard.change_event_status', name='change_event'),
     url(r'^blacklist/(?P<blacknum_id>[0-9]+)?$', 'douentza.views.events.blacklist', name='blacklist'),
     url(r'^request/'+ REQUEST_ID +'/?$',

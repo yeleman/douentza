@@ -478,3 +478,23 @@ class SurveyTakenData(models.Model):
 
     def __str__(self):
         return str(self.value)
+
+
+@implements_to_string
+class CachedData(models.Model):
+
+    TYPE_OBJECT = 'object'
+    TYPE_FILE = 'file'
+    TYPES = {
+        TYPE_OBJECT: "Objet",
+        TYPE_FILE: "Fichier"
+    }
+
+    slug = models.CharField(max_length=75, primary_key=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    data_type = models.CharField(choices=TYPES.items(),
+                                 default=TYPE_OBJECT, max_length=50)
+    value = PickledObjectField(null=True, blank=True)
+
+    def __str__(self):
+        return self.slug

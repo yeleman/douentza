@@ -63,3 +63,17 @@ def cssclass_from_status(status):
     }
 
     return "label-{}".format(status_table.get(status, 'default'))
+
+@register.filter(name='humandelta')
+def human_delta(delta):
+    if delta.days > 365:
+        nby = delta.days // 365
+        text = "{} an".format(nby)
+        if nby > 1:
+            text += "s"
+        nbd = delta.days - nby * 365
+        if nbd:
+            text += " {} jours".format(nbd)
+        return text
+    else:
+        return delta.days

@@ -3,6 +3,11 @@
 {% block content %}
 
     <h2>Statistiques Générales</h2>
+    <div class="export-csv">
+        <button class="btn btn-success" href="{% url 'export_csv' %}"><span class="glyphicon glyphicon-download"></span>
+            Export Data as CSV
+        </button>
+    </div>
     <table class="table table-condensed table-hover table-bordered table-striped table-stats-vertical">
         <tbody>
             <tr>

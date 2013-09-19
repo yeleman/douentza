@@ -103,3 +103,8 @@ iframe {
 .table-stats-vertical td {
     text-align: center;
 }
+
+.statistics .export-csv {
+    float: right;
+    margin-bottom: 11px;
+}

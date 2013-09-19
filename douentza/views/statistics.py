@@ -129,3 +129,91 @@ def event_response_counts_json(request):
 
     return HttpResponse(json.dumps(get_event_responses_counts()),
                         mimetype='application/json')
+
+
+def export_general_stats_as_csv(request):
+    ''' export the csv file '''
+    import csv
+    from douentza.models import HotlineRequest
+    filename = "export_data.csv"
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename={filename}'.format(filename=filename)
+
+    def numbering_name(prefix, suffix):
+
+        if isinstance(suffix, list):
+            values = suffix
+        elif isinstance(suffix, int):
+            values = range(1, suffix + 1)
+        else:
+            raise ValueError("la fonction numbering_name n'accepte \
+                              qu'une liste ou un entier comme argument")
+        return ["{prefix}_{suffix}".format(prefix=prefix, suffix=suffix)
+                for suffix in values]
+
+    tags_headers = numbering_name("tag", 15) + ["tags", "nb. tag"]
+    entity_headers = numbering_name('location', ["slug", "id", "type", "nb", "gps",
+                                                 "name", "latitude", "longitude", "parent"])
+    additonal_headers = numbering_name("additional_request", 5) + ["additional_nb_total"]
+    attempt_headers = numbering_name("attempt", 5) + ["attempt_nb_total"]
+
+    headers = ["received_on",
+                "identity",
+                "operator",
+                "age",
+                "sex",
+                "duration",
+                "location",
+                "ethnicity",
+                "event_type",
+                "sms_message",
+                "responded_on",
+                "project",
+                "status"]
+    headers += tags_headers + entity_headers + additonal_headers + attempt_headers
+
+    writer = csv.writer(response)
+    writer.writerow(headers)
+
+    for hotlinerequest in HotlineRequest.objects.all():
+        tags = [tag.slug for tag in hotlinerequest.tags.all()]
+        data = [hotlinerequest.received_on,
+                hotlinerequest.identity,
+                hotlinerequest.operator,
+                hotlinerequest.age,
+                hotlinerequest.sex,
+                hotlinerequest.duration,
+                hotlinerequest.location,
+                hotlinerequest.ethnicity,
+                hotlinerequest.event_type,
+                hotlinerequest.sms_message,
+                hotlinerequest.responded_on,
+                hotlinerequest.project,
+                hotlinerequest.status]
+
+
+        writer.writerow(data)
+    response.close()
+
+    return response
+
+
+def export_survey_as_csv(survey, filename):
+
+    norm_header = lambda label: slugify(label)
+    headers = [norm_header(q['label']) for q in survey.to_dict()['questions']]
+
+    csv_file = open(filename, 'w')
+    csv_writer = csv.DictWriter(csv_file, headers)
+    csv_writer.writeheader()
+
+    for survey_taken in survey.survey_takens.order_by('taken_on'):
+        data = {}
+        for question in survey_taken.survey.questions.order_by('-order', 'id'):
+            data.update({
+                norm_header(question.label): question.survey_taken_data.get(survey_taken=survey_taken).value})
+        csv_writer.writerow(data)
+
+    csv_file.close()
+
+    return filename

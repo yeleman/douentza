@@ -36,6 +36,10 @@ urlpatterns = patterns('',
     url(r'^survey_stats/$', 'douentza.views.surveys.survey_stats', name='survey_stats'),
     url(r'^archives/?$', 'douentza.views.events.archives', name='archives'),
 
+    # export
+    url(r'^export_general_stats_as_csv/?$', 'douentza.views.statistics.export_general_stats_as_csv',
+        name='export_general_stats_as_csv'),
+
     # admin
     url(r'^admin/surveys/?$', 'douentza.views.admin.admin_surveys', name='admin_surveys'),
     url(r'^admin/projects/?$', 'douentza.views.admin.admin_projects', name='admin_projects'),

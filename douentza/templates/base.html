@@ -19,7 +19,7 @@
           </div>
           <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
-                <li {% ifequal page 'event_dashboard' %} class="active"{% endifequal %}><a href="{% url 'event_dashboard' %}">Tableau de bord&nbsp;<span class="new_calls badge pull-right">{{ events_count|default:""}}</span></a></li>
+                <li {% ifequal page 'event_dashboard' %} class="active"{% endifequal %}><a href="{% url 'event_dashboard' %}">Tableau de bord&nbsp;<span class="new_calls badge pull-right">{% if events_count %}<span class="glyphicon glyphicon-earphone"></span> {{ events_count|default:""}}{% endif %}</span></a></li>
                 <li {% ifequal page 'archives' %} class="active"{% endifequal %}><a href="{% url 'archives' %}">Archives</a></li>
                 <li {% ifequal page 'statistics' %} class="active"{% endifequal %}><a href="{% url 'statistics' %}">Statistiques</a></li>
                 <li {% ifequal page 'stats_for_surveys' %} class="active"{% endifequal %}><a href="{% url 'stats_for_surveys' %}">Stats Questionnaires</a></li>

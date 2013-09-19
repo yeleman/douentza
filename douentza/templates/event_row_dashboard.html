@@ -1,7 +1,6 @@
 {% load douentza %}<tr class="row-request" request-id="{{ event.id }}">
     <td>
-        <span class="glyphicon glyphicon-earphone"></span>
-        <strong>{{ event.identity|phone }}</strong>
+        <strong class="phonelead">{{ event.identity|phone }}</strong>
         <span class="label {{event.status|statuscss}}">{{ event.status_str }}</span>
         {{ event.received_on |eventdateshort}}
         {% for ee in event.all_events %}

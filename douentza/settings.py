@@ -173,6 +173,7 @@ LOGGING = {
 
 AUTH_USER_MODEL = 'douentza.HotlineUser'
 LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'
 
 # douentza settings
 FONDA_SEND_AUTOMATIC_REPLY = False

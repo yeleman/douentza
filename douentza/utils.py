@@ -64,7 +64,9 @@ def event_type_from_message(message):
 
 
 def get_default_context(page='', **kwargs):
-    context = {'page': page}
+    from douentza.models import HotlineRequest
+    context = {'page': page,
+               'events_count': HotlineRequest.incoming.count()}
     for key, value in kwargs.items():
         context.update({key: value})
     return context

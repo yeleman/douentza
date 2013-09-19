@@ -103,3 +103,11 @@ iframe {
 .table-stats-vertical td {
     text-align: center;
 }
+
+li {
+    line-height: 1.8;
+}
+
+th, td {
+    line-height: 150%;
+}

@@ -5,7 +5,10 @@
 
 {% block content %}
 
-<div class="alert alert-info">Tout événement venant de ces numéros ne serons pas afficher parmi les derniers appels.</div>
+<div class="alert alert-info">
+<p>Tout événement (bip, SMS, etc) provenant d'un numéro sur liste noire sera ignoré et n'apparaîtra donc pas dans le tableau de bord (ni ailleurs).</p>
+<p>Le chiffre indique le nombre de tentatives (infructueuses donc) du numéro.</p>
+</div>
 
 <table class="table table-hover table-bordered ancient_events_table">
     <thead>
@@ -14,10 +17,13 @@
     <tbody>
         {% for blacknum in blacknums %}
         <tr>
-            <td><span class="badge">{{ blacknum.call_count }} <span class="glyphicon glyphicon-earphone"></span></span><strong>  ({{ blacknum.identity|phone }})</strong></td>
+            <td>
+                <span class="badge"><span class="glyphicon glyphicon-earphone"></span>&nbsp;{{ blacknum.call_count }}</span>
+                <strong>{{ blacknum.identity|phone }}</strong>
+            </td>
             <td>
                 <a href="{% url 'blacklist' blacknum.id %}">
-                    <button type="button" class="btn btn-xs btn-info"><span class="glyphicon glyphicon-ok-sign"> </span> Retirer de la liste noire</button>
+                    <button type="button" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-ok-sign"> </span> Retirer de la liste noire</button>
                 </a>
             </td>
         </tr>

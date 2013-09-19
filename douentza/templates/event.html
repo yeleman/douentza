@@ -84,26 +84,30 @@ $('#accordion .btn-survey').each(function (){
             </div>
         </div>
     </div>
-     <div class="row">
-         <div class="col-md-3"></div><div class="col-md-6"><button type="submit" class="form-control btn btn-primary">Sauvegarder</button></div><div class="col-md-3"></div>
-    </div>
 {% if form.errors %}
     <input type="hidden" id="previous_cercle" value="{{ form.cercle.value }}" />
     <input type="hidden" id="previous_commune" value="{{ form.commune.value }}" />
     <input type="hidden" id="previous_village" value="{{ form.village.value }}" />
 {% endif %}
-</form>
 
 <div class="tags_container">
     <h2>Tags</h2>
 </div>
-
+{% if surveys %}
 <div>
     <h2>Mini Questionnaires</h2>
+    <ul>
     {% for survey in surveys %}
     {% include "mini_survey_data.html" with survey_taken=survey|taken:event %}
-    <p>{{ survey.title }} <buton class="btn btn-default btn-xs btn-survey popover-data" survey-id="{{ survey.id }}" request-id="{{ event.id }}" title="{{ survey.title }}">Remplir le questionnaire</button></li>
+    <li>{{ survey.title }} <buton class="btn btn-default btn-xs btn-survey popover-data" survey-id="{{ survey.id }}" request-id="{{ event.id }}" title="{{ survey.title }}">Remplir le questionnaire</button></li>
     {% endfor %}
+    </ul>
 </div>
+{% endif %}
+
+<div class="row">
+    </div><div class="col-md-6 col-md-offset-3"><button type="submit" class="form-control btn btn-primary">Sauvegarder &amp; archiver</button></div>
+</div>
+</form>
 
 {% endblock %}

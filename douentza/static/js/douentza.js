@@ -70,9 +70,13 @@ function graph_event_response_counts(data_url) {
     });
 }
 
+function jQsmsTextHover() {
+    $('.sms-type').popover({trigger: 'hover'});
+}
 
 function setupPingLoop(since_ts) {
     console.log("setupPingLoop "+ since_ts);
+    jQsmsTextHover();
     restartPingLoop(since_ts);
 }
 
@@ -101,6 +105,7 @@ function _updateUIOnEvents() {
                 var html = data.events[i].html_row;
                 $('.today_events_table tbody').append($(html));
             }
+            jQsmsTextHover();
         }
         restartPingLoop(null);
     }).fail(function (err) {

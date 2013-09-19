@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block title %}Statistiques{% endblock %}
+
 {% block content %}
 
     <h2>Statistiques Générales</h2>
@@ -32,24 +34,24 @@
             </tr>
             <tr>
                 <th>Durée des rappels:</th>
-                <td><strong>{% if sum_duration.duration__sum %} {{ sum_duration.duration__sum }} {% else %} 0 {% endif %}</strong> seconde</td>
+                <td><strong>{{ sum_duration.duration__sum|default:"0" }}</strong> seconde{{ sum_duration.duration__sum|pluralize }}</td>
             </tr>
 
             <tr>
                 <th class="ident">Le plus long</th>
-                <td><strong>{% if longest_duration.duration__max %} {{ longest_duration.duration__max }} {% else %} 0 {% endif %}</strong> seconde</td>
+                <td><strong>{{ longest_duration.duration__max }}</strong> seconde{{ longest_duration.duration__max|pluralize }}</td>
             </tr>
             <tr>
                 <th class="ident">La moyenne</th>
-                <td><strong>{% if average_duration.duration__avg %} {{ average_duration.duration__avg|floatformat }} {% else %} 0 {% endif %}</strong> seconde</td>
+                <td><strong>{{ average_duration.duration__avg|floatformat }}</strong> seconde{{ average_duration.duration__avg|pluralize }}</td>
             </tr>
             <tr>
                 <th class="ident">La minimale</th>
-                <td><strong>{% if average_duration.duration__avg %} {{ short_duration.duration__min }} {% else %} 0 {% endif %}</strong> seconde</td>
+                <td><strong>{{ short_duration.duration__min }}</strong> seconde{{ short_duration.duration__min|pluralize }}</td>
             </tr>
             <tr>
                 <th>Total par sexes (Homme/Femme/Inconnu)</th>
-                <td>{{ sex_male }} H/ {{ sex_female }} F/ {{ sex_unknown }} Inconnus</td>
+                <td>{{ sex_male }} H/ {{ sex_female }} F/ {{ sex_unknown }} Inconnu{{ sex_unknown|pluralize }}</td>
             </tr>
         </tbody>
     </table>

@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block title %}Questionnaires{% endblock %}
+
 {% block extra_js %}
 styleFormElements();
 $('.survey-content-btn').each(function (){
@@ -13,8 +15,9 @@ $('.survey-content-btn').each(function (){
 
 {% if surveys %}
 <legend>Tous les questionnaires</legend>
-<p>Les formulaires suivants sont disponibles pour tous les appels.</p>
-<p>Il n'est pas possible de les modifier, ni de les supprimer ; mais vous pouvez les désactiver pour ne plus les voir apparaître dans le formulaire de saisie des appels.</p>
+<p>Parmis les formulaires suivants, seuls les validés sont disponibles pour tous les appels.</p>
+<p>Vous ne pouvez modifier que ceux qui ne sont pas validés.</p>
+<p>Pour ne plus voir apparaître un questionnaire, il suffit de le désactiver. Ses données apparaitront toujours dans les exports. Il est aussi ré-activable à tout môment.</p>
 <table class="table table-striped table-condensed table-bordered">
 <tr><th>Questionnaires</th><th>Nb.</th><th>Statut</th><th>Actions</th></tr>
 {% for survey in surveys %}

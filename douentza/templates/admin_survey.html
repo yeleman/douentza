@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block title %}Édition questionnaire {{ survey.title }}{% endblock %}
+
 {% block extra_js %}styleFormElements();
 $('.question-list-choices').each(function (){
    $(this).popover();

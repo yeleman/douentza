@@ -13,7 +13,7 @@ from douentza.models import (HotlineRequest, HotlineUser,
                              Entity, Survey, Question, QuestionChoice,
                              Ethnicity, CallbackAttempt, Tag, Project,
                              AdditionalRequest, SurveyTaken, SurveyTakenData,
-                             BlacklistedNumber)
+                             BlacklistedNumber, CachedData)
 
 
 class UserModificationForm(forms.ModelForm):
@@ -85,3 +85,4 @@ admin.site.register(AdditionalRequest)
 admin.site.register(SurveyTaken)
 admin.site.register(SurveyTakenData)
 admin.site.register(BlacklistedNumber)
+admin.site.register(CachedData)

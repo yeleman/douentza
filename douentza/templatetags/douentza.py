@@ -7,6 +7,7 @@ from __future__ import (unicode_literals, absolute_import,
 
 from django import template, forms
 from django.template.defaultfilters import stringfilter, date
+from django.core.urlresolvers import reverse
 
 from douentza.utils import clean_phone_number_str, COUNTRY_PREFIX
 
@@ -94,4 +95,11 @@ def queryset_order_by(queryset, order_by):
     return queryset.order_by(order_by)
 
 
-
+@register.filter(name='cachedfile')
+def cached_file_path(slug):
+    from douentza.models import CachedData
+    try:
+        return reverse('cached_file',
+                       args=(CachedData.objects.get(slug=slug).value,))
+    except:
+        return ''

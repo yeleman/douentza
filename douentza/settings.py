@@ -6,7 +6,7 @@ from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import os
 
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -174,6 +174,8 @@ LOGGING = {
 AUTH_USER_MODEL = 'douentza.HotlineUser'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
+# caching files
+CACHEDDATA_FOLDER = os.path.join(ROOT_DIR, 'cached_data')
 
 # douentza settings
 FONDA_SEND_AUTOMATIC_REPLY = False

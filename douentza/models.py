@@ -349,6 +349,14 @@ class Survey(models.Model):
     def status_str(self):
         return self.STATUSES.get(self.status, self.STATUS_CREATED)
 
+    @property
+    def cache_file_slug(self):
+        return 'ms_file_{id}'.format(id=self.id)
+
+    @property
+    def cache_slug(self):
+        return 'ms_data_{id}'.format(id=self.id)
+
 
 @implements_to_string
 class Question(models.Model):
@@ -517,3 +525,11 @@ class CachedData(models.Model):
 
     def __str__(self):
         return self.slug
+
+    @classmethod
+    def get_or_fallback(cls, slug, fallback=None):
+        try:
+            return cls.objects.get(slug=slug).value
+        except cls.DoesNotExist:
+            return fallback
+

@@ -36,18 +36,26 @@ def display_event(request, request_id):
         form = BasicInformationForm(request.POST)
         if form.is_valid():
             event = form.cleaned_data.get('request_id')
-
             event.status = HotlineRequest.STATUS_HANDLED
             event.hotline_user = get_object_or_404(HotlineUser,
                                                    username=request.user)
             event.responded_on = form.cleaned_data.get('responded_on')
             event.age = form.cleaned_data.get('age')
-            try:
-                event.project = Project.objects.get(id=int(form.cleaned_data.get('project')))
-            except ValueError:
-                pass
+            project = form.cleaned_data.get('project')
+            if not project is None:
+                try:
+                    project = Project.objects.get(id=int(project))
+                except Project.DoesNotExist:
+                    pass
+            event.project = project
             event.sex = form.cleaned_data.get('sex')
-            event.ethnicity = Ethnicity.objects.get(slug=form.cleaned_data.get('ethnicity'))
+            ethnicity = form.cleaned_data.get('ethnicity')
+            if ethnicity is not None:
+                try:
+                    ethnicity = Ethnicity.objects.get(slug=ethnicity)
+                except Ethnicity.DoesNotExist:
+                    pass
+            event.ethnicity = ethnicity
             event.duration = form.cleaned_data.get('duration')
             event.location = form.cleaned_data.get('village')
             event.save()

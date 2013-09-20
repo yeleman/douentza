@@ -162,9 +162,16 @@ class HotlineRequest(models.Model):
     def type_str(self):
         return self.TYPES.get(self.event_type)
 
+    def all_events(self, reverse=False):
+        events = [self] + list(self.additionalrequests.all()) + list(self.callbackattempts.all())
+        return sorted(events, key=lambda e: e.received_on, reverse=reverse)
 
 @implements_to_string
 class AdditionalRequest(models.Model):
+
+    class Meta:
+        ordering = ('-created_on', '-id')
+
     event = models.ForeignKey(HotlineRequest, related_name='additionalrequests')
     created_on = models.DateTimeField(auto_now_add=True)
     request_type = models.CharField(max_length=50,
@@ -177,6 +184,14 @@ class AdditionalRequest(models.Model):
 
     def type_str(self):
         return HotlineRequest.TYPES.get(self.request_type)
+
+    @property
+    def received_on(self):
+        return self.created_on
+
+    @property
+    def event_type(self):
+        return self.request_type
 
 
 @implements_to_string
@@ -195,6 +210,17 @@ class CallbackAttempt(models.Model):
                                              created_on=self.created_on)
 
     def status_str(self):
+        return HotlineRequest.STATUSES.get(self.status)
+
+    @property
+    def received_on(self):
+        return self.created_on
+
+    @property
+    def event_type(self):
+        return self.status
+
+    def type_str(self):
         return HotlineRequest.STATUSES.get(self.status)
 
 
@@ -329,6 +355,14 @@ class Survey(models.Model):
 
     def status_str(self):
         return self.STATUSES.get(self.status, self.STATUS_CREATED)
+
+    @property
+    def cache_file_slug(self):
+        return 'ms_file_{id}'.format(id=self.id)
+
+    @property
+    def cache_slug(self):
+        return 'ms_data_{id}'.format(id=self.id)
 
 
 @implements_to_string
@@ -498,3 +532,11 @@ class CachedData(models.Model):
 
     def __str__(self):
         return self.slug
+
+    @classmethod
+    def get_or_fallback(cls, slug, fallback=None):
+        try:
+            return cls.objects.get(slug=slug).value
+        except cls.DoesNotExist:
+            return fallback
+

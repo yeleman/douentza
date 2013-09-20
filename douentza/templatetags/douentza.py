@@ -6,7 +6,8 @@ from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 
 from django import template, forms
-from django.template.defaultfilters import stringfilter
+from django.template.defaultfilters import stringfilter, date
+from django.core.urlresolvers import reverse
 
 from douentza.utils import clean_phone_number_str, COUNTRY_PREFIX
 
@@ -77,3 +78,28 @@ def human_delta(delta):
         return text
     else:
         return delta.days
+
+
+@register.filter(name='eventdate')
+def event_date(adate):
+    return date(adate, "D d b, H\hi")
+
+
+@register.filter(name='eventdateshort')
+def event_date_short(adate):
+    return date(adate, "D H\hi")
+
+
+@register.filter(name='orderby')
+def queryset_order_by(queryset, order_by):
+    return queryset.order_by(order_by)
+
+
+@register.filter(name='cachedfile')
+def cached_file_path(slug):
+    from douentza.models import CachedData
+    try:
+        return reverse('cached_file',
+                       args=(CachedData.objects.get(slug=slug).value,))
+    except:
+        return ''

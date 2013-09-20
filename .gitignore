@@ -3,3 +3,4 @@
 *.pyc
 *.db
 settings_local.py
+.DS_Store

@@ -1,5 +1,13 @@
-from django.conf.urls import patterns, include, url
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# vim: ai ts=4 sts=4 et sw=4 nu
 
+from __future__ import (unicode_literals, absolute_import,
+                        division, print_function)
+
+from django.conf import settings
+from django.conf.urls import patterns, include, url
+from django.views.static import serve
 from django.contrib import admin
 
 admin.autodiscover()
@@ -7,7 +15,13 @@ admin.autodiscover()
 SURVEY_ID = r'(?P<survey_id>[0-9]+)'
 REQUEST_ID = r'(?P<request_id>[0-9]+)'
 
+def static_file_serve(request, fname):
+    return serve(request, fname, settings.CACHEDDATA_FOLDER, True)
+
 urlpatterns = patterns('',
+
+    url(r'^exports/(?P<fname>.*)$', static_file_serve, name='cached_file'),
+
     url(r'^admin/', include(admin.site.urls)),
     url(r'^login/$', 'django.contrib.auth.views.login',
         {'template_name': 'login.html'}, name='login'),

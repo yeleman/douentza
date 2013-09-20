@@ -22,10 +22,10 @@
     <thead>
         <tr>
             <th>Numéro</th>
-            <th>Date</th>
+            <th>Date du rappel</th>
             <th>Localité</th>
             <th>Ethnie</th>
-            <th>Age</th>
+            <th>Âge</th>
             <th>Projet</th>
         </tr>
     </thead>
@@ -33,7 +33,7 @@
         {% for request in requests_paginator.object_list %}
             <tr>
                 <td><a href="{% url 'handled_request' request_id=request.id %}">{{ request.identity|phone }}</a></td>
-                <td>{{ request.responded_on|eventdate }}</td>
+                <td>{{ request.responded_on|handleddate }}</td>
                 <td>{% include "_location_span.html" with event=request always=True %}</td>
                 <td>{% include "_ethnicity_span.html" with event=request always=True %}</td>
                 <td>{% include "_age_span.html" with event=request always=True %}</td>

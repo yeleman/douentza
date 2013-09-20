@@ -23,7 +23,15 @@ $('.btn-survey').each(function (){
     <tbody>
         <tr>
             <th>Date de l'appel</th>
-            <td>{{ event.received_on|eventdate }}</td>
+            <td>{{ event.received_on|handleddate }}</td>
+        </tr>
+        <tr>
+            <th>Date du rappel</th>
+            <td>{{ event.responded_on|handleddate }}</td>
+        </tr>
+        <tr>
+            <th>Operateur</th>
+            <td>{{ event.operator_str }}</td>
         </tr>
         <tr>
             <th>Âge</th>
@@ -72,7 +80,7 @@ $('.btn-survey').each(function (){
     <tbody>
         {% for request in event.all_events %}
             <tr>
-                <td>{{ request.received_on|eventdate }}</td>
+                <td>{{ request.received_on|handleddate }}</td>
                 <td>{{ request.type_str }}</td>
                 <td>{{ request.sms_message }}</td>
             </tr>

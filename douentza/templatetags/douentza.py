@@ -65,6 +65,7 @@ def cssclass_from_status(status):
 
     return "label-{}".format(status_table.get(status, 'default'))
 
+
 @register.filter(name='humandelta')
 def human_delta(delta):
     if delta.days > 365:

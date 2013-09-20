@@ -40,7 +40,6 @@ class ValidatedManager(models.Manager):
                                             .filter(status=Survey.STATUS_READY)
 
 
-
 @implements_to_string
 class HotlineRequest(models.Model):
 
@@ -152,6 +151,9 @@ class HotlineRequest(models.Model):
 
     def gender(self):
         return self.SEXES.get(self.sex)
+
+    def operator_str(self):
+        return OPERATORS.get(self.operator)
 
     def duration_delta(self):
         return datetime.timedelta(seconds=self.duration)

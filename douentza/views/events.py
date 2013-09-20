@@ -116,9 +116,10 @@ def archives(request):
 
     if request.method == "POST":
         try:
-            identity = int(request.POST.get('identity'))
+            identity = int(request.POST.get('identity').replace(' ', ''))
         except ValueError:
             identity = 1
+
         handled_requests = HotlineRequest.handled_requests.filter(identity__contains=identity)
 
     paginator = FlynsarmyPaginator(handled_requests, 25, adjacent_pages=10)

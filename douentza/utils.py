@@ -249,3 +249,10 @@ def percent_calculation(value, total):
     except ZeroDivisionError:
         percent = 0
     return percent
+
+
+def isoformat_date(date):
+    try:
+        return date.isoformat()
+    except:
+        return None

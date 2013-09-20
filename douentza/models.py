@@ -289,6 +289,10 @@ class Entity(MPTTModel):
             return self.parent.entity_type
         return self.parent
 
+    def get_geopoint(self):
+        if self.latitude and self.longitude:
+            return "{lon}, {lat}".format(lon=self.longitude, lat=self.latitude)
+
 
 @implements_to_string
 class Project(models.Model):
@@ -449,6 +453,9 @@ class Tag(models.Model):
     def __str__(self):
         return self.slug
 
+    def to_dict(self):
+        data = {'slug': self.slug}
+        return data
 
 @implements_to_string
 class BlacklistedNumber(models.Model):

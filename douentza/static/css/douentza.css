@@ -154,3 +154,8 @@ th, td {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+
+.statistics .export-csv {
+    float: right;
+    margin-bottom: 11px;
+}

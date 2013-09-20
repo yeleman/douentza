@@ -13,7 +13,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import Http404
 
 from douentza.models import (Survey, HotlineRequest, Question,
-                             SurveyTaken, SurveyTakenData, CachedData)
+                             SurveyTaken, SurveyTakenData)
 from douentza.forms import MiniSurveyForm
 from douentza.utils import get_default_context
 
@@ -97,21 +97,6 @@ def stats_for_surveys(request):
 def stats_for_survey(request, survey_id):
     context = get_default_context(page='stats_for_survey')
 
-    try:
-        survey = get_object_or_404(Survey, id=int(survey_id))
-    except ValueError:
-        raise Http404
-
-    all_questions_data = CachedData.get_or_fallback(slug=survey.cache_slug,
-                                                    fallback=[])
-    context.update({'all_questions_data': all_questions_data,
-                    'survey': survey})
-
-    return render(request, "stats_for_survey.html", context)
-
-
-def compute_survey_questions_data(survey):
-
     main_types = {
         Question.TYPE_STRING: 'string',
         Question.TYPE_TEXT: 'string',
@@ -121,6 +106,11 @@ def compute_survey_questions_data(survey):
         Question.TYPE_FLOAT: 'number',
         Question.TYPE_CHOICES: 'choice',
     }
+
+    try:
+        survey = get_object_or_404(Survey, id=int(survey_id))
+    except ValueError:
+        raise Http404
 
     all_questions_data = []
 
@@ -134,7 +124,10 @@ def compute_survey_questions_data(survey):
         questions_data.update(custom_stats_for_type(question))
         all_questions_data.append(questions_data)
 
-    return all_questions_data
+    context.update({'all_questions_data': all_questions_data,
+                    'survey': survey})
+
+    return render(request, "stats_for_survey.html", context)
 
 
 def custom_stats_for_type(question):
@@ -187,6 +180,7 @@ def _stats_for_choice(question):
         data['choices_count'][choice.slug].update({
             'count': SurveyTakenData.objects.filter(question=question,
                                                     value__exact=choice.slug).count()})
+        print(data['choices_count'][choice.slug])
     return data
 
 

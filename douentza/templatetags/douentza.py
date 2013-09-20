@@ -85,6 +85,11 @@ def event_date(adate):
     return date(adate, "D d b, H\hi")
 
 
+@register.filter(name='eventdateyear')
+def event_date(adate):
+    return date(adate, "D d b Y, H\hi")
+
+
 @register.filter(name='eventdateshort')
 def event_date_short(adate):
     return date(adate, "D H\hi")

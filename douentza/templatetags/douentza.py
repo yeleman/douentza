@@ -85,8 +85,8 @@ def event_date(adate):
     return date(adate, "D d b, H\hi")
 
 
-@register.filter(name='eventdateyear')
-def event_date(adate):
+@register.filter(name='handleddate')
+def event_handled_date(adate):
     return date(adate, "D d b Y, H\hi")
 
 

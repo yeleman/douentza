@@ -23,7 +23,7 @@ $('.request-tags').each(function () {
 {% endblock %}
 
 {% block content %}
-<h1>{{ event.identity|phone }} <span class="badge badge_alert badge-xs"><span class="glyphicon glyphicon-earphone"></span> {{event.additionalrequests.count|default:"1" }} </span></h1>
+<h1>Archives de {{ event.identity|phone }} <span class="badge badge_alert badge-xs"><span class="glyphicon glyphicon-earphone"></span> {{event.additionalrequests.count|default:"1" }} </span></h1>
 
 <table class="table table-condensed table-hover table-bordered table-striped table-stats">
     <tbody>
@@ -33,27 +33,27 @@ $('.request-tags').each(function () {
             </tr>
             <tr>
                 <th class="span8">Âge</th>
-                <td class="span4">{{ event.age }}</td>
+                <td class="span4">{{ event.age|default:"N/A" }}</td>
             </tr>
             <tr>
                 <th class="span8">Sexe</th>
-                <td class="span4">{{ event.sex }}</td>
+                <td class="span4">{{ sex }}</td>
             </tr>
             <tr>
                 <th class="span8">Durée</th>
-                <td class="span4">{{ event.duration }}</td>
+                <td class="span4">{{ event.duration }} secondes</td>
             </tr>
             <tr>
                 <th class="span8">Ethnie</th>
-                <td class="span4">{{ event.ethnicity }}</td>
+                <td class="span4">{{ event.ethnicity|default:"N/A" }}</td>
             </tr>
             <tr>
                 <th class="span8">Projet</th>
-                <td class="span4">{{ event.project }}</td>
+                <td class="span4">{{ event.project|default:"N/A" }}</td>
             </tr>
             <tr>
                 <th class="span8">Localité</th>
-                <td class="span4">{{ event.location }}</td>
+                <td class="span4">{{ event.location.get_entity_type_display.capitalize }} de {{ event.location.name }}</td>
             </tr>
         </tbody>
 </table>

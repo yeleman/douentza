@@ -151,7 +151,7 @@ class HotlineRequest(models.Model):
             .exclude(id=self.id)
 
     def gender(self):
-        return self.SEXES.get(self.sex, self.SEX_UNKNOWN)
+        return self.SEXES.get(self.sex)
 
     def duration_delta(self):
         return datetime.timedelta(seconds=self.duration)

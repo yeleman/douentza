@@ -1,0 +1,5 @@
+{% load douentza %}
+{% for survey_taken in event.survey_takens.all %}
+{% include "mini_survey_data.html" with survey_taken=survey_taken %}
+<span class="btn btn-default btn-xs btn-survey popover-data" survey-id="{{ survey_taken.survey.id }}" request-id="{{ event.id }}" title="{{ survey.title }}" data-keep-name="true" {% if placement %}data-placement="{{ placement }}"{% endif %}>{{ survey_taken.survey.title }}</span>
+{% endfor %}

@@ -144,9 +144,8 @@ def display_handled_request(request, request_id):
     except:
         raise Http404
 
-    sex = HotlineRequest.SEXES.get(event.sex)
     context = get_default_context(page="display_handled_request")
     context.update({"surveys": Survey.validated.order_by('id'),
-                    "event": event, 'sex': sex})
+                    "event": event})
 
     return render(request, "display_handled_request.html", context)

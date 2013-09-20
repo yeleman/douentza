@@ -4,72 +4,59 @@
 {% block title %}Archives de {{ event.identity|phone }}{% endblock %}
 
 {% block extra_js %}
-// Editor Tag Manager
+// Read Only Tag Manager
 var request_id = {{event.id}};
 $('.tags_container').append(getTagManager({request_id: request_id, readonly: true}).container);
 
-// previous requests tags
-$('.request-tags').each(function () {
-    $(this).replaceWith(getTagManager({request_id: $(this).attr('request-id'), readonly: true, holder_tag: 'span', max_items: 3}).container);
-});
-
 // popovers survey data
-{% for survey in surveys %}
-    {% if not survey|available_for:event %}
-        changeSurveyButton($('.btn-survey[survey-id={{survey.id}}][request-id={{event.id}}]'));
-    {% endif %}
-{% endfor %}
+$('.btn-survey').each(function (){
+    changeSurveyButton($(this));
+});
 
 {% endblock %}
 
 {% block content %}
-<h1>Archives de {{ event.identity|phone }} <span class="badge badge_alert badge-xs"><span class="glyphicon glyphicon-earphone"></span> {{event.additionalrequests.count|default:"1" }} </span></h1>
+<h1>{{ event.identity|phone }} - {{ event.received_on|eventdate }}</h1>
 
 <table class="table table-condensed table-hover table-bordered table-striped table-stats">
     <tbody>
             <tr>
                 <th class="span8">Date de l'appel</th>
-                <td class="span4">{{ event.received_on }}</td>
+                <td class="span4">{{ event.received_on|eventdate }}</td>
             </tr>
             <tr>
-                <th class="span8">Âge</th>
-                <td class="span4">{{ event.age|default:"N/A" }}</td>
+                <th>Âge</th>
+                <td>{% include "_age_span.html" with event=event always=True %}</td>
             </tr>
             <tr>
-                <th class="span8">Sexe</th>
-                <td class="span4">{{ sex }}</td>
+                <th>Sexe</th>
+                <td>{% include "_gender_span.html" with event=event always=True %}</td>
             </tr>
             <tr>
-                <th class="span8">Durée</th>
-                <td class="span4">{{ event.duration }} secondes</td>
+                <th>Durée</th>
+                <td>{% include "_duration_span.html" with event=event always=True %}</td>
             </tr>
             <tr>
-                <th class="span8">Ethnie</th>
-                <td class="span4">{{ event.ethnicity|default:"N/A" }}</td>
+                <th>Ethnie</th>
+                <td>{% include "_ethnicity_span.html" with event=previous_request always=True %}</td>
             </tr>
             <tr>
-                <th class="span8">Projet</th>
-                <td class="span4">{{ event.project|default:"N/A" }}</td>
+                <th>Projet</th>
+                <td>{% include "_project_span.html" with event=event %}</td>
             </tr>
             <tr>
-                <th class="span8">Localité</th>
-                <td class="span4">{{ event.location.get_entity_type_display.capitalize }} de {{ event.location.name }}</td>
+                <th>Localité</th>
+                <td>{% include "_location_span.html" with event=event always=True %}</td>
+            </tr>
+            <tr>
+                <th>Tags</th>
+                <td>{% if event.tags.all %}<div class="tags_container"></div>{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Questionnaires</th>
+                <td>{% include "_surveys_span.html" with event=event always=True %}</td>
             </tr>
         </tbody>
 </table>
-
-{% if event.tags.all %}
-    <div class="tags_container">
-        <h2>Tags</h2>
-    </div>
-{% endif %}
-
-<div>
-    <h2>Mini Questionnaires</h2>
-    {% for survey in surveys %}
-    {% include "mini_survey_data.html" with survey_taken=survey|taken:event %}
-    <p>{{ survey.title }} <buton class="btn btn-default btn-xs btn-survey popover-data" survey-id="{{ survey.id }}" request-id="{{ event.id }}" title="{{ survey.title }}">Remplir le questionnaire</button></li>
-    {% endfor %}
-</div>
 
 {% endblock %}

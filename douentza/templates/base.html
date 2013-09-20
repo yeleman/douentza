@@ -7,6 +7,7 @@
         <link href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet">
         <link href="{{ STATIC_URL }}css/douentza.css" rel="stylesheet">
         <link href="{{ STATIC_URL }}css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+        <link href="{{ STATIC_URL }}/favicon.ico" rel="icon" type="image/x-icon" />
     </head>
     <body class="{{ page }}">
 
@@ -18,7 +19,7 @@
           </div>
           <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
-                <li {% ifequal page 'event_dashboard' %} class="active"{% endifequal %}><a href="{% url 'event_dashboard' %}">Tableau de bord <span class="new_calls badge pull-right"></span></a></li>
+                <li {% ifequal page 'event_dashboard' %} class="active"{% endifequal %}><a href="{% url 'event_dashboard' %}">Tableau de bord&nbsp;<span class="new_calls badge pull-right">{% if events_count %}<span class="glyphicon glyphicon-earphone"></span> {{ events_count|default:""}}{% endif %}</span></a></li>
                 <li {% ifequal page 'archives' %} class="active"{% endifequal %}><a href="{% url 'archives' %}">Archives</a></li>
                 <li {% ifequal page 'statistics' %} class="active"{% endifequal %}><a href="{% url 'statistics' %}">Statistiques</a></li>
                 <li {% ifequal page 'stats_for_surveys' %} class="active"{% endifequal %}><a href="{% url 'stats_for_surveys' %}">Stats Questionnaires</a></li>

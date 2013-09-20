@@ -7,19 +7,14 @@
 {% if form.errors %}
 <p class="alert alert-danger">Votre nom d'utilisateur et mot de passe ne correspondent pas. S'il vous plaît essayer de nouveau.</p>
 {% endif %}
-<form sclass="form" class="login_form" method="post" action="{% url 'django.contrib.auth.views.login' %}">{% csrf_token %}
-<legend>Identification</legend>
+<form class="login_form form-signin" method="post" action="{% url 'django.contrib.auth.views.login' %}">{% csrf_token %}
+<legend class="form-signin-heading">Merci de vous identifier</legend>
 
 <div class="form-group">
-{{ form.username.label_tag }}
-{{ form.username }}
-</div>
-<div class="form-group">
-{{ form.password.label_tag }}
-{{ form.password }}
-</div>
+<input type="text" name="{{ form.username.name }}" class="form-control" placeholder="{{ form.username.label }}" autofocus="autofocus">
+<input type="password" name="{{ form.password.name }}" class="form-control" placeholder="{{ form.password.label }}">
 <input type="hidden" name="next" value="{{ next }}" />
-<button type="submit" class="btn btn-primary">S'identifier</button>
+<button type="submit" class="btn btn-lg btn-primary btn-block">S'identifier</button>
 </form>
 {% endblock %}
 

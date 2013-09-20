@@ -1,10 +1,13 @@
 {% load douentza %}<tr class="row-request" request-id="{{ event.id }}">
-    <td><span class="glyphicon glyphicon-earphone"></span> <strong>{{ event.identity|phone }}</strong> {{ event.received_on }} <span class="label {{event.status|statuscss}}">{{ event.status_str }}</span> {% include "event_type.html" with event=event %}{% if event.callbackattempts %}
-        <ul>
-        {% for callback in event.callbackattempts.all %}
-        <li>{{ callback.created_on }} <span class="label {{callback.status|statuscss}}">{{ callback.status_str }}</span></li>
+    <td>
+        <strong class="phonelead">{{ event.identity|phone }}</strong>
+        <span class="label {{event.status|statuscss}}">{{ event.status_str }}</span>
+        {{ event.received_on |eventdateshort}}
+        {% for ee in event.all_events %}
+            <span class="label label-default sms-type {{ee.event_type|statuscss}}" data-content="{{ ee.received_on|eventdate }} {% if ee.request_type in event.SMS_TYPES %} : {{ ee.sms_message }}{% endif %}">{{ ee.type_str }}</span>
         {% endfor %}
-    </ul>{% endif %}</td>
+    </td>
+
     <td><a href="{% url 'display_event' request_id=event.id %}"><button type="button" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-pencil"></span> Saisir le rappel</button></a></td>
     <td><a href="{% url 'change_event' event.id 'IS_BUSY' %}"><button type="button" class="btn btn-xs btn-warning"><span class="glyphicon"></span> Occupé</button></a></td>
     <td><a href="{% url 'change_event' event.id 'NOT_ANSWERING' %}"><button type="button" class="btn btn-xs btn-danger"><span class="glyphicon"></span> Ne répond pas</button></a></td>

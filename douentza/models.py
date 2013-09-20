@@ -30,7 +30,7 @@ class HandledManager(models.Manager):
 
     def get_query_set(self):
         return super(HandledManager, self).get_query_set() \
-                                           .filter(status=HotlineRequest.STATUS_HANDLED)
+                                          .filter(status=HotlineRequest.STATUS_HANDLED)
 
 
 class ValidatedManager(models.Manager):

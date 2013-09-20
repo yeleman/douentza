@@ -105,11 +105,13 @@ def archives(request):
     except:
         raise Http404
 
+
     if request.method == "POST":
-        if request.POST.get('identity'):
-            handled_requests = HotlineRequest.handled_requests.filter(identity__contains=request.POST.get('identity'))
-        else:
-            handled_requests = []
+        try:
+            identity = int(request.POST.get('identity'))
+        except ValueError:
+            identity = 1
+        handled_requests = HotlineRequest.handled_requests.filter(identity__contains=identity)
 
     paginator = FlynsarmyPaginator(handled_requests, 25, adjacent_pages=10)
 
@@ -133,8 +135,10 @@ def display_handled_request(request, request_id):
         event = get_object_or_404(HotlineRequest, id=int(request_id))
     except:
         raise Http404
+
+    sex = HotlineRequest.SEXES.get(event.sex)
     context = get_default_context(page="display_handled_request")
     context.update({"surveys": Survey.validated.order_by('id'),
-                    "event": event})
+                    "event": event, 'sex': sex})
 
     return render(request, "display_handled_request.html", context)

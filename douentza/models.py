@@ -26,13 +26,18 @@ class IncomingManager(models.Manager):
                                                                 HotlineRequest.STATUS_HANDLED,
                                                                 HotlineRequest.STATUS_BLACK_LIST))
 
+class HandledManager(models.Manager):
+
+    def get_query_set(self):
+        return super(HandledManager, self).get_query_set() \
+                                          .filter(status=HotlineRequest.STATUS_HANDLED)
+
 
 class ValidatedManager(models.Manager):
 
     def get_query_set(self):
         return super(ValidatedManager, self).get_query_set() \
                                             .filter(status=Survey.STATUS_READY)
-
 
 
 @implements_to_string
@@ -108,6 +113,7 @@ class HotlineRequest(models.Model):
 
     objects = models.Manager()
     incoming = IncomingManager()
+    handled_requests = HandledManager()
 
     def __str__(self):
         return "{event_type}-{number}-{status}".format(event_type=self.event_type,
@@ -144,7 +150,10 @@ class HotlineRequest(models.Model):
             .exclude(id=self.id)
 
     def gender(self):
-        return self.SEXES.get(self.sex, self.SEX_UNKNOWN)
+        return self.SEXES.get(self.sex)
+
+    def operator_str(self):
+        return OPERATORS.get(self.operator)
 
     def duration_delta(self):
         return datetime.timedelta(seconds=self.duration)

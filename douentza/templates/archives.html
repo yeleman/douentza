@@ -1,8 +1,51 @@
 {% extends "base.html" %}
+{% load douentza %}
 
 {% block title %}Archives{% endblock %}
 
 {% block content %}
 <h2>Archives</h2>
-{% endblock %}
 
+<form  class="form-horizontal" role="form" action="{% url 'archives' %}" method="post">
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-md-8">
+        {% include 'pagination.html' with paginator=requests_paginator %}
+      </div>
+      <div class="col-md-4 text-right">
+        <div class="form-group col-md-9"><input id="id_identity" name="identity" type="number" class="form-control" placeholder="Numéro"></div><button class="btn btn-primary" type="submit">Recherche</button>
+      </div>
+    </div>
+</form>
+
+<table class="table table-condensed table-hover table-bordered table-striped table-stats">
+    <thead>
+        <tr>
+            <th>Numéro</th>
+            <th>Date du rappel</th>
+            <th>Localité</th>
+            <th>Ethnie</th>
+            <th>Âge</th>
+            <th>Projet</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for request in requests_paginator.object_list %}
+            <tr>
+                <td><a href="{% url 'handled_request' request_id=request.id %}">{{ request.identity|phone }}</a></td>
+                <td>{{ request.responded_on|handleddate }}</td>
+                <td>{% include "_location_span.html" with event=request always=True %}</td>
+                <td>{% include "_ethnicity_span.html" with event=request always=True %}</td>
+                <td>{% include "_age_span.html" with event=request always=True %}</td>
+                <td>{% include "_project_span.html" with event=request %}</td>
+            </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6">Aucun</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{{handled}}
+
+{% endblock %}

@@ -1,0 +1,1 @@
+{% if event.location or always %}<span class="label label-default label-xs label-location" {% if event.location %}title="{{event.location.entity_type}}"{% endif %}>{{event.location|default:"Inconnue"}} <span class="glyphicon glyphicon-map-marker"></span></span>{% endif %}

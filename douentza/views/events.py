@@ -12,10 +12,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.paginator import EmptyPage, PageNotAnInteger
 
 from douentza.models import (HotlineRequest, Ethnicity, Project, HotlineUser,
-                             Entity, Survey, BlacklistedNumber)
-from douentza.utils import get_default_context, EMPTY_ENTITY
+                             Entity, Survey, BlacklistedNumber,
+                             SurveyTaken)
+from douentza.utils import get_default_context, EMPTY_ENTITY, FlynsarmyPaginator
 from douentza.forms import BasicInformationForm
 
 
@@ -34,18 +36,26 @@ def display_event(request, request_id):
         form = BasicInformationForm(request.POST)
         if form.is_valid():
             event = form.cleaned_data.get('request_id')
-
             event.status = HotlineRequest.STATUS_HANDLED
             event.hotline_user = get_object_or_404(HotlineUser,
                                                    username=request.user)
             event.responded_on = form.cleaned_data.get('responded_on')
             event.age = form.cleaned_data.get('age')
-            try:
-                event.project = Project.objects.get(id=int(form.cleaned_data.get('project')))
-            except ValueError:
-                pass
+            project = form.cleaned_data.get('project')
+            if not project is None:
+                try:
+                    project = Project.objects.get(id=int(project))
+                except Project.DoesNotExist:
+                    pass
+            event.project = project
             event.sex = form.cleaned_data.get('sex')
-            event.ethnicity = Ethnicity.objects.get(slug=form.cleaned_data.get('ethnicity'))
+            ethnicity = form.cleaned_data.get('ethnicity')
+            if ethnicity is not None:
+                try:
+                    ethnicity = Ethnicity.objects.get(slug=ethnicity)
+                except Ethnicity.DoesNotExist:
+                    pass
+            event.ethnicity = ethnicity
             event.duration = form.cleaned_data.get('duration')
             event.location = form.cleaned_data.get('village')
             event.save()
@@ -94,7 +104,49 @@ def blacklist(request, blacknum_id=None):
     return render(request, "blacklist.html", context)
 
 
+@login_required()
 def archives(request):
     context = get_default_context(page='archives')
 
+    try:
+        handled_requests = HotlineRequest.handled_requests.all()
+    except:
+        raise Http404
+
+
+    if request.method == "POST":
+        try:
+            identity = int(request.POST.get('identity').replace(' ', ''))
+        except ValueError:
+            identity = 1
+
+        handled_requests = HotlineRequest.handled_requests.filter(identity__contains=identity)
+
+    paginator = FlynsarmyPaginator(handled_requests, 25, adjacent_pages=10)
+
+    page = request.GET.get('page')
+    try:
+        requests_paginator = paginator.page(page)
+    except PageNotAnInteger:
+        requests_paginator = paginator.page(1)
+    except (EmptyPage, InvalidPage):
+        requests_paginator = paginator.page(paginator.num_pages)
+
+    context.update({"requests_paginator": requests_paginator})
+
     return render(request, "archives.html", context)
+
+
+@login_required()
+def display_handled_request(request, request_id):
+
+    try:
+        event = get_object_or_404(HotlineRequest, id=int(request_id))
+    except:
+        raise Http404
+
+    context = get_default_context(page="display_handled_request")
+    context.update({"surveys": Survey.validated.order_by('id'),
+                    "event": event})
+
+    return render(request, "display_handled_request.html", context)

@@ -38,8 +38,8 @@ class BasicInformationForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(BasicInformationForm, self).__init__(*args, **kwargs)
 
-        all_ethinicty = [(None, "Inconnue")] + [(e.slug, e.name) for e in Ethnicity.objects.order_by('name')]
-        all_project = [(None, "Aucun")] + [(p.id, p.name) for p in Project.objects.order_by('name')]
+        all_ethinicty = [('#', "Inconnue")] + [(e.slug, e.name) for e in Ethnicity.objects.order_by('name')]
+        all_project = [('#', "Aucun")] + [(p.id, p.name) for p in Project.objects.order_by('name')]
         all_region = [(EMPTY_ENTITY, "INCONNUE")] + [(e.slug, e.name)
                       for e in Entity.objects.filter(entity_type=Entity.TYPE_REGION)]
 
@@ -69,6 +69,26 @@ class BasicInformationForm(forms.Form):
             return HotlineRequest.objects.get(id=int(self.cleaned_data.get('request_id')))
         except HotlineRequest.DoesNotExist:
             raise forms.ValidationError("Évennement incorrect")
+
+    def clean_project(self):
+        project_id = self.cleaned_data.get('project')
+        if project_id == '#':
+            return None
+
+        try:
+            return Project.objects.get(id=int(project_id))
+        except (ValueError, Project.DoesNotExist):
+            return None
+
+    def clean_ethnicity(self):
+        ethnicity_slug = self.cleaned_data.get('ethnicity')
+        if ethnicity_slug == '#':
+            return None
+
+        try:
+            return Ethnicity.objects.get(slug=ethnicity_slug)
+        except Ethnicity.DoesNotExist:
+            return None
 
 
 def get_form_property(question_dict):

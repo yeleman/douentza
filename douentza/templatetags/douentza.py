@@ -65,6 +65,7 @@ def cssclass_from_status(status):
 
     return "label-{}".format(status_table.get(status, 'default'))
 
+
 @register.filter(name='humandelta')
 def human_delta(delta):
     if delta.days > 365:
@@ -83,6 +84,11 @@ def human_delta(delta):
 @register.filter(name='eventdate')
 def event_date(adate):
     return date(adate, "D d b, H\hi")
+
+
+@register.filter(name='handleddate')
+def event_handled_date(adate):
+    return date(adate, "D d b Y, H\hi")
 
 
 @register.filter(name='eventdateshort')

@@ -13,50 +13,57 @@ $('.btn-survey').each(function (){
     changeSurveyButton($(this));
 });
 
+setupPingLoop('{{now}}');
+
 {% endblock %}
 
 {% block content %}
+
 <h1>{{ event.identity|phone }} - {{ event.received_on|eventdate }}</h1>
 
 <table class="table table-condensed table-hover table-bordered table-striped table-stats">
     <tbody>
-            <tr>
-                <th class="span8">Date de l'appel</th>
-                <td class="span4">{{ event.received_on|eventdate }}</td>
-            </tr>
-            <tr>
-                <th>Âge</th>
-                <td>{% include "_age_span.html" with event=event always=True %}</td>
-            </tr>
-            <tr>
-                <th>Sexe</th>
-                <td>{% include "_gender_span.html" with event=event always=True %}</td>
-            </tr>
-            <tr>
-                <th>Durée</th>
-                <td>{% include "_duration_span.html" with event=event always=True %}</td>
-            </tr>
-            <tr>
-                <th>Ethnie</th>
-                <td>{% include "_ethnicity_span.html" with event=event always=True %}</td>
-            </tr>
-            <tr>
-                <th>Projet</th>
-                <td>{% include "_project_span.html" with event=event %}</td>
-            </tr>
-            <tr>
-                <th>Localité</th>
-                <td>{% include "_location_span.html" with event=event always=True %}</td>
-            </tr>
-            <tr>
-                <th>Tags</th>
-                <td>{% if event.tags.all %}<div class="tags_container"></div>{% endif %}</td>
-            </tr>
-            <tr>
-                <th>Questionnaires</th>
-                <td>{% include "_surveys_span.html" with event=event always=True %}</td>
-            </tr>
-        </tbody>
+        <tr>
+            <th>Date de l'appel</th>
+            <td>{{ event.received_on|eventdate }}</td>
+        </tr>
+        <tr>
+            <th>Âge</th>
+            <td>{% include "_age_span.html" with event=event always=True %}</td>
+        </tr>
+        <tr>
+            <th>Sexe</th>
+            <td>{% include "_gender_span.html" with event=event always=True %}</td>
+        </tr>
+        <tr>
+            <th>Durée</th>
+            <td>{% include "_duration_span.html" with event=event always=True %}</td>
+        </tr>
+        <tr>
+            <th>Ethnie</th>
+            <td>{% include "_ethnicity_span.html" with event=event always=True %}</td>
+        </tr>
+        <tr>
+            <th>Projet</th>
+            <td>{% include "_project_span.html" with event=event %}</td>
+        </tr>
+        <tr>
+            <th>Localité</th>
+            <td>{% include "_location_span.html" with event=event always=True %}</td>
+        </tr>
+        <tr>
+            <th>Tags</th>
+            <td>{% if event.tags.all %}<div class="tags_container"></div>{% endif %}</td>
+        </tr>
+        <tr>
+            <th>Questionnaires</th>
+            <td>{% include "_surveys_span.html" with event=event always=True %}</td>
+        </tr>
+        <tr>
+            <th>Historique des tentatives</th>
+            <td>{% include "_all_event_span.html" with event=event %}</td>
+        </tr>
+    </tbody>
 </table>
 
 {% endblock %}

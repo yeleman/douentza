@@ -138,36 +138,58 @@ def event_response_counts_json(request):
 
 def export_general_stats_as_csv(filename):
     ''' export the csv file '''
+
+    created_on = "created_on"
+    sms_message = "sms_message"
+    received_on = "received_on"
+    identity = "identity"
+    operator = "operator"
+    age = "age"
+    sex = "sex"
+    duration = "duration"
+    ethnicity_name = "ethnicity_name"
+    ethnicity_slug = "ethnicity_slug"
+    event_type = "event_type"
+    responded_on = "responded_on"
+    project = "project"
+    status = "status"
+    nb_cols_additional_request = 5
+    nb_cols_tags = 15
+    nb_cols_attempt = 5
+    tag_total_nb = "tag_total_nb"
+    attempt_nb_total = "attempt_nb_total"
+    additional_nb_total = "additional_nb_total"
+
     names_until = lambda slug, nb, suffix=None: ["{slug}_{incr}".format(slug=slug, incr=incr)
                                     for incr in range(1, nb + 1)]
     prefix_list = lambda prefix, alist: ["{prefix}_{slug}".format(slug=slug, prefix=prefix)
                                          for slug in alist]
 
-    tags_headers = names_until("tag", 15) + ["tags", "tag_total_nb"]
+    tags_headers = names_until("tag", nb_cols_tags) + ["tags", tag_total_nb]
     entity_headers = prefix_list('location', ["slug", "type", "gps", "name",
                                               "latitude", "longitude", "parent"])
 
     additional_headers = [prefix + '_' + suffix
-                         for prefix in names_until("additional_request", 5)
-                         for suffix in ["created_on", "request_type", "sms_message"]] + ["additional_nb_total"]
+                         for prefix in names_until("additional_request", nb_cols_additional_request)
+                         for suffix in [created_on, "request_type", sms_message]] + [additional_nb_total]
 
     attempt_headers = [prefix + '_' + suffix
-                       for prefix in names_until("attempt", 5)
-                       for suffix in ["created_on", "status"]] + ["attempt_nb_total"]
+                       for prefix in names_until("attempt", nb_cols_attempt)
+                       for suffix in [created_on, status]] + [attempt_nb_total]
 
-    headers = ['received_on',
-                'identity',
-                'operator',
-                'age',
-                'sex',
-                'duration',
-                'ethnicity_name',
-                'ethnicity_slug',
-                'event_type',
-                'sms_message',
-                'responded_on',
-                'project',
-                'status']
+    headers = [received_on,
+                identity,
+                operator,
+                age,
+                sex,
+                duration,
+                ethnicity_name,
+                ethnicity_slug,
+                event_type,
+                sms_message,
+                responded_on,
+                project,
+                status]
 
     headers += tags_headers + entity_headers + additional_headers + attempt_headers
 
@@ -176,20 +198,20 @@ def export_general_stats_as_csv(filename):
     csv_writer.writeheader()
 
     for hotlinerequest in HotlineRequest.objects.order_by("-received_on"):
-        data = {'received_on': isoformat_date(hotlinerequest.received_on),
-                'identity': hotlinerequest.identity,
-                'operator': hotlinerequest.operator,
-                'age': hotlinerequest.age,
-                'sex': hotlinerequest.sex,
-                'duration': hotlinerequest.duration,
-                'event_type': hotlinerequest.event_type,
-                'sms_message': hotlinerequest.sms_message,
-                'responded_on': isoformat_date(hotlinerequest.responded_on),
-                'project': hotlinerequest.project,
-                'status': hotlinerequest.status,
-                'tag_total_nb': hotlinerequest.tags.count(),
-                'additional_nb_total': hotlinerequest.additionalrequests.count(),
-                'attempt_nb_total': hotlinerequest.callbackattempts.count(),
+        data = {received_on: isoformat_date(hotlinerequest.received_on),
+                identity: hotlinerequest.identity,
+                operator: hotlinerequest.operator,
+                age: hotlinerequest.age,
+                sex: hotlinerequest.sex,
+                duration: hotlinerequest.duration,
+                event_type: hotlinerequest.event_type,
+                sms_message: hotlinerequest.sms_message,
+                responded_on: isoformat_date(hotlinerequest.responded_on),
+                project: hotlinerequest.project,
+                status: hotlinerequest.status,
+                tag_total_nb: hotlinerequest.tags.count(),
+                additional_nb_total: hotlinerequest.additionalrequests.count(),
+                attempt_nb_total: hotlinerequest.callbackattempts.count(),
         }
 
         if hotlinerequest.ethnicity:
@@ -207,22 +229,25 @@ def export_general_stats_as_csv(filename):
                          'location_name': location.name
                          })
 
-        tags = hotlinerequest.tags.all()[:15]
+        tags = hotlinerequest.tags.all()[:nb_cols_tags]
         for n, tag in enumerate(tags):
             data.update({'tag_{}'.format(n + 1): tag.slug})
 
         data.update({'tags': ", ".join([t.slug for t in tags])})
 
-        attempts = hotlinerequest.callbackattempts.all()[:15]
+        attempts = hotlinerequest.callbackattempts.all()[:nb_cols_attempt]
         for n, attempt in enumerate(attempts):
-            data.update({'attempt_{}_status'.format(n + 1): attempt.type_str(),
-                         'attempt_{}_created_on'.format(n + 1): isoformat_date(attempt.created_on)})
+            data.update({'attempt_{nb}_{status}'.format(nb=(n + 1), status=status): attempt.type_str(),
+                         'attempt_{nb}_{created_on}'.format(nb=(n + 1),
+                                                            created_on=created_on): isoformat_date(attempt.created_on)})
 
-        additionalrequests = hotlinerequest.additionalrequests.all()[:5]
+        additionalrequests = hotlinerequest.additionalrequests.all()[:nb_cols_additional_request]
         for n, additionalrequest in enumerate(additionalrequests):
-            data.update({'additional_request_{}_request_type'.format(n + 1): additionalrequest.event_type,
-                        'additional_request_{}_created_on'.format(n + 1): isoformat_date(additionalrequest.created_on),
-                        'additional_request_{}_sms_message'.format(n + 1): additionalrequest.sms_message})
+            data.update({'additional_request_{nb}_request_type'.format(nb=(n + 1)): additionalrequest.event_type,
+                        'additional_request_{nb}_{created_on}'.format(nb=(n + 1),
+                                                                      created_on=created_on): isoformat_date(additionalrequest.created_on),
+                        'additional_request_{nb}_{sms_message}'.format(nb=(n + 1),
+                                                                       sms_message=sms_message ): additionalrequest.sms_message})
 
         csv_writer.writerow(data)
     csv_file.close()

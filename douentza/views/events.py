@@ -4,7 +4,7 @@
 
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
-
+import re
 import json
 
 from django.http import Http404
@@ -96,18 +96,11 @@ def blacklist(request, blacknum_id=None):
 def archives(request):
     context = get_default_context(page='archives')
 
-    try:
-        handled_requests = HotlineRequest.handled_requests.all()
-    except:
-        raise Http404
+    handled_requests = HotlineRequest.handled_requests.all()
 
     if request.method == "POST":
-        try:
-            identity = int(request.POST.get('identity').replace(' ', ''))
-        except ValueError:
-            identity = 1
-
-        handled_requests = HotlineRequest.handled_requests.filter(identity__contains=identity)
+        search_string = re.sub(r'[^0-9]+', '', request.POST.get('identity'))
+        handled_requests = HotlineRequest.handled_requests.filter(identity__icontains=search_string)
 
     paginator = Paginator(handled_requests, 25)
 

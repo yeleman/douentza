@@ -97,21 +97,18 @@ function getExistingIds() {
 function _updateUIOnEvents() {
     clearTimeout(dashboard_loop);
 
-    $.get('/api/ping_json', {since: lastUpdate.getTime(),
-                             exclude: JSON.stringify(getExistingIds())}).done(function (data) {
-        if (data.events.length > 0) {
-            // we have new events, let them shine
-            for (var i=0; i<data.events.length; i++) {
-                var html = data.events[i].html_row;
-                $('.today_events_table tbody').append($(html));
-            }
+    $.get('/api/ping_html', {since: lastUpdate.getTime()}).done(function (data) {
+        if (data.events > 0) {
+
+            var target = $('.ancient_events_table');
+            target.empty();
+            target.append($(data.html));
             jQsmsTextHover();
         }
-        restartPingLoop(null);
+        restartPingLoop(data.now);
     }).fail(function (err) {
         restartPingLoop(null);
     });
-
 }
 
 function styleFormElements() {

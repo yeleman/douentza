@@ -14,7 +14,8 @@ from django.http import HttpResponse
 from django.db.models import Avg, Max, Min, Sum
 from django.contrib.auth.decorators import login_required
 
-from douentza.models import (HotlineRequest, Project, Survey, Entity, Ethnicity)
+from douentza.models import (HotlineRequest, Project, Survey, Entity, Ethnicity,
+                            CachedData)
 from douentza.utils import (get_default_context, datetime_range,
                             start_or_end_day_from_date, to_jstimestamp,
                             ethinicity_requests, communes_located_requests,
@@ -112,7 +113,10 @@ def get_statistics_dict():
                                                for ethinicity in Ethnicity.objects.all()],
                     'communes_located_requests': [communes_located_requests(commune)
                                                   for commune in list(Entity.objects.filter(entity_type='commune'))] +
-                                                  [("Inconnue", unknown_location_count, unknown_location_percent)],})
+                                                  [("Inconnue", unknown_location_count, unknown_location_percent)],
+                    'general_stats_slug': "general_stats",
+                    })
+
     return context
 
 
@@ -132,10 +136,8 @@ def event_response_counts_json(request):
                         mimetype='application/json')
 
 
-def export_general_stats_as_csv(request):
+def export_general_stats_as_csv(filename):
     ''' export the csv file '''
-    filename = "export_data.csv"
-
     names_until = lambda slug, nb, suffix=None: ["{slug}_{incr}".format(slug=slug, incr=incr)
                                     for incr in range(1, nb + 1)]
     prefix_list = lambda prefix, alist: ["{prefix}_{slug}".format(slug=slug, prefix=prefix)
@@ -225,4 +227,4 @@ def export_general_stats_as_csv(request):
         csv_writer.writerow(data)
     csv_file.close()
 
-    return HttpResponse()
+    return filename

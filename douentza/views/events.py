@@ -121,7 +121,7 @@ def archives(request):
 
         handled_requests = HotlineRequest.handled_requests.filter(identity__contains=identity)
 
-    paginator = Paginator(handled_requests, 2)
+    paginator = Paginator(handled_requests, 25)
 
     page = request.GET.get('page')
     try:

@@ -12,12 +12,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.core.paginator import EmptyPage, PageNotAnInteger
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 from douentza.models import (HotlineRequest, Ethnicity, Project, HotlineUser,
                              Entity, Survey, BlacklistedNumber,
                              SurveyTaken)
-from douentza.utils import get_default_context, EMPTY_ENTITY, FlynsarmyPaginator
+from douentza.utils import get_default_context, EMPTY_ENTITY
 from douentza.forms import BasicInformationForm
 
 
@@ -101,7 +101,6 @@ def archives(request):
     except:
         raise Http404
 
-
     if request.method == "POST":
         try:
             identity = int(request.POST.get('identity').replace(' ', ''))
@@ -110,7 +109,7 @@ def archives(request):
 
         handled_requests = HotlineRequest.handled_requests.filter(identity__contains=identity)
 
-    paginator = FlynsarmyPaginator(handled_requests, 25, adjacent_pages=10)
+    paginator = Paginator(handled_requests, 25)
 
     page = request.GET.get('page')
     try:

@@ -46,6 +46,7 @@ class HotlineRequest(models.Model):
     class Meta:
         unique_together = [('identity', 'received_on')]
         get_latest_by = "received_on"
+        ordering = ('received_on', )
 
     SEX_UNKNOWN = 'unknown'
     SEX_MALE = 'male'
@@ -201,6 +202,7 @@ class CallbackAttempt(models.Model):
 
     class Meta:
         get_latest_by = "created_on"
+        ordering = ('-created_on', '-id')
 
     event = models.ForeignKey(HotlineRequest, related_name='callbackattempts')
     created_on = models.DateTimeField(auto_now_add=True)
@@ -240,6 +242,10 @@ class HotlineUser(AbstractUser):
 
 @implements_to_string
 class Ethnicity(models.Model):
+
+    class Meta:
+        ordering = ('name', )
+
     slug = models.SlugField(primary_key=True)
     name = models.CharField(max_length=40, verbose_name="Nom")
 
@@ -305,6 +311,10 @@ class Entity(MPTTModel):
 
 @implements_to_string
 class Project(models.Model):
+
+    class Meta:
+        ordering = ('name', )
+
     name = models.CharField(max_length=70, verbose_name="Nom", unique=True)
     description = models.TextField(null=True, blank=True)
 
@@ -314,6 +324,9 @@ class Project(models.Model):
 
 @implements_to_string
 class Survey(models.Model):
+
+    class Meta:
+        ordering = ('id', )
 
     STATUS_CREATED = 'created'
     STATUS_READY = 'ready'
@@ -376,6 +389,7 @@ class Question(models.Model):
 
     class Meta:
         get_latest_by = 'order'
+        ordering = ('-order', )
 
     TYPE_STRING = 'string'
     TYPE_BOOLEAN = 'boolean'
@@ -441,6 +455,7 @@ class QuestionChoice(models.Model):
 
     class Meta:
         unique_together = (('slug', 'question'),)
+        ordering = ('id', )
 
     slug = models.CharField(max_length=20)
     label = models.CharField(max_length=70, verbose_name="Choix")
@@ -457,6 +472,10 @@ class QuestionChoice(models.Model):
 
 @implements_to_string
 class Tag(models.Model):
+
+    class Meta:
+        ordering = ('slug', )
+
     slug = models.CharField(max_length=50, primary_key=True)
 
     def __str__(self):
@@ -489,6 +508,7 @@ class SurveyTaken(models.Model):
 
     class Meta:
         unique_together = ('survey', 'request')
+        ordering = ('-taken_on', )
 
     survey = models.ForeignKey('Survey', related_name='survey_takens')
     request = models.ForeignKey('HotlineRequest', related_name='survey_takens')

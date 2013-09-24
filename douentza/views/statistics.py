@@ -220,7 +220,7 @@ def export_general_stats_as_csv(filename):
 
         additionalrequests = hotlinerequest.additionalrequests.all()[:15]
         for n, additionalrequest in enumerate(additionalrequests):
-            data.update({'additional_request_{}_request_type'.format(n + 1): additionalrequest.event_type(),
+            data.update({'additional_request_{}_request_type'.format(n + 1): additionalrequest.event_type,
                         'additional_request_{}_created_on'.format(n + 1): isoformat_date(additionalrequest.created_on),
                         'additional_request_{}_sms'.format(n + 1): additionalrequest.sms_message})
 

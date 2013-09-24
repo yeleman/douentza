@@ -25,7 +25,7 @@ def fondasms_handler(request):
                                         handle_outgoing_status_change,
                                         handle_device_status_change)
 
-    from pprint import pprint as pp ; pp(list(request.POST.items()))
+    from pprint import pprint as pp ; pp(request.POST)
 
     action = request.POST.get("action")
     handler = lambda x: None

@@ -159,9 +159,12 @@ def _stats_for_boolean(question):
 
 def _stats_for_date(question):
     all_values = [v.value for v in SurveyTakenData.objects.filter(question=question)]
-    first = numpy.min(all_values)
-    last = numpy.max(all_values)
-    span = last - first
+    if len(all_values):
+        first = numpy.min(all_values)
+        last = numpy.max(all_values)
+        span = last - first
+    else:
+        first = last = span = None
     return {
         'first': first,
         'center': first + datetime.timedelta(days=span.days / 2),
@@ -172,6 +175,11 @@ def _stats_for_date(question):
 
 def _stats_for_number(question):
     all_values = [v.value for v in SurveyTakenData.objects.filter(question=question)]
+    if not len(all_values):
+        return {'min': None,
+                'max': None,
+                'avg': None,
+                'median': None}
     return {
         'min': numpy.min(all_values),
         'max': numpy.max(all_values),

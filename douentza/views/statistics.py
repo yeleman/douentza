@@ -218,11 +218,11 @@ def export_general_stats_as_csv(filename):
             data.update({'attempt_{}_status'.format(n + 1): attempt.type_str(),
                          'attempt_{}_created_on'.format(n + 1): isoformat_date(attempt.created_on)})
 
-        additionalrequests = hotlinerequest.additionalrequests.all()[:15]
+        additionalrequests = hotlinerequest.additionalrequests.all()[:5]
         for n, additionalrequest in enumerate(additionalrequests):
             data.update({'additional_request_{}_request_type'.format(n + 1): additionalrequest.event_type,
                         'additional_request_{}_created_on'.format(n + 1): isoformat_date(additionalrequest.created_on),
-                        'additional_request_{}_sms'.format(n + 1): additionalrequest.sms_message})
+                        'additional_request_{}_sms_message'.format(n + 1): additionalrequest.sms_message})
 
         csv_writer.writerow(data)
     csv_file.close()

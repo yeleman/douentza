@@ -32,13 +32,9 @@ def tags_for(request, request_id):
 def update_tags(request, request_id):
     hotline_req = get_object_or_404(HotlineRequest, id=request_id)
     tags = json.loads(request.body.decode())
-    print(tags)
     hotline_req.tags.clear()
     for txttag in tags:
-        try:
-            tag = Tag.objects.get(slug=txttag)
-        except Tag.DoesNotExist:
-            tag = Tag.objects.create(slug=txttag)
+        tag = Tag.get_or_create(txttag)
         hotline_req.tags.add(tag)
 
     # clean up unused tags

@@ -466,6 +466,14 @@ class Tag(models.Model):
         data = {'slug': self.slug}
         return data
 
+    @classmethod
+    def get_or_create(cls, text):
+        try:
+            tag = cls.objects.get(slug=text)
+        except cls.DoesNotExist:
+            tag = cls.objects.create(slug=text)
+        return tag
+
 @implements_to_string
 class BlacklistedNumber(models.Model):
 

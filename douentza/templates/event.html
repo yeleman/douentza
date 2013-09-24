@@ -34,6 +34,10 @@ $('#accordion .btn-survey').each(function (){
     changeSurveyButton($(this));
 });
 
+$('button[type="submit"]').on('click', function () {
+   $('form').submit();
+});
+
 {% endblock %}
 
 {% block content %}
@@ -88,6 +92,7 @@ $('#accordion .btn-survey').each(function (){
     <input type="hidden" id="previous_commune" value="{{ form.commune.value }}" />
     <input type="hidden" id="previous_village" value="{{ form.village.value }}" />
 {% endif %}
+</form>
 
 <div class="tags_container">
     <h2>Tags</h2>
@@ -107,6 +112,5 @@ $('#accordion .btn-survey').each(function (){
 <div class="row">
     </div><div class="col-md-6 col-md-offset-3"><button type="submit" class="form-control btn btn-primary">Sauvegarder &amp; archiver</button></div>
 </div>
-</form>
 
 {% endblock %}

@@ -7,13 +7,34 @@ from __future__ import (unicode_literals, absolute_import,
 
 from django import forms
 from django.utils.text import slugify
+from django.core.exceptions import ValidationError
 
 from douentza.models import (HotlineRequest, Project, Ethnicity,
-                             Entity, Survey, Question, QuestionChoice)
+                             Entity, Survey, Question)
 from douentza.utils import EMPTY_ENTITY
 
-help_duration = "La durée est en seconde"
+help_duration = "Durée en secondes ou sous la forme 2:30"
 help_age = "L'âge en année"
+
+
+class DurationField(forms.IntegerField):
+    def to_python(self, value):
+        if ':' in value:
+            minutes, seconds = value.split(':', 1)
+        else:
+            minutes = 0
+            seconds = value
+        try:
+            if not minutes:
+                minutes = 0
+            if not seconds:
+                seconds = 0
+            value = int(minutes) * 60 + int(seconds)
+        except:
+            raise ValidationError("Impossible de comprendre la durée",
+                                  code='invalid')
+        return super(DurationField, self).to_python(value)
+
 
 class BasicInformationForm(forms.Form):
 
@@ -26,7 +47,7 @@ class BasicInformationForm(forms.Form):
     sex = forms.ChoiceField(label="Sexe", required=False,
                             choices=HotlineRequest.SEXES.items(),
                             widget=forms.Select)
-    duration = forms.IntegerField(label="Durée", widget=forms.TextInput(attrs={'placeholder': help_duration}))
+    duration = DurationField(label="Durée", widget=forms.TextInput(attrs={'placeholder': help_duration}))
     ethnicity = forms.ChoiceField(label="Ethnie", required=False, widget=forms.Select)
     project = forms.ChoiceField(label="Projet", required=False, widget=forms.Select)
 

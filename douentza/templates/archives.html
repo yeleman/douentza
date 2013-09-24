@@ -34,10 +34,10 @@
             <tr>
                 <td><a href="{% url 'handled_request' request_id=request.id %}">{{ request.identity|phone }}</a></td>
                 <td>{{ request.responded_on|handleddate }}</td>
-                <td>{% include "_location_span.html" with event=request always=True %}</td>
-                <td>{% include "_ethnicity_span.html" with event=request always=True %}</td>
-                <td>{% include "_age_span.html" with event=request always=True %}</td>
-                <td>{% include "_project_span.html" with event=request %}</td>
+                <td>{% include "_location_span.html" with event=request always=False %}</td>
+                <td>{% include "_ethnicity_span.html" with event=request always=False %}</td>
+                <td>{% include "_age_span.html" with event=request always=False %}</td>
+                <td>{% include "_project_span.html" with event=request always=False %}</td>
             </tr>
         {% empty %}
         <tr>

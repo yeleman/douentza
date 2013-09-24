@@ -14,9 +14,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
-from douentza.models import (HotlineRequest, Ethnicity, Project, HotlineUser,
-                             Entity, Survey, BlacklistedNumber,
-                             SurveyTaken)
+from douentza.models import (HotlineRequest, HotlineUser,
+                             Entity, Survey, BlacklistedNumber)
 from douentza.utils import get_default_context, EMPTY_ENTITY
 from douentza.forms import BasicInformationForm
 
@@ -94,9 +93,10 @@ def blacklist(request, blacknum_id=None):
 
 @login_required()
 def archives(request):
+
     context = get_default_context(page='archives')
 
-    handled_requests = HotlineRequest.handled_requests.all()
+    handled_requests = HotlineRequest.handled_requests.order_by('-received_on')
 
     if request.method == "POST":
         search_string = re.sub(r'[^0-9]+', '', request.POST.get('identity'))
@@ -109,7 +109,7 @@ def archives(request):
         requests_paginator = paginator.page(page)
     except PageNotAnInteger:
         requests_paginator = paginator.page(1)
-    except (EmptyPage, InvalidPage):
+    except EmptyPage:
         requests_paginator = paginator.page(paginator.num_pages)
 
     context.update({"requests_paginator": requests_paginator})

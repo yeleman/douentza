@@ -36,6 +36,9 @@ def all_events():
                   'yesterday_events': HotlineRequest.incoming.filter(received_on__gte=start_or_end_day_from_date(yesterday, True),
                                                                  received_on__lt=start_or_end_day_from_date(yesterday, False)).all(),
                   'ancient_events': HotlineRequest.incoming.filter(received_on__lt=start_or_end_day_from_date(yesterday, True)).all()}
+    data_event.update({'has_events': bool(len(data_event['today_events'])
+                                     + len(data_event['yesterday_events'])
+                                     + len(data_event['ancient_events']))})
     return data_event
 
 

@@ -101,8 +101,7 @@ function _updateUIOnEvents() {
         if (data.events > 0) {
 
             var target = $('.ancient_events_table');
-            target.empty();
-            target.append($(data.html));
+            target.replaceWith($(data.html));
             jQsmsTextHover();
         }
         restartPingLoop(data.now);

@@ -1,4 +1,7 @@
 <table class="table table-hover table-bordered ancient_events_table table-striped">
+    {% if not all_events.has_events %}
+    <tr><td><span class="glyphicon glyphicon-thumbs-up"></span> Bravo! Il n'y a aucun appel en attente.</td></tr>
+    {% endif %}
     {% if all_events.ancient_events %}
     <thead>
         <tr><th colspan="5">Plus anciens</th></tr>

@@ -180,7 +180,6 @@ def _stats_for_choice(question):
         data['choices_count'][choice.slug].update({
             'count': SurveyTakenData.objects.filter(question=question,
                                                     value__exact=choice.slug).count()})
-        print(data['choices_count'][choice.slug])
     return data
 
 

@@ -13,6 +13,7 @@ from django.core.management.base import BaseCommand
 
 from douentza.views.surveys import (export_survey_as_csv,
                                     compute_survey_questions_data)
+from douentza.views.statistics import export_general_stats_as_csv
 from douentza.models import Survey, CachedData
 
 
@@ -49,3 +50,18 @@ class Command(BaseCommand):
             cache.data_type = CachedData.TYPE_OBJECT
             cache.cached_on = now
             cache.save()
+
+        ###
+        ## General stats
+        ###
+
+        fname = 'general_stats-{date}.csv'.format(date=datestr)
+
+        filename = os.path.join(settings.CACHEDDATA_FOLDER, fname)
+        export_general_stats_as_csv(filename=filename)
+
+        cache, _ = CachedData.objects.get_or_create(slug=slugify("general_stats"))
+        cache.data_type = CachedData.TYPE_FILE
+        cache.value = fname
+        cache.cached_on = now
+        cache.save()

@@ -44,6 +44,7 @@ urlpatterns = patterns('',
     url(r'^api/tags/'+ REQUEST_ID +'/update/?$', 'douentza.views.tags.update_tags',
         name='update_tags'),
     url(r'^api/ping_json$', 'douentza.views.event_dashboard.ping_json', name='ping_json'),
+    url(r'^api/ping_html$', 'douentza.views.event_dashboard.ping_html', name='ping_html'),
 
     url(r'^entities/(?P<parent_slug>\d{8})/?$', 'douentza.views.events.entities_api', name='entities'),
     url(r'^statistics/$', 'douentza.views.statistics.dashboard', name='statistics'),

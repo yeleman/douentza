@@ -41,21 +41,9 @@ def display_event(request, request_id):
                                                    username=request.user)
             event.responded_on = form.cleaned_data.get('responded_on')
             event.age = form.cleaned_data.get('age')
-            project = form.cleaned_data.get('project')
-            if not project is None:
-                try:
-                    project = Project.objects.get(id=int(project))
-                except Project.DoesNotExist:
-                    pass
-            event.project = project
+            event.project = form.cleaned_data.get('project')
             event.sex = form.cleaned_data.get('sex')
-            ethnicity = form.cleaned_data.get('ethnicity')
-            if ethnicity is not None:
-                try:
-                    ethnicity = Ethnicity.objects.get(slug=ethnicity)
-                except Ethnicity.DoesNotExist:
-                    pass
-            event.ethnicity = ethnicity
+            event.ethnicity = form.cleaned_data.get('ethnicity')
             event.duration = form.cleaned_data.get('duration')
             event.location = form.cleaned_data.get('village')
             event.save()

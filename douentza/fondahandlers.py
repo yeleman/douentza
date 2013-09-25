@@ -110,7 +110,7 @@ def reply_with_phone_number(payload):
 
 
 def get_phone_number_for(operator):
-    return random.choice(INCOMING_NUMBERS_BY_OPERATOR.get(operator), [None]) or None
+    return random.choice(INCOMING_NUMBERS_BY_OPERATOR.get(operator, [None])) or None
 
 for number in settings.FONDA_INCOMING_NUMBERS:
     operator = operator_from_mali_number(number)

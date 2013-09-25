@@ -55,9 +55,11 @@ def fondasms_handler(request):
                             mimetype='application/json',
                             status=500)
 
-    response = {"events": [{"event": "send",
-                            "messages": outgoings}],
+    response = {"events": [],
                 "phone_number": reply_with_phone_number(request.POST)}
+    if len(outgoings):
+        response['events'].append({"event": "send",
+                            "messages": outgoings})
 
     return HttpResponse(json.dumps(response),
                         mimetype='application/json')

@@ -23,9 +23,8 @@ def fondasms_handler(request):
     from douentza.fondahandlers import (handle_incoming_call,
                                         handle_incoming_sms,
                                         handle_outgoing_status_change,
-                                        handle_device_status_change)
-
-    from pprint import pprint as pp ; pp(request.POST)
+                                        handle_device_status_change,
+                                        reply_with_phone_number)
 
     action = request.POST.get("action")
     handler = lambda x: None
@@ -57,9 +56,8 @@ def fondasms_handler(request):
                             status=500)
 
     response = {"events": [{"event": "send",
-                            "messages": outgoings}]}
-
-    from pprint import pprint as pp ; pp(response)
+                            "messages": outgoings}],
+                "phone_number": reply_with_phone_number(request.POST)}
 
     return HttpResponse(json.dumps(response),
                         mimetype='application/json')

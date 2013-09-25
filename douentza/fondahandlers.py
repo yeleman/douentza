@@ -4,6 +4,9 @@
 
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
+import random
+
+from django.conf import settings
 
 from douentza.models import HotlineRequest
 from douentza.utils import (event_type_from_message,
@@ -16,6 +19,11 @@ from douentza.utils import normalize_phone_number
 
 class UnableToCreateHotlineRequest(Exception):
     pass
+
+# place holder for incoming phone numbers (phone device)
+# with operator
+INCOMING_NUMBERS_BY_OPERATOR = {}
+INCOMING_NUMBERS_WITH_OPERATOR = {}
 
 
 def automatic_reply_handler(payload):
@@ -88,6 +96,25 @@ def handle_device_status_change(payload):
     # we don't track device changes for now
     return
 
+
 def check_meta_data(payload):
     # we don't track device changes for now
     return
+
+
+def reply_with_phone_number(payload):
+    end_user_phone = payload.get('from')
+    if end_user_phone is not None:
+        return get_phone_number_for(operator_from_mali_number(end_user_phone))
+    return None
+
+
+def get_phone_number_for(operator):
+    return random.choice(INCOMING_NUMBERS_BY_OPERATOR.get(operator), [None]) or None
+
+for number in settings.FONDA_INCOMING_NUMBERS:
+    operator = operator_from_mali_number(number)
+    if not operator in INCOMING_NUMBERS_BY_OPERATOR.keys():
+        INCOMING_NUMBERS_BY_OPERATOR.update({operator: []})
+    INCOMING_NUMBERS_BY_OPERATOR[operator].append(number)
+    INCOMING_NUMBERS_WITH_OPERATOR.update({number: operator})

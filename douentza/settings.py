@@ -181,6 +181,7 @@ CACHEDDATA_FOLDER = os.path.join(ROOT_DIR, 'cached_data')
 FONDA_SEND_AUTOMATIC_REPLY = False
 FONDA_SEND_AUTOMATIC_REPLY_VIA_HANDLER = False
 FONDA_AUTOMATIC_REPLY_TEXT = None
+FONDA_INCOMING_NUMBERS = []
 
 try:
     from douentza.settings_local import *

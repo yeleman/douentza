@@ -26,11 +26,11 @@ class IncomingManager(models.Manager):
                                                                 HotlineRequest.STATUS_HANDLED,
                                                                 HotlineRequest.STATUS_BLACK_LIST))
 
-class HandledManager(models.Manager):
+class DoneManager(models.Manager):
 
     def get_query_set(self):
-        return super(HandledManager, self).get_query_set() \
-                                          .filter(status=HotlineRequest.STATUS_HANDLED)
+        return super(DoneManager, self).get_query_set() \
+                                          .filter(status__in=HotlineRequest.DONE_STATUSES)
 
 
 class ValidatedManager(models.Manager):
@@ -87,6 +87,7 @@ class HotlineRequest(models.Model):
 
     HOTLINE_TYPES = (TYPE_CALL_ME, TYPE_CHARGE_ME, TYPE_SMS, TYPE_RING)
     SMS_TYPES = (TYPE_SMS, TYPE_SMS_SPAM)
+    DONE_STATUSES = (STATUS_GAVE_UP, STATUS_HANDLED)
 
     created_on = models.DateTimeField(auto_now_add=True)
     identity = models.CharField(max_length=30, verbose_name="Numéro")
@@ -114,7 +115,7 @@ class HotlineRequest(models.Model):
 
     objects = models.Manager()
     incoming = IncomingManager()
-    handled_requests = HandledManager()
+    done = DoneManager()
 
     def __str__(self):
         return "{event_type}-{number}-{status}".format(event_type=self.event_type,

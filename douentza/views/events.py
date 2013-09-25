@@ -96,13 +96,13 @@ def archives(request):
 
     context = get_default_context(page='archives')
 
-    handled_requests = HotlineRequest.handled_requests.order_by('-received_on')
+    done_requests = HotlineRequest.done.order_by('-received_on')
 
     if request.method == "POST":
         search_string = re.sub(r'[^0-9]+', '', request.POST.get('identity'))
-        handled_requests = HotlineRequest.handled_requests.filter(identity__icontains=search_string)
+        done_requests = HotlineRequest.done.filter(identity__icontains=search_string)
 
-    paginator = Paginator(handled_requests, 25)
+    paginator = Paginator(done_requests, 25)
 
     page = request.GET.get('page')
     try:

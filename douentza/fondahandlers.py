@@ -63,7 +63,7 @@ def handle_sms_call(payload, event_type=None):
 
     try:
         existing = HotlineRequest.objects \
-                                 .exclude(status=HotlineRequest.STATUS_HANDLED) \
+                                 .exclude(status__in=HotlineRequest.DONE_STATUSES) \
                                  .get(identity=identity)
     except HotlineRequest.DoesNotExist:
         existing = None

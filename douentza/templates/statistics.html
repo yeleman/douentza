@@ -40,15 +40,15 @@
 
             <tr>
                 <th class="ident">Le plus long</th>
-                <td><strong>{{ longest_duration.duration__max }}</strong> seconde{{ longest_duration.duration__max|pluralize }}</td>
+                <td><strong>{{ longest_duration.duration__max|default:"0" }}</strong> seconde{{ longest_duration.duration__max|pluralize }}</td>
             </tr>
             <tr>
                 <th class="ident">La moyenne</th>
-                <td><strong>{{ average_duration.duration__avg|floatformat }}</strong> seconde{{ average_duration.duration__avg|pluralize }}</td>
+                <td><strong>{{ average_duration.duration__avg|floatformat|default:"0" }}</strong> seconde{{ average_duration.duration__avg|pluralize }}</td>
             </tr>
             <tr>
                 <th class="ident">La minimale</th>
-                <td><strong>{{ short_duration.duration__min }}</strong> seconde{{ short_duration.duration__min|pluralize }}</td>
+                <td><strong>{{ short_duration.duration__min|default:"0" }}</strong> seconde{{ short_duration.duration__min|pluralize }}</td>
             </tr>
             <tr>
                 <th>Total par sexes (Homme/Femme/Inconnu)</th>

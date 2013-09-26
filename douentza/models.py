@@ -14,7 +14,7 @@ from mptt.models import MPTTModel, TreeForeignKey
 from mptt.managers import TreeManager
 from picklefield.fields import PickledObjectField
 
-from douentza._compat import implements_to_string
+from py3compat import implements_to_string
 from douentza.utils import OPERATORS, to_jstimestamp
 
 

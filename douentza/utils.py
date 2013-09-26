@@ -7,8 +7,8 @@ from __future__ import (unicode_literals, absolute_import,
 import re
 import datetime
 
-from douentza._compat import string_types
-from django.core.paginator import Paginator, Page
+from py3compat import string_types
+
 
 NB_CHARS_VALID_NUMBER = 8  # bellow, number is considered invalid
 COUNTRY_PREFIX = '223'  # home phone prefix

@@ -4,18 +4,19 @@
 
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
-import six
 import json
 import datetime
-if not six.PY3:
-    import unicodecsv as csv
-else:
-    import csv
 
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.db.models import Avg, Max, Min, Sum
 from django.contrib.auth.decorators import login_required
+from py3compat import PY2
+
+if PY2:
+    import unicodecsv as csv
+else:
+    import csv
 
 from douentza.models import HotlineRequest, Project, Survey, Entity, Ethnicity
 from douentza.utils import (get_default_context, datetime_range,

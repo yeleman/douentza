@@ -38,18 +38,18 @@ class Command(BaseCommand):
             export_survey_as_csv(survey=survey,
                                  filename=filename)
 
-            cache, _ = CachedData.objects.get_or_create(slug=survey.cache_file_slug)
-            cache.data_type = CachedData.TYPE_FILE
-            cache.value = fname
-            cache.cached_on = now
-            cache.save()
+            fcache, _ = CachedData.objects.get_or_create(slug=survey.cache_file_slug)
+            fcache.data_type = CachedData.TYPE_FILE
+            fcache.value = fname
+            fcache.cached_on = now
+            fcache.save()
 
             # Survey Stats Data
-            cache, _ = CachedData.objects.get_or_create(slug=survey.cache_slug)
-            cache.value = compute_survey_questions_data(survey)
-            cache.data_type = CachedData.TYPE_OBJECT
-            cache.cached_on = now
-            cache.save()
+            ocache, _ = CachedData.objects.get_or_create(slug=survey.cache_slug)
+            ocache.value = compute_survey_questions_data(survey)
+            ocache.data_type = CachedData.TYPE_OBJECT
+            ocache.cached_on = now
+            ocache.save()
 
         ###
         ## General stats
@@ -60,8 +60,8 @@ class Command(BaseCommand):
         filename = os.path.join(settings.CACHEDDATA_FOLDER, fname)
         export_general_stats_as_csv(filename=filename)
 
-        cache, _ = CachedData.objects.get_or_create(slug=slugify("general_stats"))
-        cache.data_type = CachedData.TYPE_FILE
-        cache.value = fname
-        cache.cached_on = now
-        cache.save()
+        gcache, _ = CachedData.objects.get_or_create(slug=slugify("general_stats"))
+        gcache.data_type = CachedData.TYPE_FILE
+        gcache.value = fname
+        gcache.cached_on = now
+        gcache.save()

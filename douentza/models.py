@@ -576,5 +576,6 @@ class CachedData(models.Model):
         try:
             return cls.objects.get(slug=slug).value
         except cls.DoesNotExist:
+            raise
             return fallback
 

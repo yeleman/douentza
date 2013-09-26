@@ -4,18 +4,20 @@
 
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
-
+import six
 import json
 import datetime
-import csv
+if not six.PY3:
+    import unicodecsv as csv
+else:
+    import csv
 
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.db.models import Avg, Max, Min, Sum
 from django.contrib.auth.decorators import login_required
 
-from douentza.models import (HotlineRequest, Project, Survey, Entity, Ethnicity,
-                            CachedData)
+from douentza.models import HotlineRequest, Project, Survey, Entity, Ethnicity
 from douentza.utils import (get_default_context, datetime_range,
                             start_or_end_day_from_date, to_jstimestamp,
                             ethinicity_requests, communes_located_requests,
@@ -194,7 +196,10 @@ def export_general_stats_as_csv(filename):
     headers += tags_headers + entity_headers + additional_headers + attempt_headers
 
     csv_file = open(filename, 'w')
-    csv_writer = csv.DictWriter(csv_file, headers)
+    if not six.PY3:
+        csv_writer = csv.DictWriter(csv_file, headers, encoding='utf-8')
+    else:
+        csv_writer = csv.DictWriter(csv_file, headers)
     csv_writer.writeheader()
 
     for hotlinerequest in HotlineRequest.objects.order_by("-received_on"):

@@ -104,8 +104,12 @@ def stats_for_survey(request, survey_id):
 
     all_questions_data = CachedData.get_or_fallback(slug=survey.cache_slug,
                                                     fallback=[])
+
+    print(survey.cache_slug)
     context.update({'all_questions_data': all_questions_data,
                     'survey': survey})
+
+    from pprint import pprint as pp ; pp(all_questions_data)
 
     return render(request, "stats_for_survey.html", context)
 

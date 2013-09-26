@@ -10,6 +10,9 @@ from django.conf.urls import patterns, include, url
 from django.views.static import serve
 from django.contrib import admin
 
+from fondasms import urls as fondasms_urls
+from fondasms.views import fondasms_handler
+
 admin.autodiscover()
 
 SURVEY_ID = r'(?P<survey_id>[0-9]+)'
@@ -28,11 +31,15 @@ urlpatterns = patterns('',
     url(r'^logout/$', 'django.contrib.auth.views.logout',
         {'next_page': '/'}, name='logout'),
 
-    # Android API
-    url(r'^fondasms/?$', 'douentza.views.fondasms.fondasms_handler',
+    # # Android API
+    url(r'^fondasms/?$', fondasms_handler,
+        {'handler_module': 'douentza.fondahandlers',
+         'send_automatic_reply': False,
+         'automatic_reply_via_handler': False,
+         'automatic_reply_text': ("Merci. On a bien enregistré votre demande. "
+                                  "On vous rappelle bientôt.")},
         name='fondasms'),
-    url(r'^fondasms/tester?$', 'douentza.views.fondasms.fondasms_tester',
-        name='fondasms_tester'),
+    # url(r'^fondasms/', include(fondasms_urls)),
 
     # API
     url(r'^api/event_response_counts/?$', 'douentza.views.statistics.event_response_counts_json',

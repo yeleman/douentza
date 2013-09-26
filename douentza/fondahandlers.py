@@ -7,13 +7,13 @@ from __future__ import (unicode_literals, absolute_import,
 import random
 
 from django.conf import settings
+from fondasms.utils import datetime_from_timestamp
 
 from douentza.models import HotlineRequest
 from douentza.utils import (event_type_from_message,
                             is_valid_number,
                             number_is_blacklisted,
                             operator_from_mali_number)
-from douentza.views.fondasms import datetime_from_timestamp
 from douentza.utils import normalize_phone_number
 
 

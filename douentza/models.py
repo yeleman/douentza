@@ -18,6 +18,133 @@ from py3compat import implements_to_string
 from douentza.utils import OPERATORS, to_jstimestamp
 
 
+@implements_to_string
+class HotlineUser(AbstractUser):
+
+    def full_name(self):
+        if self.get_full_name():
+            return self.get_full_name()
+        return self.username
+
+    def __str__(self):
+        return self.full_name()
+
+
+@implements_to_string
+class Ethnicity(models.Model):
+
+    class Meta:
+        ordering = ('name', )
+
+    slug = models.SlugField(primary_key=True)
+    name = models.CharField(max_length=40, verbose_name="Nom")
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Ethnicity, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
+
+
+@implements_to_string
+class Tag(models.Model):
+
+    class Meta:
+        ordering = ('slug', )
+
+    slug = models.CharField(max_length=50, primary_key=True)
+
+    def __str__(self):
+        return self.slug
+
+    def to_dict(self):
+        data = {'slug': self.slug}
+        return data
+
+    @classmethod
+    def get_or_create(cls, text):
+        try:
+            tag = cls.objects.get(slug=text)
+        except cls.DoesNotExist:
+            tag = cls.objects.create(slug=text)
+        return tag
+
+@implements_to_string
+class BlacklistedNumber(models.Model):
+
+    identity = models.CharField(max_length=30, unique=True)
+    call_count = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return self.identity
+
+
+@implements_to_string
+class Entity(MPTTModel):
+
+    TYPE_REGION = 'region'
+    TYPE_CERCLE = 'cercle'
+    TYPE_ARRONDISSEMENT = 'arrondissement'
+    TYPE_COMMUNE = 'commune'
+    TYPE_VILLAGE = 'village'
+    TYPE_OTHER = 'autre'
+
+    TYPES = {
+        TYPE_REGION: "Région",
+        TYPE_CERCLE: "Cercle",
+        TYPE_ARRONDISSEMENT: "Arrondissement",
+        TYPE_COMMUNE: "Commune",
+        TYPE_VILLAGE: "Village",
+        TYPE_OTHER: 'Autre',
+    }
+
+    slug = models.CharField(max_length=20, primary_key=True)
+    name = models.CharField(max_length=100)
+    entity_type = models.CharField(max_length=30, choices=TYPES.items())
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
+    parent = TreeForeignKey('self', null=True, blank=True,
+                            related_name='children',
+                            verbose_name="Parent")
+
+    objects = TreeManager()
+
+    def __str__(self):
+        return self.name
+
+    def display_name(self):
+        return self.name.title()
+
+    def display_full_name(self):
+        if self.parent:
+            return "{name}/{parent}".format(name=self.display_name(),
+                                            parent=self.parent.display_name())
+        return self.display_name()
+
+    def parent_level(self):
+        if self.parent:
+            return self.parent.entity_type
+        return self.parent
+
+    def get_geopoint(self):
+        if self.latitude and self.longitude:
+            return "{lon}, {lat}".format(lon=self.longitude, lat=self.latitude)
+
+
+@implements_to_string
+class Project(models.Model):
+
+    class Meta:
+        ordering = ('name', )
+
+    name = models.CharField(max_length=70, verbose_name="Nom", unique=True)
+    description = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+
 class IncomingManager(models.Manager):
 
     def get_query_set(self):
@@ -170,6 +297,7 @@ class HotlineRequest(models.Model):
         events = [self] + list(self.additionalrequests.all()) + list(self.callbackattempts.all())
         return sorted(events, key=lambda e: e.received_on, reverse=reverse)
 
+
 @implements_to_string
 class AdditionalRequest(models.Model):
 
@@ -227,100 +355,6 @@ class CallbackAttempt(models.Model):
 
     def type_str(self):
         return HotlineRequest.STATUSES.get(self.status)
-
-
-@implements_to_string
-class HotlineUser(AbstractUser):
-
-    def full_name(self):
-        if self.get_full_name():
-            return self.get_full_name()
-        return self.username
-
-    def __str__(self):
-        return self.full_name()
-
-
-@implements_to_string
-class Ethnicity(models.Model):
-
-    class Meta:
-        ordering = ('name', )
-
-    slug = models.SlugField(primary_key=True)
-    name = models.CharField(max_length=40, verbose_name="Nom")
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
-        super(Ethnicity, self).save(*args, **kwargs)
-
-    def __str__(self):
-        return self.name
-
-
-@implements_to_string
-class Entity(MPTTModel):
-
-    TYPE_REGION = 'region'
-    TYPE_CERCLE = 'cercle'
-    TYPE_ARRONDISSEMENT = 'arrondissement'
-    TYPE_COMMUNE = 'commune'
-    TYPE_VILLAGE = 'village'
-    TYPE_OTHER = 'autre'
-
-    TYPES = {
-        TYPE_REGION: "Région",
-        TYPE_CERCLE: "Cercle",
-        TYPE_ARRONDISSEMENT: "Arrondissement",
-        TYPE_COMMUNE: "Commune",
-        TYPE_VILLAGE: "Village",
-        TYPE_OTHER: 'Autre',
-    }
-
-    slug = models.CharField(max_length=20, primary_key=True)
-    name = models.CharField(max_length=100)
-    entity_type = models.CharField(max_length=30, choices=TYPES.items())
-    latitude = models.FloatField(null=True, blank=True)
-    longitude = models.FloatField(null=True, blank=True)
-    parent = TreeForeignKey('self', null=True, blank=True,
-                            related_name='children',
-                            verbose_name="Parent")
-
-    objects = TreeManager()
-
-    def __str__(self):
-        return self.name
-
-    def display_name(self):
-        return self.name.title()
-
-    def display_full_name(self):
-        if self.parent:
-            return "{name}/{parent}".format(name=self.display_name(),
-                                            parent=self.parent.display_name())
-        return self.display_name()
-
-    def parent_level(self):
-        if self.parent:
-            return self.parent.entity_type
-        return self.parent
-
-    def get_geopoint(self):
-        if self.latitude and self.longitude:
-            return "{lon}, {lat}".format(lon=self.longitude, lat=self.latitude)
-
-
-@implements_to_string
-class Project(models.Model):
-
-    class Meta:
-        ordering = ('name', )
-
-    name = models.CharField(max_length=70, verbose_name="Nom", unique=True)
-    description = models.TextField(null=True, blank=True)
-
-    def __str__(self):
-        return self.name
 
 
 @implements_to_string
@@ -472,39 +506,6 @@ class QuestionChoice(models.Model):
 
 
 @implements_to_string
-class Tag(models.Model):
-
-    class Meta:
-        ordering = ('slug', )
-
-    slug = models.CharField(max_length=50, primary_key=True)
-
-    def __str__(self):
-        return self.slug
-
-    def to_dict(self):
-        data = {'slug': self.slug}
-        return data
-
-    @classmethod
-    def get_or_create(cls, text):
-        try:
-            tag = cls.objects.get(slug=text)
-        except cls.DoesNotExist:
-            tag = cls.objects.create(slug=text)
-        return tag
-
-@implements_to_string
-class BlacklistedNumber(models.Model):
-
-    identity = models.CharField(max_length=30, unique=True)
-    call_count = models.PositiveIntegerField(default=1)
-
-    def __str__(self):
-        return self.identity
-
-
-@implements_to_string
 class SurveyTaken(models.Model):
 
     class Meta:
@@ -578,4 +579,3 @@ class CachedData(models.Model):
         except cls.DoesNotExist:
             raise
             return fallback
-

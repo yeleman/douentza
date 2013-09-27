@@ -10,9 +10,6 @@ from django.conf.urls import patterns, include, url
 from django.views.static import serve
 from django.contrib import admin
 
-from fondasms import urls as fondasms_urls
-from fondasms.views import fondasms_handler
-
 admin.autodiscover()
 
 SURVEY_ID = r'(?P<survey_id>[0-9]+)'
@@ -32,14 +29,13 @@ urlpatterns = patterns('',
         {'next_page': '/'}, name='logout'),
 
     # # Android API
-    url(r'^fondasms/?$', fondasms_handler,
-        {'handler_module': 'douentza.fondahandlers',
+    url(r'^fondasms/?$', 'fondasms.views.fondasms_handler',
+        {'handler_module': 'douentza.fondasms_handlers',
          'send_automatic_reply': False,
          'automatic_reply_via_handler': False,
          'automatic_reply_text': ("Merci. On a bien enregistré votre demande. "
                                   "On vous rappelle bientôt.")},
         name='fondasms'),
-    # url(r'^fondasms/', include(fondasms_urls)),
 
     # API
     url(r'^api/event_response_counts/?$', 'douentza.views.statistics.event_response_counts_json',
@@ -53,7 +49,7 @@ urlpatterns = patterns('',
     url(r'^api/ping_json$', 'douentza.views.event_dashboard.ping_json', name='ping_json'),
     url(r'^api/ping_html$', 'douentza.views.event_dashboard.ping_html', name='ping_html'),
 
-    url(r'^entities/(?P<parent_slug>\d{8})/?$', 'douentza.views.events.entities_api', name='entities'),
+    url(r'^entities/(?P<parent_slug>[a-z0-9_\-]+)/?$', 'douentza.views.events.entities_api', name='entities'),
     url(r'^statistics/$', 'douentza.views.statistics.dashboard', name='statistics'),
     url(r'^survey_stats/$', 'douentza.views.surveys.stats_for_surveys', name='stats_for_surveys'),
     url(r'^survey_stats/'+ SURVEY_ID +r'/?$', 'douentza.views.surveys.stats_for_survey',

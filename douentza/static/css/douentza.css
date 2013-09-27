@@ -159,7 +159,3 @@ th, td {
 body.archives .pagination {
     margin: 0;
 }
-.statistics .export-csv {
-    float: right;
-    margin-bottom: 11px;
-}

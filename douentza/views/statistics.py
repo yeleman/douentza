@@ -18,7 +18,7 @@ if PY2:
 else:
     import csv
 
-from douentza.models import HotlineRequest, Project, Survey, Entity, Ethnicity
+from douentza.models import HotlineRequest, Project, Survey, Entity, Ethnicity, CachedData
 from douentza.utils import (get_default_context, datetime_range,
                             start_or_end_day_from_date, to_jstimestamp,
                             ethinicity_requests, communes_located_requests,
@@ -128,7 +128,8 @@ def dashboard(request):
     context = get_default_context(page='statistics')
 
     context.update(get_statistics_dict())
-    context.update({'graph_slug': "general_stats_graph"})
+    context.update({'graph_slug': "general_stats_graph",
+                    'last_update': CachedData.objects.get(slug="general_stats").created_on})
 
     return render(request, "statistics.html", context)
 

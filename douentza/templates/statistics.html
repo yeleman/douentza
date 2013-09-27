@@ -6,16 +6,13 @@
 {% block content %}
 
     <h2>Statistiques Générales</h2>
-    <div class="export-csv">
-        <a  href="{{ general_stats_slug|cachedslug }}"><button class="btn btn-success"><span class="glyphicon glyphicon-download"></span>
-            Export Data as CSV
-        </button></a>
-    </div>
+    <p class="pull-left">Les statistiques (ainsi que celles des mini-questionnaires) sont mises à jour périodiquement (environ chaque 2 heures).<br />Dernière mise à jour: {{ last_update|handleddate }}</p>
+    <a href="{{ general_stats_slug|cachedslug }}" class="pull-right"><button class="btn btn-success"><span class="glyphicon glyphicon-download"></span> Export Data as CSV</button></a>
     <table class="table table-condensed table-hover table-bordered table-striped table-stats-vertical">
         <tbody>
             <tr>
                 <th class="span8">Dernier appel</th>
-                <td class="span4">{{ last_event.received_on }}</td>
+                <td class="span4">{{ last_event.received_on|handleddate }}</td>
             </tr>
             <tr>
                 <th>Nombre total de projets</th>

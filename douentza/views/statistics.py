@@ -128,6 +128,7 @@ def dashboard(request):
     context = get_default_context(page='statistics')
 
     context.update(get_statistics_dict())
+    context.update({'graph_slug': "general_stats_graph"})
 
     return render(request, "statistics.html", context)
 
@@ -197,7 +198,7 @@ def export_general_stats_as_csv(filename):
     headers += tags_headers + entity_headers + additional_headers + attempt_headers
 
     csv_file = open(filename, 'w')
-    if not six.PY3:
+    if PY2:
         csv_writer = csv.DictWriter(csv_file, headers, encoding='utf-8')
     else:
         csv_writer = csv.DictWriter(csv_file, headers)

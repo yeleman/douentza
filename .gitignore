@@ -5,3 +5,4 @@
 settings_local.py
 .DS_Store
 *.csv
+cached_data/

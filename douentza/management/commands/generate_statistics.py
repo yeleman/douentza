@@ -6,6 +6,7 @@ from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import os
 import datetime
+import json
 
 from django.conf import settings
 from django.utils.text import slugify
@@ -13,7 +14,8 @@ from django.core.management.base import BaseCommand
 
 from douentza.views.surveys import (export_survey_as_csv,
                                     compute_survey_questions_data)
-from douentza.views.statistics import export_general_stats_as_csv
+from douentza.views.statistics import (export_general_stats_as_csv,
+                                       get_event_responses_counts)
 from douentza.models import Survey, CachedData
 
 
@@ -65,3 +67,15 @@ class Command(BaseCommand):
         gcache.value = fname
         gcache.cached_on = now
         gcache.save()
+
+
+        # General Stats Graph
+        fname = 'general-stats-graph-{date}.json'.format(date=datestr)
+        filename = os.path.join(settings.CACHEDDATA_FOLDER, fname)
+        json.dump(get_event_responses_counts(), open(filename, 'w'))
+
+        jcache, _ = CachedData.objects.get_or_create(slug=slugify("general_stats_graph"))
+        jcache.data_type = CachedData.TYPE_FILE
+        jcache.value = fname
+        jcache.cached_on = now
+        jcache.save()

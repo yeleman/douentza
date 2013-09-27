@@ -109,3 +109,8 @@ def cached_file_path(slug):
                        args=(CachedData.objects.get(slug=slug).value,))
     except:
         return ''
+
+
+@register.filter(name='cachedslug')
+def cached_slug_redirect(slug):
+    return reverse('cached_slug', args=(slug,))

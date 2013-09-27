@@ -15,12 +15,16 @@ admin.autodiscover()
 SURVEY_ID = r'(?P<survey_id>[0-9]+)'
 REQUEST_ID = r'(?P<request_id>[0-9]+)'
 
+
 def static_file_serve(request, fname):
     return serve(request, fname, settings.CACHEDDATA_FOLDER, True)
 
+
 urlpatterns = patterns('',
 
-    url(r'^exports/(?P<fname>.*)$', static_file_serve, name='cached_file'),
+    url(r'^download/(?P<fname>.*)$', static_file_serve, name='cached_file'),
+    url(r'^exports/(?P<slug>[a-z0-9A-Z\-\_]+)$',
+        'douentza.views.cached_data.cached_data_lookup', name='cached_slug'),
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^login/$', 'django.contrib.auth.views.login',

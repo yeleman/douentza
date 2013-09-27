@@ -24,6 +24,15 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
+        def remove_previous_file(cdata):
+            if cdata.data_type == CachedData.TYPE_FILE and cdata.value:
+                filename = os.path.join(settings.CACHEDDATA_FOLDER, cdata.value)
+                try:
+                    os.remove(filename)
+                    return True
+                except:
+                    return False
+
         now = datetime.datetime.now()
         datestr = now.strftime('%Y-%m-%d-%Hh%M')
 
@@ -41,6 +50,7 @@ class Command(BaseCommand):
                                  filename=filename)
 
             fcache, _ = CachedData.objects.get_or_create(slug=survey.cache_file_slug)
+            remove_previous_file(fcache) # clean-up first
             fcache.data_type = CachedData.TYPE_FILE
             fcache.value = fname
             fcache.cached_on = now
@@ -63,6 +73,7 @@ class Command(BaseCommand):
         export_general_stats_as_csv(filename=filename)
 
         gcache, _ = CachedData.objects.get_or_create(slug=slugify("general_stats"))
+        remove_previous_file(gcache) # clean-up first
         gcache.data_type = CachedData.TYPE_FILE
         gcache.value = fname
         gcache.cached_on = now
@@ -75,6 +86,7 @@ class Command(BaseCommand):
         json.dump(get_event_responses_counts(), open(filename, 'w'))
 
         jcache, _ = CachedData.objects.get_or_create(slug=slugify("general_stats_graph"))
+        remove_previous_file(jcache) # clean-up first
         jcache.data_type = CachedData.TYPE_FILE
         jcache.value = fname
         jcache.cached_on = now

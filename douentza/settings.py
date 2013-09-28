@@ -103,10 +103,16 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.RemoteUserMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.RemoteUserBackend',
+)
+
 
 ROOT_URLCONF = 'douentza.urls'
 
@@ -180,6 +186,7 @@ CACHEDDATA_FOLDER = os.path.join(ROOT_DIR, 'cached_data')
 
 # douentza settings
 FONDA_INCOMING_NUMBERS = []
+AUTH_HTTPPASSWD_FILE = None
 
 try:
     from douentza.settings_local import *

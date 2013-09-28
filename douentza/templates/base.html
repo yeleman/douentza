@@ -39,15 +39,11 @@
 
         </div>
 
-        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.9.1.min.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.autocomplete.min.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}js/date-fr-FR.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}js/douentza.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}js/highcharts.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap-datetimepicker.min.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.9.1.min.js?v=1.9.1"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/thirdparties.min.js?v=1.0"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}js/douentza.js?b=20130928"></script>
+        {% if page == "statistics" %}<script type="text/javascript" src="{{ STATIC_URL }}js/highcharts.js?v=3.0.5"></script>{% endif %}
         <script type="text/javascript">
-
         $(document).ready(function (){
             {% block extra_js %}{% endblock %}
         });

@@ -1,3 +1,6 @@
+/**
+*  Douentza Custom JS
+*/
 
 var dashboard_loop;
 var dashboard_interval = 5 * 1000;
@@ -24,25 +27,6 @@ if (!String.prototype.format) {
 String.prototype.toSlug = function () {
   return this.replace(/^\s+|\s+$/g, '').replace(/\s+/g, '-').toLowerCase();
 };
-
-
-var DEFAULT_FORMAT_TIMEONLY = "HH#mm";
-var DEFAULT_FORMAT_DATETIME = "dd MMMM yyyy à HH#mm";
-
-
-function formatFromTimestamp(ts, format) {
-    if (format === null || format === undefined) {
-        format = DEFAULT_FORMAT_DATETIME;
-    }
-
-    return formatDate(new Date(ts), format);
-}
-
-
-function formatDate(adate, format) {
-
-    return adate.toString(format).replace('#', 'h');
-}
 
 
 function graph_event_response_counts(data_url) {
@@ -75,7 +59,6 @@ function jQsmsTextHover() {
 }
 
 function setupPingLoop(since_ts) {
-    console.log("setupPingLoop "+ since_ts);
     jQsmsTextHover();
     restartPingLoop(since_ts);
 }

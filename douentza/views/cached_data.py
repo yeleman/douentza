@@ -30,5 +30,5 @@ def serve_cached_file(request, fname=None):
         return serve(request, fname, settings.CACHEDDATA_FOLDER, True)
     response = HttpResponse()
     del response['content-type']
-    response['X-Accel-Redirect'] = fname
+    response['X-Accel-Redirect'] = "/protected/{fname}".format(fname=fname)
     return response

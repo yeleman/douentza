@@ -22,3 +22,5 @@ FONDA_SEND_AUTOMATIC_REPLY = True
 FONDA_SEND_AUTOMATIC_REPLY_VIA_HANDLER = False
 FONDA_AUTOMATIC_REPLY_TEXT = ("Merci. On a bien enregistré votre demande. "
                               "On vous rappelle bientôt.")
+FONDA_INCOMING_NUMBERS = []
+AUTH_HTTPPASSWD_FILE = None

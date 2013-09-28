@@ -5,6 +5,7 @@
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import datetime
+import crypt
 
 from django.db import models
 from django import forms

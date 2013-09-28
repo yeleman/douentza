@@ -7,10 +7,12 @@ from __future__ import (unicode_literals, absolute_import,
 
 from django.http import Http404
 from django.shortcuts import redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 
 from douentza.models import CachedData
 
 
+@login_required
 def cached_data_lookup(request, slug):
     cdata = get_object_or_404(CachedData, slug=slug)
 

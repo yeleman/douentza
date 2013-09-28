@@ -5,9 +5,11 @@
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 
-from django.http import Http404
+from django.http import Http404, HttpResponse
+from django.conf import settings
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.views.static import serve
 
 from douentza.models import CachedData
 
@@ -20,3 +22,13 @@ def cached_data_lookup(request, slug):
         raise Http404
 
     return redirect('cached_file', cdata.value)
+
+
+@login_required
+def serve_cached_file(request, fname=None):
+    if settings.SERVE_CACHED_FILES:
+        return serve(request, fname, settings.CACHEDDATA_FOLDER, True)
+    response = HttpResponse()
+    del response['content-type']
+    response['X-Sendfile'] = fname
+    return response

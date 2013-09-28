@@ -182,6 +182,7 @@ AUTH_USER_MODEL = 'douentza.HotlineUser'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 # caching files
+SERVE_CACHED_FILES = True
 CACHEDDATA_FOLDER = os.path.join(ROOT_DIR, 'cached_data')
 
 # douentza settings

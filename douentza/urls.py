@@ -5,9 +5,8 @@
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 
-from django.conf import settings
 from django.conf.urls import patterns, include, url
-from django.views.static import serve
+
 from django.contrib import admin
 
 admin.autodiscover()
@@ -16,13 +15,13 @@ SURVEY_ID = r'(?P<survey_id>[0-9]+)'
 REQUEST_ID = r'(?P<request_id>[0-9]+)'
 
 
-def static_file_serve(request, fname):
-    return serve(request, fname, settings.CACHEDDATA_FOLDER, True)
+
 
 
 urlpatterns = patterns('',
 
-    url(r'^download/(?P<fname>.*)$', static_file_serve, name='cached_file'),
+    url(r'^download/(?P<fname>.*)$',
+        'douentza.views.cached_data.serve_cached_file', name='cached_file'),
     url(r'^exports/(?P<slug>[a-z0-9A-Z\-\_]+)$',
         'douentza.views.cached_data.cached_data_lookup', name='cached_slug'),
 

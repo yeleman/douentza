@@ -34,31 +34,6 @@ class UserCreationForm(forms.ModelForm):
         user.set_password(self.cleaned_data["password"])
         if commit:
             user.save()
-
-        def existing_users(filename):
-            users = {}
-            for userline in open(settings.AUTH_HTTPPASSWD_FILE, 'r').readlines():
-                username, passwd = userline.split(':', 1)
-                users.update({username: passwd})
-            return users
-
-        if settings.AUTH_HTTPPASSWD_FILE is None:
-            return user
-
-        try:
-            users = existing_users()
-        except:
-            users = {}
-
-        gen_userline = lambda u, passwd: "{username}:{passwd}\n".format(
-            username=u.username,
-            passwd=crypt.crypt(passwd))
-
-        with open(settings.AUTH_HTTPPASSWD_FILE, 'w') as f:
-            for auser in HotlineUser.objects.all():
-                if auser.username in users.keys() and auser.username != user.username:
-                    f.write(gen_userline(auser, users.get(auser.username)))
-            f.write(gen_userline(user, self.cleaned_data["password"]))
         return user
 
 

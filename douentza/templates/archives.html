@@ -32,7 +32,7 @@
     <tbody>
         {% for request in requests_paginator.object_list %}
             <tr>
-                <td><a href="{% url 'handled_request' request_id=request.id %}">{{ request.identity|phone }}</a></td>
+                <td><a href="{% url 'archived_request' request_id=request.id %}">{{ request.identity|phone }}</a></td>
                 <td>{{ request.received_on|handleddate }}</td>
                 <td>{% include "_location_span.html" with event=request always=False %}</td>
                 <td>{% include "_ethnicity_span.html" with event=request always=False %}</td>

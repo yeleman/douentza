@@ -43,9 +43,9 @@ $('button[type="submit"]').on('click', function () {
 {% block content %}
 <h1>{{ event.identity|phone }} <span class="badge badge_alert badge-xs"><span class="glyphicon glyphicon-earphone"></span> {{event.additionalrequests.count|default:"1" }} </span></h1>
 
-{% include "event_history_panel.html" with event=event %}
+{% include "request_history_panel.html" with event=event %}
 
-<form  class="form-horizontal" role="form" action="{% url 'display_event' event.id %}" method="post">
+<form  class="form-horizontal" role="form" action="{% url 'display_request' event.id %}" method="post">
     {% csrf_token %}
     {{ form.request_id }}
     <div class="row">

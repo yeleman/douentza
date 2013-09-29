@@ -19,14 +19,6 @@ from douentza.utils import (start_or_end_day_from_date,
                             to_jstimestamp)
 
 
-@login_required()
-def dashboard(request):
-    context = get_default_context(page="event_dashboard")
-    context.update({'all_events': all_events()})
-    context.update({'now': to_jstimestamp(datetime.datetime.today())})
-    return render(request, "event_dashboard.html", context)
-
-
 def all_events():
     today = datetime.date.today()
     yesterday = today - datetime.timedelta(days=1)
@@ -43,6 +35,14 @@ def all_events():
 
 
 @login_required()
+def dashboard(request):
+    context = get_default_context(page="dashboard")
+    context.update({'all_events': all_events()})
+    context.update({'now': to_jstimestamp(datetime.datetime.today())})
+    return render(request, "dashboard.html", context)
+
+
+@login_required()
 def ping_json(request):
     try:
         since = datetime.datetime.fromtimestamp(int(request.GET.get('since')) / 1000)
@@ -56,7 +56,7 @@ def ping_json(request):
 
     def prep_request(request):
         d = request.to_dict()
-        d.update({'html_row': render_to_string('event_row_dashboard.html',
+        d.update({'html_row': render_to_string('dashboard_table_row.html',
                                                {'event': request})})
         return d
     events = [prep_request(r)
@@ -111,4 +111,4 @@ def change_event_status(request, request_id, new_status):
     if new_status == HotlineRequest.STATUS_BLACK_LIST:
         BlacklistedNumber.objects.create(identity=event.identity,
                                          call_count=1)
-    return redirect('event_dashboard')
+    return redirect('dashboard')

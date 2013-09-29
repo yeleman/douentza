@@ -4,9 +4,7 @@
         <meta charset="utf-8">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>{% block title %}Modal{% endblock %}</title>
-        <link href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet">
-        <link href="{{ STATIC_URL }}css/douentza.css" rel="stylesheet">
-        <link href="{{ STATIC_URL }}css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+        {% include "css_tags.html" %}
     </head>
     <body class="{{ page }}">
 
@@ -14,10 +12,7 @@
 
         </div>
 
-        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.9.1.min.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}js/douentza.js"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap-datetimepicker.min.js"></script>
+        {% include "javascript_tags.html" %}
         <script type="text/javascript">
 
         $(document).ready(function (){

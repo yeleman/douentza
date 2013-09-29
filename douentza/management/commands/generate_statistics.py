@@ -12,7 +12,7 @@ from django.conf import settings
 from django.utils.text import slugify
 from django.core.management.base import BaseCommand
 
-from douentza.views.surveys import (export_survey_as_csv,
+from douentza.views.surveys_stats import (export_survey_as_csv,
                                     compute_survey_questions_data)
 from douentza.views.statistics import (export_general_stats_as_csv,
                                        get_event_responses_counts)

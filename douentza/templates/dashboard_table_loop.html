@@ -1,0 +1,5 @@
+{% for event in all_events %}
+{% include "dashboard_table_row.html" with event=event %}
+{% empty %}
+<tr><td colspan="4">Aucun événnement</td></tr>
+{% endfor %}

@@ -14,10 +14,6 @@ admin.autodiscover()
 SURVEY_ID = r'(?P<survey_id>[0-9]+)'
 REQUEST_ID = r'(?P<request_id>[0-9]+)'
 
-
-
-
-
 urlpatterns = patterns('',
 
     url(r'^download/(?P<fname>.*)$',
@@ -49,15 +45,15 @@ urlpatterns = patterns('',
         name='tags_for_json'),
     url(r'^api/tags/'+ REQUEST_ID +'/update/?$', 'douentza.views.tags.update_tags',
         name='update_tags'),
-    url(r'^api/ping_json$', 'douentza.views.event_dashboard.ping_json', name='ping_json'),
-    url(r'^api/ping_html$', 'douentza.views.event_dashboard.ping_html', name='ping_html'),
+    url(r'^api/ping_json$', 'douentza.views.dashboard.ping_json', name='ping_json'),
+    url(r'^api/ping_html$', 'douentza.views.dashboard.ping_html', name='ping_html'),
 
     url(r'^entities/(?P<parent_slug>[a-z0-9_\-]+)/?$', 'douentza.views.events.entities_api', name='entities'),
     url(r'^statistics/$', 'douentza.views.statistics.dashboard', name='statistics'),
-    url(r'^survey_stats/$', 'douentza.views.surveys.stats_for_surveys', name='stats_for_surveys'),
-    url(r'^survey_stats/'+ SURVEY_ID +r'/?$', 'douentza.views.surveys.stats_for_survey',
+    url(r'^survey_stats/$', 'douentza.views.surveys_stats.stats_for_surveys', name='stats_for_surveys'),
+    url(r'^survey_stats/'+ SURVEY_ID +r'/?$', 'douentza.views.surveys_stats.stats_for_survey',
         name='stats_for_survey'),
-    url(r'^archives/?$', 'douentza.views.events.archives', name='archives'),
+    url(r'^archives/?$', 'douentza.views.archives.archives', name='archives'),
 
     # admin
     url(r'^admin/surveys/?$', 'douentza.views.admin.admin_surveys', name='admin_surveys'),
@@ -70,14 +66,14 @@ urlpatterns = patterns('',
     url(r'^admin/surveys/'+ SURVEY_ID +'/toggle/?$', 'douentza.views.admin.admin_survey_toggle',
         name='admin_survey_toggle'),
 
-    url(r'^$', 'douentza.views.event_dashboard.dashboard', name='event_dashboard'),
+    url(r'^$', 'douentza.views.dashboard.dashboard', name='dashboard'),
     url(r'^change/'+ REQUEST_ID +r'/(?P<new_status>[a-zA-Z\_]+)$',
-        'douentza.views.event_dashboard.change_event_status', name='change_event'),
-    url(r'^blacklist/(?P<blacknum_id>[0-9]+)?$', 'douentza.views.events.blacklist', name='blacklist'),
+        'douentza.views.dashboard.change_event_status', name='change_event'),
+    url(r'^blacklist/(?P<blacknum_id>[0-9]+)?$', 'douentza.views.admin.admin_blacklist', name='blacklist'),
     url(r'^request/'+ REQUEST_ID +'/?$',
-        'douentza.views.events.display_event', name='display_event'),
-    url(r'^handled_request/'+ REQUEST_ID +'/?$',
-        'douentza.views.events.display_handled_request', name='handled_request'),
+        'douentza.views.events.display_request', name='display_request'),
+    url(r'^archived_request/'+ REQUEST_ID +'/?$',
+        'douentza.views.archives.archived_request', name='archived_request'),
     url(r'^survey/'+ SURVEY_ID +'-'+ REQUEST_ID +'/form/?$', 'douentza.views.surveys.survey_form', name='mini_survey_form'),
     url(r'^survey/'+ SURVEY_ID +'-'+ REQUEST_ID +'/data/?$', 'douentza.views.surveys.survey_data', name='mini_survey_data'),
 )

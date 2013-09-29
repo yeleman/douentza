@@ -8,8 +8,9 @@ from __future__ import (unicode_literals, absolute_import,
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
-from douentza.models import Survey, QuestionChoice, Question, Project
+from douentza.models import Survey, QuestionChoice, Question, Project, BlacklistedNumber, HotlineRequest
 from douentza.forms import (MiniSurveyInitForm, MiniSurveyAddQuestion,
                             AddProjectForm)
 from douentza.utils import get_default_context
@@ -138,3 +139,28 @@ def admin_projects(request):
 
     return render(request, "admin_projects.html", context)
 
+
+@login_required()
+def admin_blacklist(request, blacknum_id=None):
+    context = get_default_context(page='blacklist')
+    if blacknum_id:
+        try:
+            blacknum = BlacklistedNumber.objects.get(id=blacknum_id)
+            blacknum.delete()
+        except:
+            raise Http404
+
+        try:
+            hquest = HotlineRequest.objects.get(identity=blacknum.identity)
+        except:
+            raise Http404
+        hquest.status = HotlineRequest.STATUS_NEW_REQUEST
+        hquest.save()
+        return redirect("blacklist")
+
+        messages.success(request,
+                         "{identity} à été retiré la liste noire".format(
+                            identity=blacknum.identity))
+    context.update({'blacknums': BlacklistedNumber.objects.all()})
+
+    return render(request, "blacklist.html", context)

@@ -123,24 +123,6 @@ def get_statistics_dict():
     return context
 
 
-@login_required()
-def dashboard(request):
-    context = get_default_context(page='statistics')
-
-    context.update(get_statistics_dict())
-    context.update({'graph_slug': "general_stats_graph",
-                    'last_update': CachedData.objects.get(slug="general_stats").created_on})
-
-    return render(request, "statistics.html", context)
-
-
-@login_required()
-def event_response_counts_json(request):
-
-    return HttpResponse(json.dumps(get_event_responses_counts()),
-                        mimetype='application/json')
-
-
 def export_general_stats_as_csv(filename):
     ''' export the csv file '''
 
@@ -261,3 +243,21 @@ def export_general_stats_as_csv(filename):
     csv_file.close()
 
     return filename
+
+
+@login_required()
+def dashboard(request):
+    context = get_default_context(page='statistics')
+
+    context.update(get_statistics_dict())
+    context.update({'graph_slug': "general_stats_graph",
+                    'last_update': CachedData.objects.get(slug="general_stats").created_on})
+
+    return render(request, "statistics.html", context)
+
+
+@login_required()
+def event_response_counts_json(request):
+
+    return HttpResponse(json.dumps(get_event_responses_counts()),
+                        mimetype='application/json')

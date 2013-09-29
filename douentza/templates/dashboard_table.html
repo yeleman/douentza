@@ -7,7 +7,7 @@
         <tr><th colspan="5">Plus anciens</th></tr>
     </thead>
     <tbody>
-        {% include "event_dashboard_loop.html" with all_events=all_events.ancient_events %}
+        {% include "dashboard_table_loop.html" with all_events=all_events.ancient_events %}
     </tbody>
     {% endif %}
     {% if all_events.yesterday_events %}
@@ -15,7 +15,7 @@
         <tr><th colspan="5">Hier</th></tr>
     </thead>
     <tbody>
-        {% include "event_dashboard_loop.html" with all_events=all_events.yesterday_events %}
+        {% include "dashboard_table_loop.html" with all_events=all_events.yesterday_events %}
     </tbody>
     {% endif %}
     {% if all_events.today_events %}
@@ -23,7 +23,7 @@
         <tr><th colspan="5">Aujourd'hui</th></tr>
     </thead>
     <tbody>
-        {% include "event_dashboard_loop.html" with all_events=all_events.today_events %}
+        {% include "dashboard_table_loop.html" with all_events=all_events.today_events %}
     </tbody>
     {% endif %}
 </table>

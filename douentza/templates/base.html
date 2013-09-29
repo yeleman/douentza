@@ -4,8 +4,7 @@
         <meta charset="utf-8">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>{% block title %}Accueil{% endblock %} - Hotline - Douentza</title>
-        <link href="{{ STATIC_URL }}css/bootstrap.min.css?v=3.0.0" rel="stylesheet">
-        <link href="{{ STATIC_URL }}css/douentza.css?b=20130928" rel="stylesheet">
+        {% include "css_tags.html" %}
         <link href="{{ STATIC_URL }}favicon.ico?b=20130928" rel="icon" type="image/x-icon" />
     </head>
     <body class="{{ page }}">
@@ -18,7 +17,7 @@
           </div>
           <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
-                <li {% ifequal page 'event_dashboard' %} class="active"{% endifequal %}><a href="{% url 'event_dashboard' %}">Tableau de bord&nbsp;<span class="new_calls badge pull-right">{% if events_count %}<span class="glyphicon glyphicon-earphone"></span> {{ events_count|default:""}}{% endif %}</span></a></li>
+                <li {% ifequal page 'dashboard' %} class="active"{% endifequal %}><a href="{% url 'dashboard' %}">Tableau de bord&nbsp;<span class="new_calls badge pull-right">{% if events_count %}<span class="glyphicon glyphicon-earphone"></span> {{ events_count|default:""}}{% endif %}</span></a></li>
                 <li {% ifequal page 'archives' %} class="active"{% endifequal %}><a href="{% url 'archives' %}">Archives</a></li>
                 <li {% ifequal page 'statistics' %} class="active"{% endifequal %}><a href="{% url 'statistics' %}">Statistiques</a></li>
                 <li {% ifequal page 'stats_for_surveys' %} class="active"{% endifequal %}><a href="{% url 'stats_for_surveys' %}">Stats Questionnaires</a></li>
@@ -38,9 +37,7 @@
 
         </div>
 
-        <script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.9.1.min.js?v=1.9.1"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}js/thirdparties.min.js?v=1.0"></script>
-        <script type="text/javascript" src="{{ STATIC_URL }}js/douentza.js?b=20130928"></script>
+        {% include "javascript_tags.html" %}
         {% if page == "statistics" %}<script type="text/javascript" src="{{ STATIC_URL }}js/highcharts.js?v=3.0.5"></script>{% endif %}
         <script type="text/javascript">
         $(document).ready(function (){

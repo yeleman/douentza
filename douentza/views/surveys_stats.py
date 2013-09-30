@@ -5,13 +5,18 @@
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import datetime
-import csv
 
 import numpy
 from django.utils.text import slugify
 from django.http import Http404
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from py3compat import PY2
+
+if PY2:
+    import unicodecsv as csv
+else:
+    import csv
 
 from douentza.models import (Survey, Question,
                              SurveyTakenData, CachedData)
@@ -143,7 +148,10 @@ def export_survey_as_csv(survey, filename):
     headers = [norm_header(q['label']) for q in survey.to_dict()['questions']]
 
     csv_file = open(filename, 'w')
-    csv_writer = csv.DictWriter(csv_file, headers)
+    if PY2:
+        csv_writer = csv.DictWriter(csv_file, headers, encoding='utf-8')
+    else:
+        csv_writer = csv.DictWriter(csv_file, headers)
     csv_writer.writeheader()
 
     for survey_taken in survey.survey_takens.order_by('taken_on'):

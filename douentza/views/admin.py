@@ -146,21 +146,20 @@ def admin_blacklist(request, blacknum_id=None):
     if blacknum_id:
         try:
             blacknum = BlacklistedNumber.objects.get(id=blacknum_id)
+            identity = blacknum.identity
             blacknum.delete()
         except:
             raise Http404
 
-        try:
-            hquest = HotlineRequest.objects.get(identity=blacknum.identity)
-        except:
-            raise Http404
-        hquest.status = HotlineRequest.STATUS_NEW_REQUEST
-        hquest.save()
+        for hotline_request in HotlineRequest.objects.filter(identity=identity,
+                                                             status=HotlineRequest.STATUS_BLACK_LIST):
+            hotline_request.status = hotline_request.previous_status()
+            hotline_request.save()
         return redirect("blacklist")
 
         messages.success(request,
                          "{identity} à été retiré la liste noire".format(
-                            identity=blacknum.identity))
+                         identity=blacknum.identity))
     context.update({'blacknums': BlacklistedNumber.objects.all()})
 
     return render(request, "blacklist.html", context)

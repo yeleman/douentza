@@ -71,6 +71,7 @@ class Tag(models.Model):
             tag = cls.objects.create(slug=text)
         return tag
 
+
 @implements_to_string
 class BlacklistedNumber(models.Model):
 
@@ -79,6 +80,15 @@ class BlacklistedNumber(models.Model):
 
     def __str__(self):
         return self.identity
+
+    @classmethod
+    def add_to_identy(cls, identity):
+        try:
+            bln = cls.objects.get(identity=identity)
+            bln.call_count += 1
+            bln.save()
+        except cls.DoesNotExist:
+            bln = cls.objects.create(identity=identity, call_count=1)
 
 
 @implements_to_string
@@ -153,6 +163,7 @@ class IncomingManager(models.Manager):
                                            .exclude(status__in=(HotlineRequest.STATUS_GAVE_UP,
                                                                 HotlineRequest.STATUS_HANDLED,
                                                                 HotlineRequest.STATUS_BLACK_LIST))
+
 
 class DoneManager(models.Manager):
 
@@ -261,7 +272,7 @@ class HotlineRequest(models.Model):
         callbackattempt = CallbackAttempt(event=self, status=new_status)
         callbackattempt.save()
 
-        if self.callbackattempts.count() >= 3:
+        if self.callbackattempts.exclude(status=self.STATUS_BLACK_LIST).count() >= 3:
             self.status = HotlineRequest.STATUS_GAVE_UP
         else:
             self.status = new_status
@@ -297,6 +308,14 @@ class HotlineRequest(models.Model):
     def all_events(self, reverse=False):
         events = [self] + list(self.additionalrequests.all()) + list(self.callbackattempts.all())
         return sorted(events, key=lambda e: e.received_on, reverse=reverse)
+
+    def previous_status(self, but_type=STATUS_BLACK_LIST):
+        events = self.all_events()
+        while len(events):
+            last = events.pop()
+            if last.event_type != but_type:
+                return last.event_type
+        return self.STATUS_NEW_REQUEST
 
 
 @implements_to_string
@@ -449,7 +468,7 @@ class Question(models.Model):
         TYPE_STRING: forms.CharField(),
         TYPE_TEXT: forms.CharField(),
         TYPE_BOOLEAN: forms.BooleanField(),
-        TYPE_DATE : forms.DateField(),
+        TYPE_DATE: forms.DateField(),
         TYPE_INTEGER: forms.IntegerField(),
         TYPE_FLOAT: forms.FloatField(),
         TYPE_CHOICES: forms.ChoiceField(),
@@ -537,7 +556,6 @@ class SurveyTaken(models.Model):
             question_data.update({'value': self.data_for(question)})
             data['questions'].append(question_data)
         return data
-
 
 
 @implements_to_string

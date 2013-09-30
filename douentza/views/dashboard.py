@@ -109,6 +109,5 @@ def change_event_status(request, request_id, new_status):
         raise Http404
 
     if new_status == HotlineRequest.STATUS_BLACK_LIST:
-        BlacklistedNumber.objects.create(identity=event.identity,
-                                         call_count=1)
+        BlacklistedNumber.add_to_identy(event.identity)
     return redirect('dashboard')

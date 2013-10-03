@@ -32,20 +32,20 @@
             </tr>
             <tr>
                 <th>Durée des rappels:</th>
-                <td><strong>{{ sum_duration.duration__sum|default:"0" }}</strong> seconde{{ sum_duration.duration__sum|pluralize }}</td>
+                <td><strong>{{ sum_duration.duration__sum|duration|default:"-" }}</strong></td>
             </tr>
 
             <tr>
                 <th class="ident">Le plus long</th>
-                <td><strong>{{ longest_duration.duration__max|default:"0" }}</strong> seconde{{ longest_duration.duration__max|pluralize }}</td>
+                <td><strong>{{ longest_duration.duration__max|duration|default:"-" }}</strong></td>
             </tr>
             <tr>
                 <th class="ident">La moyenne</th>
-                <td><strong>{{ average_duration.duration__avg|floatformat|default:"0" }}</strong> seconde{{ average_duration.duration__avg|pluralize }}</td>
+                <td><strong>{{ average_duration.duration__avg|duration|default:"-" }}</strong></td>
             </tr>
             <tr>
                 <th class="ident">La minimale</th>
-                <td><strong>{{ short_duration.duration__min|default:"0" }}</strong> seconde{{ short_duration.duration__min|pluralize }}</td>
+                <td><strong>{{ short_duration.duration__min|duration|default:"-" }}</strong></td>
             </tr>
             <tr>
                 <th>Total par sexes (Homme/Femme/Inconnu)</th>

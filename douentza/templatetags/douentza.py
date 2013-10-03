@@ -5,6 +5,8 @@
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 
+import datetime
+
 from django import template, forms
 from django.template.defaultfilters import stringfilter, date
 from django.core.urlresolvers import reverse
@@ -114,3 +116,42 @@ def cached_file_path(slug):
 @register.filter(name='cachedslug')
 def cached_slug_redirect(slug):
     return reverse('cached_slug', args=(slug,))
+
+
+@register.filter(name='duration')
+def duration(seconds):
+    if seconds is None:
+        return None
+    else:
+        seconds = int(seconds)
+
+    data= {
+         'days': 0,
+         'hours': 0,
+         'minutes': 0,
+         'seconds': 0}
+    if seconds > 86400:
+        data['days'] = seconds // 86400
+        seconds -= data['days'] * 86400
+    if seconds > 3600:
+        data['hours'] = seconds // 3600
+        seconds -= data['hours'] * 3600
+    if seconds > 60:
+        data['minutes'] = seconds // 60
+        seconds -= data['minutes'] * 60
+    data['seconds'] = seconds
+
+    s = ""
+    if data['days']:
+        s += "{}j ".format(data['days'])
+    if data['hours']:
+        s += "{}h ".format(data['hours'])
+    if data['minutes']:
+        s += "{}mn ".format(data['minutes'])
+    if data['seconds']:
+        s += "{}".format(data['seconds'])
+
+    if not data['hours'] and not data['minutes']:
+        s += "s"
+
+    return s

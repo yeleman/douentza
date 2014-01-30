@@ -81,11 +81,12 @@ def compute_survey_questions_data(survey):
             first = numpy.min(all_values)
             last = numpy.max(all_values)
             span = last - first
+            center = first + datetime.timedelta(days=span.days / 2)
         else:
-            first = last = span = None
+            first = last = span = center = None
         return {
             'first': first,
-            'center': first + datetime.timedelta(days=span.days / 2),
+            'center': center,
             'span': span,
             'last': last
         }

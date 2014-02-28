@@ -1,0 +1,1 @@
+[{"pk": "gao", "model": "douentza.cluster", "fields": {"name": "Gao"}}, {"pk": "mopti", "model": "douentza.cluster", "fields": {"name": "Mopti"}}, {"pk": "tombouctou", "model": "douentza.cluster", "fields": {"name": "Tombouctou"}}]

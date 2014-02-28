@@ -11,7 +11,7 @@ from django.conf import settings
 from django.contrib.auth.admin import UserAdmin
 from django import forms
 
-from douentza.models import (HotlineRequest, HotlineUser,
+from douentza.models import (HotlineRequest, HotlineUser, Cluster,
                              Entity, Survey, Question, QuestionChoice,
                              Ethnicity, CallbackAttempt, Tag, Project,
                              AdditionalRequest, SurveyTaken, SurveyTakenData,
@@ -40,7 +40,7 @@ class UserCreationForm(forms.ModelForm):
 class CustomUserAdmin(UserAdmin):
     form = UserModificationForm
     add_form = UserCreationForm
-    list_display = ("username", "first_name", "last_name")
+    list_display = ("username", "first_name", "last_name", "cluster")
     ordering = ("username",)
 
     fieldsets = (
@@ -51,7 +51,7 @@ class CustomUserAdmin(UserAdmin):
         (None, {
             'classes': ('wide',),
             'fields': ('username', 'email', 'password', 'first_name', 'last_name',
-                       'is_superuser', 'is_staff', 'is_active')}),
+                       'is_superuser', 'is_staff', 'is_active', 'cluster')}),
     )
 
 
@@ -59,7 +59,8 @@ class CustomHotlineRequest(admin.ModelAdmin):
     list_display = ("received_on", "operator", "identity", "event_type",
                     "sms_message", "created_on", "hotline_user",
                     "status", "project")
-    list_filter = ("created_on", "event_type", "operator", "hotline_user")
+    list_filter = ("created_on", "event_type", "operator", "hotline_user",
+                   "cluster")
 
 
 class CustomEntity(admin.ModelAdmin):
@@ -88,3 +89,4 @@ admin.site.register(SurveyTaken)
 admin.site.register(SurveyTakenData)
 admin.site.register(BlacklistedNumber)
 admin.site.register(CachedData)
+admin.site.register(Cluster)

@@ -20,7 +20,22 @@ from douentza.utils import OPERATORS, to_jstimestamp
 
 
 @implements_to_string
+class Cluster(models.Model):
+
+    class Meta:
+        ordering = ('name', )
+
+    slug = models.SlugField(primary_key=True)
+    name = models.CharField(max_length=70, verbose_name="Nom", unique=True)
+
+    def __str__(self):
+        return self.name
+
+
+@implements_to_string
 class HotlineUser(AbstractUser):
+
+    cluster = models.ForeignKey('Cluster', null=True)
 
     def full_name(self):
         if self.get_full_name():
@@ -237,7 +252,6 @@ class HotlineRequest(models.Model):
     received_on = models.DateTimeField()
     event_type = models.CharField(max_length=50, choices=TYPES.items())
     sms_message = models.TextField(null=True, blank=True)
-
     hotline_user = models.ForeignKey('HotlineUser', null=True, blank=True)
     responded_on = models.DateTimeField(null=True, blank=True,
                                         verbose_name="Date de l'appel")
@@ -251,6 +265,7 @@ class HotlineRequest(models.Model):
     ethnicity = models.ForeignKey('Ethnicity', null=True, blank=True, verbose_name="Éthnie")
     tags = models.ManyToManyField('Tag', null=True, blank=True, verbose_name="Tags", related_name='requests')
     project = models.ForeignKey('Project', null=True, blank=True, verbose_name="Projet")
+    cluster = models.ForeignKey('Cluster', null=True, blank=True)
 
     objects = models.Manager()
     incoming = IncomingManager()

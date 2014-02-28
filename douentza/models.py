@@ -306,7 +306,7 @@ class HotlineRequest(models.Model):
             .exclude(id=self.id)
 
     def add_cluster(self, cluster_slug):
-        self.cluster = Cluster.objects.get(slug= cluster_slug)
+        self.cluster = Cluster.objects.get(slug=cluster_slug)
         self.save()
 
     def gender(self):

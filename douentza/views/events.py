@@ -24,6 +24,10 @@ def display_request(request, request_id):
     except:
         raise Http404
 
+    if event.cluster is None:
+        event.cluster = request.user.cluster
+        event.save()
+
     context = get_default_context(page="display_request")
     context.update({'event': event})
     context.update({'surveys': Survey.validated.order_by('id')})
@@ -41,7 +45,7 @@ def display_request(request, request_id):
             event.ethnicity = form.cleaned_data.get('ethnicity')
             event.duration = form.cleaned_data.get('duration')
             event.location = form.cleaned_data.get('village')
-            event.cluster = request.user.slug
+            event.cluster = request.user.cluster
             event.save()
             return redirect('dashboard')
     else:

@@ -65,8 +65,10 @@ def handle_sms_call(payload, event_type=None):
         existing = HotlineRequest.objects \
                                  .exclude(status__in=HotlineRequest.DONE_STATUSES) \
                                  .get(identity=identity)
+        cluster = existing.cluster
     except HotlineRequest.DoesNotExist:
         existing = None
+        cluster = None
 
     # if same number calls again before previous request has been treated
     # we add an additional request only
@@ -82,7 +84,8 @@ def handle_sms_call(payload, event_type=None):
             hotline_number=phone_number,
             received_on=received_on,
             sms_message=message,
-            operator=operator)
+            operator=operator,
+            cluster=cluster)
     except Exception as e:
         raise UnableToCreateHotlineRequest(e)
 

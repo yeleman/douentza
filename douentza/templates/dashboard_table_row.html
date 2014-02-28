@@ -1,4 +1,6 @@
-{% load douentza %}<tr class="row-request" request-id="{{ event.id }}">
+{% load douentza %}
+
+<tr class="row-request" request-id="{{ event.id }}">
     <td>
         <strong class="phonelead">{{ event.identity|phone }}</strong>
         <span class="label {{event.status|statuscss}}">{{ event.status_str }}</span>
@@ -7,8 +9,26 @@
         {% include "_all_event_span.html" with event=event always=True %}
     </td>
 
-    <td><a href="{% url 'display_request' request_id=event.id %}"><button type="button" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-pencil"></span> Saisir le rappel</button></a></td>
-    <td><a href="{% url 'change_event' event.id 'IS_BUSY' %}"><button type="button" class="btn btn-xs btn-warning"><span class="glyphicon"></span> Occupé</button></a></td>
-    <td><a href="{% url 'change_event' event.id 'NOT_ANSWERING' %}"><button type="button" class="btn btn-xs btn-danger"><span class="glyphicon"></span> Ne répond pas</button></a></td>
-    <td><a href="{% url 'change_event' event.id 'BLACK_LIST'%}"><button type="button" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-minus-sign"></span> Blacklister</button></a></td>
+    {% ifequal unsorted "True" %}
+        <td>
+            {% for cluster in clusters %}<a href="{% url 'sorted_location' event.id cluster.slug %}">
+                <button type="button" class="btn btn-xs btn-primary"><span class="glyphicon"></span>{{ cluster.name }}</button></a>
+            {% endfor %}
+        </td>
+    {% else %}
+        <td> </td>
+    {% endifequal %}
+
+    <td><a href="{% url 'display_request' request_id=event.id %}">
+        <button type="button" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-pencil"></span> Saisir le rappel</button></a>
+    </td>
+    <td><a href="{% url 'change_event' event.id 'IS_BUSY' %}">
+        <button type="button" class="btn btn-xs btn-warning"><span class="glyphicon"></span> Occupé</button></a>
+    </td>
+    <td><a href="{% url 'change_event' event.id 'NOT_ANSWERING' %}">
+        <button type="button" class="btn btn-xs btn-danger"><span class="glyphicon"></span>     Ne répond pas</button></a>
+    </td>
+    <td><a href="{% url 'change_event' event.id 'BLACK_LIST'%}">
+        <button type="button" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-minus-sign"></span> Blacklister</button></a>
+    </td>
 </tr>

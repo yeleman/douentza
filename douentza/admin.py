@@ -58,7 +58,7 @@ class CustomUserAdmin(UserAdmin):
 class CustomHotlineRequest(admin.ModelAdmin):
     list_display = ("received_on", "operator", "identity", "event_type",
                     "sms_message", "created_on", "hotline_user",
-                    "status", "project")
+                    "status", "project", 'cluster')
     list_filter = ("created_on", "event_type", "operator", "hotline_user",
                    "cluster")
 

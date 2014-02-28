@@ -41,6 +41,7 @@ def display_request(request, request_id):
             event.ethnicity = form.cleaned_data.get('ethnicity')
             event.duration = form.cleaned_data.get('duration')
             event.location = form.cleaned_data.get('village')
+            event.cluster = request.user.slug
             event.save()
             return redirect('dashboard')
     else:

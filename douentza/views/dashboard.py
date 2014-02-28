@@ -13,31 +13,38 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 
-from douentza.models import HotlineRequest, BlacklistedNumber, AdditionalRequest, CallbackAttempt
+from douentza.models import (HotlineRequest, BlacklistedNumber,
+                             AdditionalRequest, CallbackAttempt,
+                             Cluster)
 from douentza.utils import (start_or_end_day_from_date,
                             get_default_context,
                             to_jstimestamp)
 
 
-def all_events():
+def all_events(user):
     today = datetime.date.today()
     yesterday = today - datetime.timedelta(days=1)
-
-    data_event = {'today_events': HotlineRequest.incoming.filter(received_on__gte=start_or_end_day_from_date(today, True),
-                                                              received_on__lt=start_or_end_day_from_date(today, False)).all(),
-                  'yesterday_events': HotlineRequest.incoming.filter(received_on__gte=start_or_end_day_from_date(yesterday, True),
+    hotlinerequests = HotlineRequest.incoming.filter(cluster=user.cluster)
+    data_event = {'today_events': hotlinerequests.filter(received_on__gte=start_or_end_day_from_date(today, True),
+                                                                 received_on__lt=start_or_end_day_from_date(today, False)).all(),
+                  'yesterday_events': hotlinerequests.filter(received_on__gte=start_or_end_day_from_date(yesterday, True),
                                                                  received_on__lt=start_or_end_day_from_date(yesterday, False)).all(),
-                  'ancient_events': HotlineRequest.incoming.filter(received_on__lt=start_or_end_day_from_date(yesterday, True)).all()}
+                  'ancient_events': hotlinerequests.filter(received_on__lt=start_or_end_day_from_date(yesterday, True)).all(),
+                  'unsorted_events': HotlineRequest.incoming.filter(cluster=None).all()}
     data_event.update({'has_events': bool(len(data_event['today_events'])
                                      + len(data_event['yesterday_events'])
-                                     + len(data_event['ancient_events']))})
+                                     + len(data_event['ancient_events'])
+                                     + len(data_event['unsorted_events'])
+                                     )})
     return data_event
 
 
 @login_required()
 def dashboard(request):
+    user = request.user
     context = get_default_context(page="dashboard")
-    context.update({'all_events': all_events()})
+    context.update({'all_events': all_events(user),
+                    'clusters': Cluster.objects.exclude(slug=user.cluster.slug).all()})
     context.update({'now': to_jstimestamp(datetime.datetime.today())})
     return render(request, "dashboard.html", context)
 
@@ -85,7 +92,7 @@ def ping_html(request):
 
     if nb_events:
         html = render_to_string('dashboard_table.html',
-                                {'all_events': all_events()})
+                                {'all_events': all_events(request.user)})
     else:
         html = None
 
@@ -110,4 +117,17 @@ def change_event_status(request, request_id, new_status):
 
     if new_status == HotlineRequest.STATUS_BLACK_LIST:
         BlacklistedNumber.add_to_identy(event.identity)
+    return redirect('dashboard')
+
+
+@login_required()
+def sorted_location(request, request_id, cluster_slug):
+    try:
+        event = HotlineRequest.objects \
+                              .exclude(status=HotlineRequest.STATUS_HANDLED) \
+                              .get(id=int(request_id))
+        event.add_cluster(cluster_slug)
+    except (HotlineRequest.DoesNotExist, ValueError):
+        raise Http404
+
     return redirect('dashboard')

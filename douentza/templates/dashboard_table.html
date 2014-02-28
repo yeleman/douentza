@@ -4,7 +4,7 @@
     {% endif %}
     {% if all_events.ancient_events %}
     <thead>
-        <tr><th colspan="5">Plus anciens</th></tr>
+        <tr><th colspan="6">Plus anciens</th></tr>
     </thead>
     <tbody>
         {% include "dashboard_table_loop.html" with all_events=all_events.ancient_events %}
@@ -12,7 +12,7 @@
     {% endif %}
     {% if all_events.yesterday_events %}
     <thead>
-        <tr><th colspan="5">Hier</th></tr>
+        <tr><th colspan="6">Hier</th></tr>
     </thead>
     <tbody>
         {% include "dashboard_table_loop.html" with all_events=all_events.yesterday_events %}
@@ -20,10 +20,18 @@
     {% endif %}
     {% if all_events.today_events %}
     <thead>
-        <tr><th colspan="5">Aujourd'hui</th></tr>
+        <tr><th colspan="6">Aujourd'hui</th></tr>
     </thead>
     <tbody>
         {% include "dashboard_table_loop.html" with all_events=all_events.today_events %}
+    </tbody>
+    {% endif %}
+    {% if all_events.unsorted_events %}
+    <thead>
+        <tr><th colspan="6">Non trié</th></tr>
+    </thead>
+    <tbody>
+        {% include "dashboard_table_loop.html" with all_events=all_events.unsorted_events unsorted="True" %}
     </tbody>
     {% endif %}
 </table>

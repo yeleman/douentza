@@ -70,8 +70,11 @@ urlpatterns = patterns('',
     url(r'^change/'+ REQUEST_ID +r'/(?P<new_status>[a-zA-Z\_]+)$',
         'douentza.views.dashboard.change_event_status', name='change_event'),
     url(r'^blacklist/(?P<blacknum_id>[0-9]+)?$', 'douentza.views.admin.admin_blacklist', name='blacklist'),
-    url(r'^request/'+ REQUEST_ID +'/?$',
-        'douentza.views.events.display_request', name='display_request'),
+
+    url(r'^sorted_location/'+ REQUEST_ID +r'/(?P<cluster_slug>[a-zA-Z\_]+)$',
+        'douentza.views.dashboard.sorted_location', name='sorted_location'),
+
+    url(r'^request/'+ REQUEST_ID +'/?$', 'douentza.views.events.display_request', name='display_request'),
     url(r'^archived_request/'+ REQUEST_ID +'/?$',
         'douentza.views.archives.archived_request', name='archived_request'),
     url(r'^survey/'+ SURVEY_ID +'-'+ REQUEST_ID +'/form/?$', 'douentza.views.surveys.survey_form', name='mini_survey_form'),

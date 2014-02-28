@@ -1,5 +1,5 @@
 {% for event in all_events %}
-{% include "dashboard_table_row.html" with event=event %}
+{% include "dashboard_table_row.html" with event=event unsorted=unsorted %}
 {% empty %}
 <tr><td colspan="4">Aucun événnement</td></tr>
 {% endfor %}

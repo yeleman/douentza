@@ -146,6 +146,7 @@ def export_general_stats_as_csv(filename):
     tag_total_nb = "tag_total_nb"
     attempt_nb_total = "attempt_nb_total"
     additional_nb_total = "additional_nb_total"
+    cluster = "cluster"
 
     names_until = lambda slug, nb, suffix=None: ["{slug}_{incr}".format(slug=slug, incr=incr)
                                     for incr in range(1, nb + 1)]
@@ -176,7 +177,8 @@ def export_general_stats_as_csv(filename):
                 sms_message,
                 responded_on,
                 project,
-                status]
+                status,
+                cluster]
 
     headers += tags_headers + entity_headers + additional_headers + attempt_headers
 
@@ -202,6 +204,7 @@ def export_general_stats_as_csv(filename):
                 tag_total_nb: hotlinerequest.tags.count(),
                 additional_nb_total: hotlinerequest.additionalrequests.count(),
                 attempt_nb_total: hotlinerequest.callbackattempts.count(),
+                cluster: hotlinerequest.cluster
         }
 
         if hotlinerequest.ethnicity:

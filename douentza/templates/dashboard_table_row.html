@@ -1,7 +1,7 @@
 {% load douentza %}
 
 <tr class="row-request" request-id="{{ event.id }}">
-    <td{% if not unsorted %} colspan="2">
+    <td{% if not unsorted %} colspan="2"{% endif %}>
         <strong class="phonelead">{{ event.identity|phone }}</strong>
         <span class="label {{event.status|statuscss}}">{{ event.status_str }}</span>
         {{ event.received_on |eventdateshort}}
@@ -15,7 +15,7 @@
                 <button type="button" class="btn btn-xs btn-primary"><span class="glyphicon"></span>{{ cluster.name }}</button></a>
             {% endfor %}
         </td>
-    {% endifequal %}
+    {% endif %}
 
     <td><a href="{% url 'display_request' request_id=event.id %}">
         <button type="button" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-pencil"></span> Saisir le rappel</button></a>

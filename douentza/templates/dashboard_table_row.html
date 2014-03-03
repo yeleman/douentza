@@ -1,7 +1,7 @@
 {% load douentza %}
 
 <tr class="row-request" request-id="{{ event.id }}">
-    <td>
+    <td{% if not unsorted %} colspan="2">
         <strong class="phonelead">{{ event.identity|phone }}</strong>
         <span class="label {{event.status|statuscss}}">{{ event.status_str }}</span>
         {{ event.received_on |eventdateshort}}
@@ -9,14 +9,12 @@
         {% include "_all_event_span.html" with event=event always=True %}
     </td>
 
-    {% ifequal unsorted "True" %}
+    {% if unsorted %}
         <td>
             {% for cluster in clusters %}<a href="{% url 'sorted_location' event.id cluster.slug %}">
                 <button type="button" class="btn btn-xs btn-primary"><span class="glyphicon"></span>{{ cluster.name }}</button></a>
             {% endfor %}
         </td>
-    {% else %}
-        <td> </td>
     {% endifequal %}
 
     <td><a href="{% url 'display_request' request_id=event.id %}">

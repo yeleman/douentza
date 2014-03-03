@@ -92,7 +92,8 @@ def ping_html(request):
 
     if nb_events:
         html = render_to_string('dashboard_table.html',
-                                {'all_events': all_events(request.user)})
+                                {'all_events': all_events(request.user),
+                                 'clusters': Cluster.objects.exclude(slug=request.user.cluster.slug).all()})
     else:
         html = None
 

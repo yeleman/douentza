@@ -121,3 +121,7 @@ for number in settings.FONDA_INCOMING_NUMBERS:
         INCOMING_NUMBERS_BY_OPERATOR.update({operator: []})
     INCOMING_NUMBERS_BY_OPERATOR[operator].append(number)
     INCOMING_NUMBERS_WITH_OPERATOR.update({number: operator})
+
+
+def handle_outgoing_request(payload):
+    return

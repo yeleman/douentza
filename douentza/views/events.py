@@ -36,8 +36,7 @@ def display_request(request, request_id):
         if form.is_valid():
             event = form.cleaned_data.get('request_id')
             event.status = HotlineRequest.STATUS_HANDLED
-            event.hotline_user = get_object_or_404(HotlineUser,
-                                                   username=request.user)
+            event.hotline_user = request.user
             event.responded_on = form.cleaned_data.get('responded_on')
             event.age = form.cleaned_data.get('age')
             event.project = form.cleaned_data.get('project')

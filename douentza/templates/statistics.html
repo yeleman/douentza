@@ -64,4 +64,4 @@
 
 {% endblock %}
 
-{% block extra_js %}graph_event_response_counts("{{ graph_slug|cachedfile }}");{% endblock %}
+{% block extra_js %}graph_event_response_counts("{% url 'event_response_counts' %}");{% endblock %}

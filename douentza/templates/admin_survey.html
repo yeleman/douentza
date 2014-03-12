@@ -8,7 +8,7 @@ $('.question-list-choices').each(function (){
 });
 function display_question_choices() {
     var elem = $('#id_question_type');
-    var is_choice = (elem.val() == 'choice');
+    var is_choice = (elem.val() == 'choice' || elem.val() == 'multi_choice');
     var elem_choices = $('#id_question_choices').parent();
     elem_choices.toggleClass('hidden', !is_choice);
 }
@@ -29,7 +29,7 @@ display_question_choices();
 <h3>Questions existantes</h3>
 <ol>
 {% for questiond in survey.to_dict.questions %}
-<li>{{ questiond.label }} [<abbr {% if questiond.type == 'choice' %}class="question-list-choices" data-content="{% for choice in questiond.choices %}<span class='label label-default'>{{ choice.label }}</span> {% endfor %}" data-html="true" data-placement="top" data-trigger="hover"{% endif %}>{{ questiond.type_str }}</abbr>]{% if questiond.required %} <strong>obligatoire</strong>{% endif %}. <a href="{% url 'admin_survey_delete_question' survey.id questiond.id %}"><button class="btn btn-danger btn-xs">supprimer</button></a></li>
+<li>{{ questiond.label }} [<abbr {% if questiond.has_choices %}class="question-list-choices" data-content="{% for choice in questiond.choices %}<small><span class='label label-default'>{{ choice.label }}</span></small>&nbsp; {% endfor %}" data-html="true" data-placement="top" data-trigger="hover"{% endif %}>{{ questiond.type_str }}</abbr>]{% if questiond.required %} <strong>obligatoire</strong>{% endif %}. <a href="{% url 'admin_survey_delete_question' survey.id questiond.id %}"><button class="btn btn-danger btn-xs">supprimer</button></a></li>
 {% empty %}
 <p>Aucune question pour le môment. Ajoutez-en ci-dessous.</p>
 {% endfor %}

@@ -1,4 +1,3 @@
-{% load douentza %}
 {% for ee in event.all_events %}
-    <span class="label label-default sms-type {{ee.event_type|statuscss}}" data-content="{{ ee.received_on|eventdate }} {% if ee.request_type in event.SMS_TYPES %} : {{ ee.sms_message }}{% endif %}">{{ ee.type_str }}</span>
+    {% include "event_span.html" with ee=ee %}
 {% endfor %}

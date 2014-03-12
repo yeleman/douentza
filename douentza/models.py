@@ -276,6 +276,10 @@ class HotlineRequest(models.Model):
                                                        status=self.status,
                                                        number=self.identity)
 
+    @property
+    def request_type(self):
+        return self.event_type
+
     def to_dict(self):
         return {
             'id': self.id,
@@ -432,7 +436,7 @@ class Survey(models.Model):
         d = {'title': self.title,
              'description': self.description,
              'questions': []}
-        for question in self.questions.order_by('-order', 'id'):
+        for question in self.questions.order_by('order', '-id'):
             d['questions'].append(question.to_dict())
         return d
 
@@ -471,6 +475,7 @@ class Question(models.Model):
     TYPE_INTEGER = 'int'
     TYPE_FLOAT = 'float'
     TYPE_CHOICES = 'choice'
+    TYPE_MULTI_CHOICES = 'multi_choice'
     TYPE_TEXT = 'text'
 
     TYPES = {
@@ -480,7 +485,8 @@ class Question(models.Model):
         TYPE_DATE: "Date",
         TYPE_INTEGER: "Nombre (entier)",
         TYPE_FLOAT: "Nombre (réel)",
-        TYPE_CHOICES: "Liste de choix"
+        TYPE_CHOICES: "Liste de choix",
+        TYPE_MULTI_CHOICES: "Liste de choix multiples"
     }
 
     TYPES_CLS = {
@@ -491,6 +497,7 @@ class Question(models.Model):
         TYPE_INTEGER: forms.IntegerField(),
         TYPE_FLOAT: forms.FloatField(),
         TYPE_CHOICES: forms.ChoiceField(),
+        TYPE_CHOICES: forms.MultipleChoiceField(),
     }
 
     order = models.PositiveIntegerField(default=0,
@@ -516,6 +523,7 @@ class Question(models.Model):
              'order': self.order,
              'label': self.label,
              'type': self.question_type,
+             'has_choices': self.question_type in (self.TYPE_CHOICES, self.TYPE_MULTI_CHOICES),
              'type_str': self.type_str(),
              'required': self.required,
              'choices': []}

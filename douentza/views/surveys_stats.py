@@ -60,6 +60,7 @@ def compute_survey_questions_data(survey):
             Question.TYPE_INTEGER: _stats_for_number,
             Question.TYPE_FLOAT: _stats_for_number,
             Question.TYPE_CHOICES: _stats_for_choice,
+            Question.TYPE_MULTI_CHOICES: _stats_for_multi_choice,
         }.get(question.question_type)(question)
 
 
@@ -118,6 +119,15 @@ def compute_survey_questions_data(survey):
                                                         value__exact=choice.slug).count()})
         return data
 
+    def _stats_for_multi_choice(question):
+        data = {'choices_count': {}}
+        for choice in question.questionchoices.order_by('id'):
+            data['choices_count'].update({choice.slug: choice.to_dict()})
+            data['choices_count'][choice.slug].update({
+                'count': sum([1 for answer in SurveyTakenData.objects.filter(question=question)
+                              if choice.slug in answer.value])})
+        return data
+
     main_types = {
         Question.TYPE_STRING: 'string',
         Question.TYPE_TEXT: 'string',
@@ -126,6 +136,7 @@ def compute_survey_questions_data(survey):
         Question.TYPE_INTEGER: 'number',
         Question.TYPE_FLOAT: 'number',
         Question.TYPE_CHOICES: 'choice',
+        Question.TYPE_MULTI_CHOICES: 'multi_choice',
     }
 
     all_questions_data = []
@@ -148,6 +159,11 @@ def export_survey_as_csv(survey, filename):
     norm_header = lambda label: slugify(label)
     headers = [norm_header(q['label']) for q in survey.to_dict()['questions']]
 
+    def norm_value(value):
+        if isinstance(value, list):
+            return ",".join(value)
+        return value
+
     csv_file = open(filename, 'w')
     if PY2:
         csv_writer = csv.DictWriter(csv_file, headers, encoding='utf-8')
@@ -159,7 +175,7 @@ def export_survey_as_csv(survey, filename):
         data = {}
         for question in survey_taken.survey.questions.order_by('-order', 'id'):
             data.update({
-                norm_header(question.label): question.survey_taken_data.get(survey_taken=survey_taken).value})
+                norm_header(question.label): norm_value(question.survey_taken_data.get(survey_taken=survey_taken).value)})
         csv_writer.writerow(data)
 
     csv_file.close()

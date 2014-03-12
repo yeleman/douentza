@@ -47,7 +47,8 @@ class BasicInformationForm(forms.Form):
     sex = forms.ChoiceField(label="Sexe", required=False,
                             choices=HotlineRequest.SEXES.items(),
                             widget=forms.Select)
-    duration = DurationField(label="Durée", widget=forms.TextInput(attrs={'placeholder': help_duration}))
+    duration = DurationField(label="Durée", required=True,
+                             widget=forms.TextInput(attrs={'placeholder': help_duration}))
     ethnicity = forms.ChoiceField(label="Ethnie", required=False, widget=forms.Select)
     project = forms.ChoiceField(label="Projet", required=False, widget=forms.Select)
 
@@ -111,6 +112,10 @@ class BasicInformationForm(forms.Form):
         except Ethnicity.DoesNotExist:
             return None
 
+    def clean_duration(self):
+        if not self.cleaned_data.get('duration'):
+            raise forms.ValidationError("Durée d'appel incorrecte.")
+
 
 def get_form_property(question_dict):
     from douentza.models import Question
@@ -120,6 +125,9 @@ def get_form_property(question_dict):
 
     if question_type == Question.TYPE_CHOICES:
         field = forms.ChoiceField(choices=[(c.get('slug'), c.get('label'))
+                                           for c in question_dict.get('choices')])
+    elif question_type == Question.TYPE_MULTI_CHOICES:
+        field = forms.MultipleChoiceField(choices=[(c.get('slug'), c.get('label'))
                                            for c in question_dict.get('choices')])
     elif question_type == Question.TYPE_STRING:
         field = forms.CharField(max_length=250)
@@ -141,8 +149,7 @@ class MiniSurveyForm(forms.Form):
         survey = kwargs.pop('survey')
         super(MiniSurveyForm, self).__init__(*args, **kwargs)
 
-        questions = sorted(survey.get('questions', []),
-                           key=lambda x: x['order'], reverse=True)
+        questions = survey.get('questions', [])
         if not questions:
             return
 
@@ -170,12 +177,8 @@ class MiniSurveyAddQuestion(forms.ModelForm):
 
     def clean_question_choices(self):
         txt_choices = self.cleaned_data.get('question_choices')
-        choices = {}
-        for choice in txt_choices.split('\n'):
-            choice = choice.strip()
-            if len(choice):
-                choices.update({slugify(choice): choice})
-        return choices
+        return [(slugify(choice.strip()), choice.strip())
+                for choice in txt_choices.split('\n') if len(choice.strip())]
 
 
 class AddProjectForm(forms.ModelForm):

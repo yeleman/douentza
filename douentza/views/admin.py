@@ -52,10 +52,12 @@ def admin_survey(request, survey_id):
 
             question = form.save(commit=False)
             question.survey = survey
+            if question.order == 0:
+                question.order = survey.questions.count() + 1
             question.save()
 
-            if question.question_type == question.TYPE_CHOICES:
-                for slug, label in form.cleaned_data.get('question_choices').items():
+            if question.question_type in (question.TYPE_CHOICES, question.TYPE_MULTI_CHOICES):
+                for slug, label in form.cleaned_data.get('question_choices'):
                     try:
                         QuestionChoice.objects.create(slug=slug,
                                                       label=label,

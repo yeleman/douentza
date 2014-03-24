@@ -49,6 +49,26 @@ def get_event_responses_counts():
     return event_response_data
 
 
+def data_for_entity(entity, descendants=False):
+    if descendants:
+        qs = HotlineRequest.objects.filter(location__in=entity.get_descendants(True))
+    else:
+        qs = HotlineRequest.objects.filter(location=entity)
+    return {
+        'nb_calls': qs.count(),
+        'nb_unique_numbers': qs.distinct().count(),
+        'nb_male': qs.filter(sex=HotlineRequest.SEX_MALE).count(),
+        'nb_female': qs.filter(sex=HotlineRequest.SEX_FEMALE).count(),
+        'nb_unknown_gender': qs.filter(sex=HotlineRequest.SEX_UNKNOWN).count(),
+        'nb_answered': qs.filter(status=HotlineRequest.STATUS_HANDLED).count(),
+        'first_call': isoformat_date(qs.order_by('created_on').first().created_on),
+        'last_call': isoformat_date(qs.order_by('created_on').last().created_on),
+        'marker-size': 'medium',
+        'marker-color': '#2C3E50',
+        'marker-symbol': 'mobilephone',
+    }
+
+
 def get_geojson_statistics():
 
     data = {
@@ -59,22 +79,6 @@ def get_geojson_statistics():
         "properties": {},
         "features": []
     }
-
-    def data_for_entity(entity):
-        qs = HotlineRequest.objects.filter(location=entity)
-        return {
-            'nb_calls': qs.count(),
-            'nb_unique_numbers': qs.distinct().count(),
-            'nb_male': qs.filter(sex=HotlineRequest.SEX_MALE).count(),
-            'nb_female': qs.filter(sex=HotlineRequest.SEX_FEMALE).count(),
-            'nb_unknown_gender': qs.filter(sex=HotlineRequest.SEX_UNKNOWN).count(),
-            'nb_answered': qs.filter(status=HotlineRequest.STATUS_HANDLED).count(),
-            'first_call': isoformat_date(qs.order_by('created_on').first().created_on),
-            'last_call': isoformat_date(qs.order_by('created_on').last().created_on),
-            'marker-size': 'medium',
-            'marker-color': '#2C3E50',
-            'marker-symbol': 'mobilephone',
-        }
 
     data['properties'].update({
         'name': "Localités des personnes ayant émis des appels vers la Hotline"

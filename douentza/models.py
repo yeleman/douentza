@@ -5,7 +5,7 @@
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import datetime
-import crypt
+import json
 
 from django.db import models
 from django import forms
@@ -139,6 +139,13 @@ class Entity(MPTTModel):
     def __str__(self):
         return self.name
 
+    @classmethod
+    def get_or_none(cls, slug):
+        try:
+            return cls.objects.get(slug=slug)
+        except cls.DoesNotExist:
+            return None
+
     def display_name(self):
         return self.name.title()
 
@@ -156,6 +163,47 @@ class Entity(MPTTModel):
     def get_geopoint(self):
         if self.latitude and self.longitude:
             return "{lon}, {lat}".format(lon=self.longitude, lat=self.latitude)
+
+    @property
+    def geometry(self):
+        return None
+
+    @property
+    def geojson(self):
+        if not self.geometry:
+            if self.latitude and self.longitude:
+                return {"type": "Point",
+                        "coordinates": [self.longitude, self.latitude]}
+            return {}
+        return json.loads(self.geometry)
+
+    @property
+    def geojson_feature(self):
+        feature = {
+            "type": "Feature",
+            "properties": self.to_dict()
+        }
+        if self.geojson:
+            feature.update({"geometry": self.geojson})
+        return feature
+
+    def display_code_name(self):
+        return "{name} ({code})".format(code=self.slug,
+                                        name=self.display_name())
+
+    def display_typed_name(self):
+        return "{type} de {name}".format(type=self.TYPES.get(self.entity_type), name=self.name)
+
+    def to_dict(self):
+        return {'slug': self.slug,
+                'name': self.name,
+                'display_typed_name': self.display_typed_name(),
+                'display_code_name': self.display_code_name(),
+                'display_full_name': self.display_full_name(),
+                'type': self.entity_type,
+                'parent': getattr(self.parent, 'slug', None),
+                'latitude': self.latitude,
+                'longitude': self.longitude}
 
 
 @implements_to_string

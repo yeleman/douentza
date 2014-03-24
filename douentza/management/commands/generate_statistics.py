@@ -15,7 +15,8 @@ from django.core.management.base import BaseCommand
 from douentza.views.surveys_stats import (export_survey_as_csv,
                                     compute_survey_questions_data)
 from douentza.views.statistics import (export_general_stats_as_csv,
-                                       get_event_responses_counts)
+                                       get_event_responses_counts,
+                                       get_geojson_statistics)
 from douentza.models import Survey, CachedData
 
 
@@ -91,3 +92,18 @@ class Command(BaseCommand):
         jcache.value = fname
         jcache.cached_on = now
         jcache.save()
+
+        ###
+        ## GeoJSON
+        ###
+        fname = 'geojson-statistics-{date}.json'.format(date=datestr)
+        filename = os.path.join(settings.CACHEDDATA_FOLDER, fname)
+        json.dump(get_geojson_statistics(), open(filename, 'w'))
+
+        jcache, _ = CachedData.objects.get_or_create(slug=slugify("geojson_statistics"))
+        remove_previous_file(jcache) # clean-up first
+        jcache.data_type = CachedData.TYPE_FILE
+        jcache.value = fname
+        jcache.cached_on = now
+        jcache.save()
+

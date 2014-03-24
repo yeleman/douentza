@@ -49,6 +49,50 @@ def get_event_responses_counts():
     return event_response_data
 
 
+def get_geojson_statistics():
+
+    data = {
+        "type": "FeatureCollection",
+        "crs": {"type": "name",
+                "properties": {
+                    "name": "urn:ogc:def:crs:OGC:1.3:CRS84"}},
+        "properties": {},
+        "features": []
+    }
+
+    def data_for_entity(entity):
+        qs = HotlineRequest.objects.filter(location=entity)
+        return {
+            'nb_calls': qs.count(),
+            'nb_unique_numbers': qs.distinct().count(),
+            'nb_male': qs.filter(sex=HotlineRequest.SEX_MALE).count(),
+            'nb_female': qs.filter(sex=HotlineRequest.SEX_FEMALE).count(),
+            'nb_unknown_gender': qs.filter(sex=HotlineRequest.SEX_UNKNOWN).count(),
+            'nb_answered': qs.filter(status=HotlineRequest.STATUS_HANDLED).count(),
+            'first_call': isoformat_date(qs.order_by('created_on').first().created_on),
+            'last_call': isoformat_date(qs.order_by('created_on').last().created_on),
+            'marker-size': 'medium',
+            'marker-color': '#2C3E50',
+            'marker-symbol': 'mobilephone',
+        }
+
+    data['properties'].update({
+        'name': "Localités des personnes ayant émis des appels vers la Hotline"
+    })
+
+    entities_with_data = list(set([Entity.get_or_none(r['location'])
+                          for r in HotlineRequest.objects.all().values('location')
+                          if not r['location'] is None]))
+
+    for entity in entities_with_data:
+        if entity.get_geopoint() is None:
+            continue
+        cgj = entity.geojson_feature
+        cgj['properties'].update(data_for_entity(entity))
+        data['features'].append(cgj)
+    return data
+
+
 def get_statistics_dict():
     context = {}
 
@@ -60,6 +104,7 @@ def get_statistics_dict():
         last_event = []
 
     nb_total_events = hotlinerequest.count()
+    nb_total_replies = hotlinerequest.exclude(status=HotlineRequest.STATUS_HANDLED).count()
     nb_survey = Survey.objects.count()
     projects = Project.objects.all()
     nb_projects = projects.count()
@@ -82,8 +127,9 @@ def get_statistics_dict():
     short_duration = handled_hotline_request.aggregate(Min("duration"))
 
     hotlinerequest_project_count = [(project.name,
-                                     hotlinerequest.filter(project=project).count(),
-                                     percent_calculation(hotlinerequest.filter(project=project).count(), nb_projects))
+                                     handled_hotline_request.filter(project=project).count(),
+                                     percent_calculation(handled_hotline_request.filter(project=project).count(),
+                                                         handled_hotline_request.count()))
                                      for project in projects]
 
     under_18 = stats_per_age(0, 18)
@@ -92,11 +138,18 @@ def get_statistics_dict():
     stats_41_55 = stats_per_age(41, 55)
     other_56 = stats_per_age(56, 180)
 
+    communes_located_requests_list = [
+        communes_located_requests(commune)
+        for commune in list(Entity.objects.filter(entity_type='commune'))] + \
+        [("Inconnue", unknown_location_count, unknown_location_percent)]
+    communes_located_requests_list = [c for c in communes_located_requests_list if c[1] > 0]
+
     context.update({'last_event': last_event,
                     'nb_total_events': nb_total_events,
                     'nb_projects': nb_projects,
                     'nb_survey': nb_survey,
                     'nb_unique_number': nb_unique_number,
+                    'nb_total_replies': nb_total_replies,
                     'sex_unknown': sex_unknown,
                     'sex_male': sex_male,
                     'sex_female': sex_female,
@@ -113,10 +166,8 @@ def get_statistics_dict():
                     'hotlinerequest_project_count': hotlinerequest_project_count,
                     'sum_duration': sum_duration,
                     'nb_ethinicity_requests': [ethinicity_requests(ethinicity)
-                                               for ethinicity in Ethnicity.objects.all()],
-                    'communes_located_requests': [communes_located_requests(commune)
-                                                  for commune in list(Entity.objects.filter(entity_type='commune'))] +
-                                                  [("Inconnue", unknown_location_count, unknown_location_percent)],
+                                               for ethinicity in list(Ethnicity.objects.all()) + [None]],
+                    'communes_located_requests': communes_located_requests_list,
                     'general_stats_slug': "general_stats",
                     })
 

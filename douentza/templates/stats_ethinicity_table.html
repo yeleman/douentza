@@ -10,8 +10,8 @@
             </tr>
         </thead>
         <tbody>
-            {% for commune, count, percent in nb_ethinicity_requests %}
-                <tr><td>{{ commune }}</td>
+            {% for ethnicity, count, percent in nb_ethinicity_requests %}
+                <tr><td>{{ ethnicity|default_if_none:"Inconnue" }}</td>
                     <td class='important'>{{ percent|floatformat:2 }}%</td>
                     <td class='important'> {{ count }} </td>
                 </tr>

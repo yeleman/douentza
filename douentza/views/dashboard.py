@@ -24,13 +24,14 @@ from douentza.utils import (start_or_end_day_from_date,
 def all_events(user):
     today = datetime.date.today()
     yesterday = today - datetime.timedelta(days=1)
-    hotlinerequests = HotlineRequest.incoming.filter(cluster=user.cluster)
+    hotlinerequests = HotlineRequest.incoming.filter(cluster=user.cluster).exclude(cluster=None)
     data_event = {'today_events': hotlinerequests.filter(received_on__gte=start_or_end_day_from_date(today, True),
                                                                  received_on__lt=start_or_end_day_from_date(today, False)).all(),
                   'yesterday_events': hotlinerequests.filter(received_on__gte=start_or_end_day_from_date(yesterday, True),
                                                                  received_on__lt=start_or_end_day_from_date(yesterday, False)).all(),
                   'ancient_events': hotlinerequests.filter(received_on__lt=start_or_end_day_from_date(yesterday, True)).all(),
-                  'unsorted_events': HotlineRequest.incoming.filter(cluster=None).all()}
+                  'unsorted_events': HotlineRequest.incoming.filter(cluster=None).all()
+                  }
     data_event.update({'has_events': bool(len(data_event['today_events'])
                                      + len(data_event['yesterday_events'])
                                      + len(data_event['ancient_events'])
@@ -44,7 +45,7 @@ def dashboard(request):
     user = request.user
     context = get_default_context(page="dashboard")
     context.update({'all_events': all_events(user),
-                    'clusters': Cluster.objects.exclude(slug=user.cluster.slug).all()})
+                    'clusters': Cluster.objects.exclude(slug=getattr(user.cluster, 'slug', None)).all()})
     context.update({'now': to_jstimestamp(datetime.datetime.today())})
     return render(request, "dashboard.html", context)
 

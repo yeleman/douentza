@@ -23,6 +23,10 @@
                 <td class="important">{{ nb_total_events }}</td>
             </tr>
             <tr>
+                <th>Nombre total de rappels</th>
+                <td class="important">{{ nb_total_replies }}</td>
+            </tr>
+            <tr>
                 <th>Nombre total de questionnaires</th>
                 <td class="important">{{ nb_survey }}</td>
             </tr>
@@ -32,20 +36,20 @@
             </tr>
             <tr>
                 <th>Durée des rappels:</th>
-                <td><strong>{{ sum_duration.duration__sum|duration|default:"-" }}</strong></td>
+                <td><strong>{{ sum_duration.duration__sum|duration|default_if_none:"-" }}</strong></td>
             </tr>
 
             <tr>
                 <th class="ident">Le plus long</th>
-                <td><strong>{{ longest_duration.duration__max|duration|default:"-" }}</strong></td>
+                <td><strong>{{ longest_duration.duration__max|duration|default_if_none:"-" }}</strong></td>
             </tr>
             <tr>
                 <th class="ident">La moyenne</th>
-                <td><strong>{{ average_duration.duration__avg|duration|default:"-" }}</strong></td>
+                <td><strong>{{ average_duration.duration__avg|duration|default_if_none:"-" }}</strong></td>
             </tr>
             <tr>
                 <th class="ident">La minimale</th>
-                <td><strong>{{ short_duration.duration__min|duration|default:"-" }}</strong></td>
+                <td><strong>{{ short_duration.duration__min|duration|default_if_none:"-" }}</strong></td>
             </tr>
             <tr>
                 <th>Total par sexes (Homme/Femme/Inconnu)</th>
@@ -54,14 +58,65 @@
         </tbody>
     </table>
 
+    <h2>Localités des appels</h2>
+    <div id="map" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+
     {% include "stats_per_age.html" %}
     {% include "stats_per_project.html" %}
-    {% include "stats_commune_table.html" %}
     {% include "stats_ethinicity_table.html" %}
 
     <h2>Graphe des appels</h2>
     <div id="container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
 
+    {% include "stats_commune_table.html" %}
+
 {% endblock %}
 
-{% block extra_js %}graph_event_response_counts("{% url 'event_response_counts' %}");{% endblock %}
+{% block extra_js %}
+graph_event_response_counts("{% url 'event_response_counts' %}");
+//var map = L.mapbox.map('map', 'examples.map-9ijuk24y').setView([40, -74.50], 9);
+map = L.mapbox.map('map', 'rgaudin.gfak5lf0')
+        .setView([17.874, -5.493], 6)
+        .addControl(L.mapbox.geocoderControl('rgaudin.gfak5lf0'));
+
+var display_fields = ['nb_calls', 'nb_unique_numbers', 'nb_male', 'nb_female', 'nb_unknown_gender', 'nb_answered', 'first_call', 'last_call'];
+
+var markers = new L.MarkerClusterGroup();
+
+var geojson_url = "{% url 'cached_slug' 'geojson_statistics' %}";
+$.getJSON(geojson_url, function(geojson) {
+
+    var geoJsonLayer = L.geoJson(geojson, {
+       onEachFeature: function(feature, layer) {
+            function gen_line(field, label, is_date) {
+                var value = layer.feature.properties[field];
+                if (is_date === true) {
+                    value = format_date(value);
+                }
+                return '<li>' + label + ' : <strong>' + value + '</strong></li>';
+            }
+
+            function format_date(isodate) {
+                return new Date(parseInt(Date.parse(isodate))).toDateString();
+            }
+
+            var content = '<h1>' + layer.feature.properties.display_full_name + '</h1>' +
+                          '<ul>' +
+                          gen_line('nb_calls', "Nb. appels") +
+                          gen_line('nb_unique_numbers', "Nb. numéros uniques") +
+                          gen_line('nb_male', "Nb. appels Homme") +
+                          gen_line('nb_female', "Nb. appels Femme") +
+                          gen_line('nb_unknown_gender', "Nb. appels Inconnus") +
+                          gen_line('nb_answered', "Nb. appels répondus") +
+                          gen_line('first_call', "Premier appel", true) +
+                          gen_line('last_call', "Dernier appel", true) +
+                          '</ul>';
+            layer.bindPopup(content);
+       }
+    });
+
+    markers.addLayer(geoJsonLayer);
+    map.addLayer(markers);
+
+});
+{% endblock %}

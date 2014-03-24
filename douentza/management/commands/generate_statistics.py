@@ -96,7 +96,7 @@ class Command(BaseCommand):
         ###
         ## GeoJSON
         ###
-        fname = 'geojson-statistics-{date}.json'.format(date=datestr)
+        fname = 'public_geojson-statistics-{date}.json'.format(date=datestr)
         filename = os.path.join(settings.CACHEDDATA_FOLDER, fname)
         json.dump(get_geojson_statistics(), open(filename, 'w'))
 

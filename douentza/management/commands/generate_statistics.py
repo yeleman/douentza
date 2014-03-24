@@ -54,14 +54,14 @@ class Command(BaseCommand):
             remove_previous_file(fcache) # clean-up first
             fcache.data_type = CachedData.TYPE_FILE
             fcache.value = fname
-            fcache.cached_on = now
+            fcache.created_on = now
             fcache.save()
 
             # Survey Stats Data
             ocache, _ = CachedData.objects.get_or_create(slug=survey.cache_slug)
             ocache.value = compute_survey_questions_data(survey)
             ocache.data_type = CachedData.TYPE_OBJECT
-            ocache.cached_on = now
+            ocache.created_on = now
             ocache.save()
 
         ###
@@ -77,7 +77,7 @@ class Command(BaseCommand):
         remove_previous_file(gcache) # clean-up first
         gcache.data_type = CachedData.TYPE_FILE
         gcache.value = fname
-        gcache.cached_on = now
+        gcache.created_on = now
         gcache.save()
 
 
@@ -90,7 +90,7 @@ class Command(BaseCommand):
         remove_previous_file(jcache) # clean-up first
         jcache.data_type = CachedData.TYPE_FILE
         jcache.value = fname
-        jcache.cached_on = now
+        jcache.created_on = now
         jcache.save()
 
         ###
@@ -104,6 +104,6 @@ class Command(BaseCommand):
         remove_previous_file(jcache) # clean-up first
         jcache.data_type = CachedData.TYPE_FILE
         jcache.value = fname
-        jcache.cached_on = now
+        jcache.created_on = now
         jcache.save()
 

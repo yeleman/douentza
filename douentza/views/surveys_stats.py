@@ -51,30 +51,40 @@ def stats_for_survey(request, survey_id):
 
 def compute_survey_questions_data(survey):
 
-    def custom_stats_for_type(question):
+    def _safe_percent(numerator, denominator):
+        try:
+            return numerator / denominator * 100
+        except:
+            return 0
+
+    def custom_stats_for_type(question, total):
         return {
-            Question.TYPE_STRING: lambda x: {},
-            Question.TYPE_TEXT: lambda x: {},
+            Question.TYPE_STRING: lambda x, y: {},
+            Question.TYPE_TEXT: lambda x, y: {},
             Question.TYPE_BOOLEAN: _stats_for_boolean,
             Question.TYPE_DATE : _stats_for_date,
             Question.TYPE_INTEGER: _stats_for_number,
             Question.TYPE_FLOAT: _stats_for_number,
             Question.TYPE_CHOICES: _stats_for_choice,
             Question.TYPE_MULTI_CHOICES: _stats_for_multi_choice,
-        }.get(question.question_type)(question)
+        }.get(question.question_type)(question, total)
 
 
-    def _stats_for_boolean(question):
+    def _stats_for_boolean(question, total):
+        nb_true = SurveyTakenData.objects.filter(question=question,
+                                                 value__exact=True).count()
+        nb_false = SurveyTakenData.objects.filter(question=question,
+                                                  value__exact=False).count()
         data = {
-            'nb_true': SurveyTakenData.objects.filter(question=question,
-                                                      value__exact=True).count(),
-            'nb_false': SurveyTakenData.objects.filter(question=question,
-                                                       value__exact=False).count()
+            'nb_true': nb_true,
+            'percent_true': _safe_percent(nb_true, total),
+            'nb_false': nb_false,
+            'percent_false': _safe_percent(nb_false, total)
         }
         return data
 
 
-    def _stats_for_date(question):
+    def _stats_for_date(question, total):
         all_values = [v.value
                       for v in SurveyTakenData.objects.filter(question=question)
                       if v.value is not None]
@@ -93,7 +103,7 @@ def compute_survey_questions_data(survey):
         }
 
 
-    def _stats_for_number(question):
+    def _stats_for_number(question, total):
         all_values = [v.value
                       for v in SurveyTakenData.objects.filter(question=question)
                       if v.value is not None]
@@ -110,16 +120,18 @@ def compute_survey_questions_data(survey):
         }
 
 
-    def _stats_for_choice(question):
+    def _stats_for_choice(question, total):
         data = {'choices_count': {}}
         for choice in question.questionchoices.order_by('id'):
+            count = SurveyTakenData.objects.filter(question=question,
+                                                   value__exact=choice.slug).count()
             data['choices_count'].update({choice.slug: choice.to_dict()})
             data['choices_count'][choice.slug].update({
-                'count': SurveyTakenData.objects.filter(question=question,
-                                                        value__exact=choice.slug).count()})
+                'count': count,
+                'percent': _safe_percent(count, total)})
         return data
 
-    def _stats_for_multi_choice(question):
+    def _stats_for_multi_choice(question, total):
         data = {'choices_count': {}}
         for choice in question.questionchoices.order_by('id'):
             data['choices_count'].update({choice.slug: choice.to_dict()})
@@ -143,12 +155,15 @@ def compute_survey_questions_data(survey):
 
     for question in survey.questions.order_by('-order', 'id'):
         questions_data = question.to_dict()
+        total = SurveyTakenData.objects.filter(question=question).count()
+        nb_null = SurveyTakenData.objects.filter(question=question,
+                                                 value__isnull=True).count()
         questions_data.update({
-            'nb_values': SurveyTakenData.objects.filter(question=question).count(),
-            'nb_null_values': SurveyTakenData.objects.filter(question=question,
-                                                             value__isnull=True).count(),
+            'nb_values': total,
+            'nb_null_values': nb_null,
+            'percent_null_values': _safe_percent(nb_null, total),
             'type_template': "ms_question_details_{}.html".format(main_types.get(question.question_type))})
-        questions_data.update(custom_stats_for_type(question))
+        questions_data.update(custom_stats_for_type(question, total))
         all_questions_data.append(questions_data)
 
     return all_questions_data

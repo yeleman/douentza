@@ -1,0 +1,88 @@
+{% load l10n %}
+{% if question.type == 'choice' or question.type == 'boolean' or question.type == 'multi_choice'%}
+<div class="question-chart" id="chart-q-{{ question.id }}"></div>
+<script type="text/javascript">
+survey_charts.push({
+    chart: {
+        renderTo: 'chart-q-{{ question.id }}',
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false
+    },
+    title: {
+        text: null,
+    },
+    tooltip: {
+        {% if question.type == 'choice' or question.type == 'multi_choice' %}
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        {% endif %}
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: false
+            },
+            showInLegend: true
+        },
+        column: {
+            animation: false,
+            enableMouseTracking: false,
+            dataLabels: {
+                color: 'black',
+                enabled: true,
+                formatter: function () { return (Math.round(this.y * 10) / 10).toString().replace('.', ',') + '%'; }
+            },
+            showInLegend: true,
+        }
+    },
+    series:
+    {% if question.type == 'choice' or question.type == 'multi_choice' %}
+        [{
+            type: 'pie',
+            name: 'Pourcentage',
+            data: [
+                {% for slug, choice in question.choices_count.items %}
+                {% localize off %}["{{ choice.label }}", {{ choice.count }}],{% endlocalize %}
+                {% endfor %}
+            ]
+        }],
+        {% endif %}
+    {% if question.type == 'boolean2' %}
+        [{
+            type: 'pie',
+            name: 'Pourcentage',
+            data: [
+                {% localize off %}
+                ["Vrai", {{ question.nb_true }}],
+                ["Faux", {{ question.nb_false }}],
+                {% endlocalize %}
+            ]
+        }],
+    {% endif %}
+    {% if question.type == 'boolean' %}
+        [
+        {% localize off %}
+        {
+            type: 'column',
+            name: "Vrai",
+            data: [{{ question.percent_true }}]
+        },
+        {
+            type: 'column',
+            name: "Faux",
+            data: [{{ question.percent_false }}]
+        },
+        {
+            type: 'column',
+            name: "n/a",
+            data: [{{ question.percent_null_values }}]
+        },
+        {% endlocalize %}
+        ],
+    {% endif %}
+    credits: {enabled: false}
+});
+</script>
+{% endif %}

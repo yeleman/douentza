@@ -2,6 +2,12 @@
 
 {% block title %}Statistiques de “{{ survey.title }}”{% endblock %}
 
+{% block extra_js %}
+$.each(survey_charts, function (index) {
+    new Highcharts.Chart(survey_charts[index]);
+});
+{% endblock %}
+
 {% block content %}
 
 <h2>{{ survey.title }}</h2>
@@ -10,9 +16,12 @@
 <tr><th>Nb. de questionnaires remplis</th><td>{{ survey.survey_takens.count }}</td></tr>
 </table>
 
+<script type="text/javascript">survey_charts = [];</script>
+
 <table class="table table-bordered table-condensed ">
-<tr><th>Question</th><th>Type</th><th title="Nombre de valeurs pour la question">Nb.</th><th title="Nombre de valeurs nulles pour la question">Nulles</th><th>Détails</th></tr>
+<tr><th>Question</th><th>Type</th><th title="Nombre de valeurs pour la question">Nb.</th><th title="Nombre de valeurs nulles pour la question">Nulles</th><th>Détails</th><th>Graph</th></tr>
 {% for question in all_questions_data %}
-<tr><td><strong>{{ question.label }}</strong></td><td>{{ question.type_str }}</td><td>{{ question.nb_values }}</td><td>{{ question.nb_null_values }}</td><td>{% include "ms_question_details.html" with question=question %}</td></tr>
+<tr><td><strong>{{ question.label }}</strong></td><td>{{ question.type_str }}</td><td>{{ question.nb_values }}</td><td>{{ question.nb_null_values }}</td><td>{% include "ms_question_details.html" with question=question %}</td><td>{% include "ms_question_chart.html" with question=question %}</td></tr>
 {% endfor %}
 {% endblock %}
+

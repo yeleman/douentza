@@ -165,3 +165,8 @@ th, td {
 body.archives .pagination {
     margin: 0;
 }
+
+
+.question-chart {
+    width: 300px;
+}

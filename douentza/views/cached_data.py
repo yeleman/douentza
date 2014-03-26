@@ -8,7 +8,7 @@ from __future__ import (unicode_literals, absolute_import,
 from django.http import Http404, HttpResponse
 from django.conf import settings
 from django.shortcuts import redirect, get_object_or_404
-from django.core.exceptions import PermissionDenied
+from django.contrib.auth.decorators import login_required
 from django.views.static import serve
 
 from douentza.models import CachedData
@@ -25,7 +25,7 @@ def cached_data_lookup(request, slug):
 
 def serve_cached_file(request, fname=None, public=False):
     if not fname.startswith('public_'):
-        raise PermissionDenied
+        return login_required(do_serve_file_no_auth(request, fname))
     return do_serve_file_no_auth(request, fname)
 
 

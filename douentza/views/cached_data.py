@@ -25,7 +25,7 @@ def cached_data_lookup(request, slug):
 
 def serve_cached_file(request, fname=None, public=False):
     if not fname.startswith('public_'):
-        return login_required(do_serve_file_no_auth(request, fname))
+        return login_required(do_serve_file_no_auth)(request, fname)
     return do_serve_file_no_auth(request, fname)
 
 

@@ -37,6 +37,15 @@ survey_charts.push({
             showInLegend: true,
         }
     },
+    xAxis: {
+        title: {text: null},
+        labels: {enabled: false},
+    },
+    yAxis: {
+        title: {text: null},
+        min: 0,
+        max: 100,
+    },
     series:
     {% if question.type == 'choice' or question.type == 'multi_choice' %}
         [{

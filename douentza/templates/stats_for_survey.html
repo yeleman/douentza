@@ -19,9 +19,9 @@ $.each(survey_charts, function (index) {
 <script type="text/javascript">survey_charts = [];</script>
 
 <table class="table table-bordered table-condensed ">
-<tr><th>Question</th><th>Type</th><th title="Nombre de valeurs pour la question">Nb.</th><th title="Nombre de valeurs nulles pour la question">Nulles</th><th>Détails</th><th>Graph</th></tr>
+<tr><th>Question</th><th>Type</th><th title="Nombre de valeurs nulles pour la question">Nulles</th><th>Détails</th><th>Graph</th></tr>
 {% for question in all_questions_data %}
-<tr><td><strong>{{ question.label }}</strong></td><td>{{ question.type_str }}</td><td>{{ question.nb_values }}</td><td>{{ question.nb_null_values }}</td><td>{% include "ms_question_details.html" with question=question %}</td><td>{% include "ms_question_chart.html" with question=question %}</td></tr>
+<tr><td><strong>{{ question.label }}</strong></td><td>{{ question.type_str }}</td><td>{{ question.nb_null_values }}</td><td>{% include "ms_question_details.html" with question=question %}</td><td>{% include "ms_question_chart.html" with question=question %}</td></tr>
 {% endfor %}
 {% endblock %}
 

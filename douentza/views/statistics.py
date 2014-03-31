@@ -27,24 +27,26 @@ from douentza.utils import (get_default_context, datetime_range,
 
 def get_event_responses_counts():
 
+    hotlinerequest = HotlineRequest.objects
+
     try:
-        start = HotlineRequest.objects.order_by('received_on')[0].received_on
+        start = hotlinerequest.order_by('received_on')[0].received_on
     except IndexError:
         start = datetime.datetime.today()
 
     events = []
     responses = []
+    remainings = []
 
     for date in datetime_range(start):
         ts = to_jstimestamp(date)
-        qcount = HotlineRequest.objects.filter(received_on__gte=start_or_end_day_from_date(date),
-                                               received_on__lt=start_or_end_day_from_date(date, False)).count()
-        scount = HotlineRequest.objects.filter(responded_on__gte=start_or_end_day_from_date(date),
-                                               responded_on__lt=start_or_end_day_from_date(date, False)).count()
+        qcount = hotlinerequest.filter(received_on__gte=start_or_end_day_from_date(date),
+                                       received_on__lt=start_or_end_day_from_date(date, False)).count()
+        scount = hotlinerequest.filter(responded_on__gte=start_or_end_day_from_date(date),
+                                       responded_on__lt=start_or_end_day_from_date(date, False)).count()
         events.append((ts, qcount))
         responses.append((ts, scount))
-    event_response_data = {'events': events,
-                           'responses': responses}
+    event_response_data = {'events': events, 'responses': responses}
 
     return event_response_data
 
@@ -108,7 +110,7 @@ def get_statistics_dict():
         last_event = []
 
     nb_total_events = hotlinerequest.count()
-    nb_total_replies = hotlinerequest.exclude(status=HotlineRequest.STATUS_HANDLED).count()
+    nb_total_replies = hotlinerequest.filter(status__in=HotlineRequest.DONE_STATUSES).count()
     nb_survey = Survey.objects.count()
     projects = Project.objects.all()
     nb_projects = projects.count()

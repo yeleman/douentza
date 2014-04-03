@@ -20,7 +20,7 @@ else:
 
 from douentza.models import (Survey, Question,
                              SurveyTakenData, CachedData)
-from douentza.utils import get_default_context
+from douentza.utils import get_default_context, isoformat_date
 
 
 @login_required
@@ -172,7 +172,11 @@ def compute_survey_questions_data(survey):
 def export_survey_as_csv(survey, filename):
 
     norm_header = lambda label: slugify(label)
-    headers = [norm_header(q['label']) for q in survey.to_dict()['questions']]
+    meta_headers = ['meta_received_on', 'meta_responded_on', 'meta_operator',
+                    'meta_cluster', 'meta_project', 'meta_age', 'meta_sex',
+                    'meta_call_duration', 'meta_ethnicity', 'meta_region',
+                    'meta_cercle', 'meta_commune', 'meta_village', 'meta_gps']
+    headers = meta_headers + [norm_header(q['label']) for q in survey.to_dict()['questions']]
 
     def norm_value(value):
         if isinstance(value, list):
@@ -187,7 +191,22 @@ def export_survey_as_csv(survey, filename):
     csv_writer.writeheader()
 
     for survey_taken in survey.survey_takens.order_by('taken_on'):
-        data = {}
+        data = {
+            'meta_received_on': isoformat_date(survey_taken.request.received_on),
+            'meta_responded_on': isoformat_date(survey_taken.request.responded_on),
+            'meta_operator': survey_taken.request.operator,
+            'meta_cluster': survey_taken.request.cluster,
+            'meta_project': survey_taken.request.project,
+            'meta_age': survey_taken.request.age,
+            'meta_sex': survey_taken.request.sex,
+            'meta_call_duration': survey_taken.request.duration,
+            'meta_ethnicity': survey_taken.request.ethnicity.slug,
+            'meta_region': getattr(survey_taken.request.location, 'get_region', lambda: None)(),
+            'meta_cercle': getattr(survey_taken.request.location, 'get_cercle', lambda: None)(),
+            'meta_commune': getattr(survey_taken.request.location, 'get_commune', lambda: None)(),
+            'meta_village': getattr(survey_taken.request.location, 'get_village', lambda: None)(),
+            'meta_gps': getattr(survey_taken.request.location, 'get_geopoint', lambda: None)(),
+        }
         for question in survey_taken.survey.questions.order_by('-order', 'id'):
             data.update({
                 norm_header(question.label): norm_value(question.survey_taken_data.get(survey_taken=survey_taken).value)})

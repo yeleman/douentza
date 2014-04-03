@@ -31,6 +31,13 @@ class Cluster(models.Model):
     def __str__(self):
         return self.name
 
+    @classmethod
+    def get_or_none(cls, slug):
+        try:
+            return cls.objects.get(slug=slug)
+        except cls.DoesNotExist:
+            return None
+
 
 @implements_to_string
 class HotlineUser(AbstractUser):
@@ -44,6 +51,13 @@ class HotlineUser(AbstractUser):
 
     def __str__(self):
         return self.full_name()
+
+    @classmethod
+    def get_or_none(cls, username):
+        try:
+            return cls.objects.get(username=username)
+        except cls.DoesNotExist:
+            return None
 
 
 @implements_to_string
@@ -61,6 +75,13 @@ class Ethnicity(models.Model):
 
     def __str__(self):
         return self.name
+
+    @classmethod
+    def get_or_none(cls, slug):
+        try:
+            return cls.objects.get(slug=slug)
+        except cls.DoesNotExist:
+            return None
 
 
 @implements_to_string
@@ -86,6 +107,13 @@ class Tag(models.Model):
             tag = cls.objects.create(slug=text)
         return tag
 
+    @classmethod
+    def get_or_none(cls, slug):
+        try:
+            return cls.objects.get(slug=slug)
+        except cls.DoesNotExist:
+            return None
+
 
 @implements_to_string
 class BlacklistedNumber(models.Model):
@@ -104,6 +132,13 @@ class BlacklistedNumber(models.Model):
             bln.save()
         except cls.DoesNotExist:
             bln = cls.objects.create(identity=identity, call_count=1)
+
+    @classmethod
+    def get_or_none(cls, identity):
+        try:
+            return cls.objects.get(identity=identity)
+        except cls.DoesNotExist:
+            return None
 
 
 @implements_to_string
@@ -145,6 +180,32 @@ class Entity(MPTTModel):
             return cls.objects.get(slug=slug)
         except cls.DoesNotExist:
             return None
+
+    def get_ancestor_of(self, etype):
+        if self.entity_type == etype:
+            return self
+        try:
+            return [e for e in self.get_ancestors() if e.entity_type == etype][-1]
+        except IndexError:
+            return None
+
+    def get_village(self):
+        return self.get_ancestor_of('village')
+
+    def get_commune(self):
+        return self.get_ancestor_of('commune')
+
+    def get_cercle(self):
+        return self.get_ancestor_of('cercle')
+
+    def get_region(self):
+        return self.get_ancestor_of('region')
+
+    def get_arrondissement(self):
+        return self.get_ancestor_of('arrondissement')
+
+    def get_autre(self):
+        return self.get_ancestor_of('autre')
 
     def display_name(self):
         return self.name.title()
@@ -217,6 +278,13 @@ class Project(models.Model):
 
     def __str__(self):
         return self.name
+
+    @classmethod
+    def get_or_none(cls, name):
+        try:
+            return cls.objects.get(name=name)
+        except cls.DoesNotExist:
+            return None
 
 
 class IncomingManager(models.Manager):
@@ -330,6 +398,13 @@ class HotlineRequest(models.Model):
                                                        status=self.status,
                                                        number=self.identity)
 
+    @classmethod
+    def get_or_none(cls, ident):
+        try:
+            return cls.objects.get(id=ident)
+        except cls.DoesNotExist:
+            return None
+
     @property
     def request_type(self):
         return self.event_type
@@ -422,6 +497,14 @@ class AdditionalRequest(models.Model):
     def event_type(self):
         return self.request_type
 
+    @classmethod
+    def get_or_none(cls, ident):
+        try:
+            return cls.objects.get(id=ident)
+        except cls.DoesNotExist:
+            return None
+
+
 
 @implements_to_string
 class CallbackAttempt(models.Model):
@@ -452,6 +535,13 @@ class CallbackAttempt(models.Model):
 
     def type_str(self):
         return HotlineRequest.STATUSES.get(self.status)
+
+    @classmethod
+    def get_or_none(cls, ident):
+        try:
+            return cls.objects.get(id=ident)
+        except cls.DoesNotExist:
+            return None
 
 
 @implements_to_string
@@ -486,6 +576,14 @@ class Survey(models.Model):
 
     def __str__(self):
         return self.title
+
+    @classmethod
+    def get_or_none(cls, ident):
+        try:
+            return cls.objects.get(id=ident)
+        except cls.DoesNotExist:
+            return None
+
 
     def to_dict(self):
         d = {'title': self.title,
@@ -570,6 +668,14 @@ class Question(models.Model):
         return "{survey}/{label}".format(label=self.label,
                                          survey=self.survey)
 
+    @classmethod
+    def get_or_none(cls, ident):
+        try:
+            return cls.objects.get(id=ident)
+        except cls.DoesNotExist:
+            return None
+
+
     def type_str(self):
         return self.TYPES.get(self.question_type)
 
@@ -606,6 +712,13 @@ class QuestionChoice(models.Model):
         return {'slug': self.slug,
                 'label': self.label}
 
+    @classmethod
+    def get_or_none(cls, ident):
+        try:
+            return cls.objects.get(id=ident)
+        except cls.DoesNotExist:
+            return None
+
 
 @implements_to_string
 class SurveyTaken(models.Model):
@@ -620,6 +733,13 @@ class SurveyTaken(models.Model):
 
     def __str__(self):
         return str(self.survey)
+
+    @classmethod
+    def get_or_none(cls, ident):
+        try:
+            return cls.objects.get(id=ident)
+        except cls.DoesNotExist:
+            return None
 
     def data_for(self, question):
         try:
@@ -653,6 +773,13 @@ class SurveyTakenData(models.Model):
     def __str__(self):
         return str(self.value)
 
+    @classmethod
+    def get_or_none(cls, ident):
+        try:
+            return cls.objects.get(id=ident)
+        except cls.DoesNotExist:
+            return None
+
 
 @implements_to_string
 class CachedData(models.Model):
@@ -680,3 +807,10 @@ class CachedData(models.Model):
         except cls.DoesNotExist:
             raise
             return fallback
+
+    @classmethod
+    def get_or_none(cls, slug):
+        try:
+            return cls.objects.get(slug=slug)
+        except cls.DoesNotExist:
+            return None

@@ -36,7 +36,6 @@ def get_event_responses_counts():
 
     events = []
     responses = []
-    remainings = []
 
     for date in datetime_range(start):
         ts = to_jstimestamp(date)

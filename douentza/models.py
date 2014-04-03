@@ -235,11 +235,17 @@ class DoneManager(models.Manager):
                                           .filter(status__in=HotlineRequest.DONE_STATUSES)
 
 
-class ValidatedManager(models.Manager):
+class AllManager(models.Manager):
 
     def get_query_set(self):
-        return super(ValidatedManager, self).get_query_set() \
-                                            .filter(status=Survey.STATUS_READY)
+        return super(AllManager, self).get_query_set() \
+                                          .exclude(status=Survey.STATUS_CREATED)
+
+class ReadyManager(models.Manager):
+
+    def get_query_set(self):
+        return super(ReadyManager, self).get_query_set() \
+                                        .filter(status=Survey.STATUS_READY)
 
 
 @implements_to_string
@@ -475,7 +481,8 @@ class Survey(models.Model):
                               max_length=50)
 
     objects = models.Manager()
-    validated = ValidatedManager()
+    validated = AllManager()
+    ready = ReadyManager()
 
     def __str__(self):
         return self.title

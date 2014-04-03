@@ -7,16 +7,16 @@ from __future__ import (unicode_literals, absolute_import,
 
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 from douentza.models import Survey, QuestionChoice, Question, Project, BlacklistedNumber, HotlineRequest
 from douentza.forms import (MiniSurveyInitForm, MiniSurveyAddQuestion,
                             AddProjectForm)
+from douentza.decorators import staff_required
 from douentza.utils import get_default_context
 
 
-@login_required
+@staff_required
 def admin_surveys(request):
     context = get_default_context(page='admin_surveys')
 
@@ -37,7 +37,7 @@ def admin_surveys(request):
     return render(request, "admin_surveys.html", context)
 
 
-@login_required
+@staff_required
 def admin_survey(request, survey_id):
     context = get_default_context(page='admin_survey')
 
@@ -75,7 +75,7 @@ def admin_survey(request, survey_id):
     return render(request, "admin_survey.html", context)
 
 
-@login_required
+@staff_required
 def admin_delete_question(request, survey_id, question_id):
 
     survey = get_object_or_404(Survey, id=int(survey_id),
@@ -91,7 +91,7 @@ def admin_delete_question(request, survey_id, question_id):
     return redirect('admin_survey', survey_id=survey.id)
 
 
-@login_required
+@staff_required
 def admin_survey_validate(request, survey_id):
 
     survey = get_object_or_404(Survey, id=int(survey_id),
@@ -106,7 +106,7 @@ def admin_survey_validate(request, survey_id):
     return redirect('admin_surveys')
 
 
-@login_required
+@staff_required
 def admin_survey_toggle(request, survey_id):
 
     survey = get_object_or_404(Survey, id=int(survey_id),
@@ -120,7 +120,7 @@ def admin_survey_toggle(request, survey_id):
     return redirect('admin_surveys')
 
 
-@login_required
+@staff_required
 def admin_projects(request):
 
     context = get_default_context(page='add_project')
@@ -142,7 +142,7 @@ def admin_projects(request):
     return render(request, "admin_projects.html", context)
 
 
-@login_required()
+@staff_required
 def admin_blacklist(request, blacknum_id=None):
     context = get_default_context(page='blacklist')
     if blacknum_id:

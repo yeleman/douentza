@@ -305,7 +305,7 @@ def export_general_stats_as_csv(filename):
     return filename
 
 
-@login_required()
+@login_required
 def dashboard(request):
     context = get_default_context(page='statistics')
 
@@ -316,7 +316,7 @@ def dashboard(request):
     return render(request, "statistics.html", context)
 
 
-@login_required()
+@login_required
 def event_response_counts_json(request):
 
     return HttpResponse(json.dumps(get_event_responses_counts()),

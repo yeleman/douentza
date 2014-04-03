@@ -23,7 +23,7 @@ from douentza.models import (Survey, Question,
 from douentza.utils import get_default_context
 
 
-@login_required()
+@login_required
 def stats_for_surveys(request):
     context = get_default_context(page='stats_for_surveys')
 
@@ -32,7 +32,7 @@ def stats_for_surveys(request):
     return render(request, "stats_for_surveys.html", context)
 
 
-@login_required()
+@login_required
 def stats_for_survey(request, survey_id):
     context = get_default_context(page='stats_for_survey')
 

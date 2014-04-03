@@ -3,10 +3,15 @@
 {% block title %}Tableau de bord{% endblock %}
 
 {% block content %}
+{% if user.is_staff %}
 <div>
     {% include "dashboard_table.html" with all_events=all_events %}
 </div>
-
+{% else %}
+<div class="alert alert-warning">
+    <p>You can't record calls with your read-only profile. Please head over to the statistics.</p>
+</div>
+{% endif %}
 {% endblock %}
 
 {% block extra_js %}

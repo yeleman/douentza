@@ -14,9 +14,10 @@ from django.contrib.auth.decorators import login_required
 from douentza.models import HotlineRequest, HotlineUser, Entity, Survey
 from douentza.utils import get_default_context, EMPTY_ENTITY
 from douentza.forms import BasicInformationForm
+from douentza.decorators import staff_required
 
 
-@login_required()
+@staff_required
 def display_request(request, request_id):
 
     try:
@@ -30,7 +31,7 @@ def display_request(request, request_id):
 
     context = get_default_context(page="display_request")
     context.update({'event': event})
-    context.update({'surveys': Survey.validated.order_by('id')})
+    context.update({'surveys': Survey.ready.order_by('id')})
     if request.method == "POST":
         form = BasicInformationForm(request.POST)
         if form.is_valid():
@@ -55,7 +56,7 @@ def display_request(request, request_id):
     return render(request, "request.html", context)
 
 
-@login_required()
+@staff_required
 def entities_api(request, parent_slug=None):
     ''' JSON list of Entity whose parent has the slug provided '''
 

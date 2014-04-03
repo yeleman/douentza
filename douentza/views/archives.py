@@ -15,7 +15,7 @@ from douentza.models import HotlineRequest, Survey
 from douentza.utils import get_default_context
 
 
-@login_required()
+@login_required
 def archives(request):
 
     context = get_default_context(page='archives')
@@ -41,7 +41,7 @@ def archives(request):
     return render(request, "archives.html", context)
 
 
-@login_required()
+@login_required
 def archived_request(request, request_id):
 
     try:

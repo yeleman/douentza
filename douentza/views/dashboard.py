@@ -19,6 +19,7 @@ from douentza.models import (HotlineRequest, BlacklistedNumber,
 from douentza.utils import (start_or_end_day_from_date,
                             get_default_context,
                             to_jstimestamp)
+from douentza.decorators import staff_required
 
 
 def all_events(user):
@@ -40,7 +41,7 @@ def all_events(user):
     return data_event
 
 
-@login_required()
+@login_required
 def dashboard(request):
     user = request.user
     context = get_default_context(page="dashboard")
@@ -50,7 +51,7 @@ def dashboard(request):
     return render(request, "dashboard.html", context)
 
 
-@login_required()
+@staff_required
 def ping_json(request):
     try:
         since = datetime.datetime.fromtimestamp(int(request.GET.get('since')) / 1000)
@@ -77,7 +78,7 @@ def ping_json(request):
     return HttpResponse(json.dumps(data), mimetype='application/json')
 
 
-@login_required()
+@staff_required
 def ping_html(request):
 
     now = datetime.datetime.now()
@@ -105,7 +106,7 @@ def ping_html(request):
     return HttpResponse(json.dumps(data), mimetype='application/json')
 
 
-@login_required()
+@staff_required
 def change_event_status(request, request_id, new_status):
     if not new_status in HotlineRequest.STATUSES.keys():
         raise Http404
@@ -122,7 +123,7 @@ def change_event_status(request, request_id, new_status):
     return redirect('dashboard')
 
 
-@login_required()
+@staff_required
 def sorted_location(request, request_id, cluster_slug):
     try:
         event = HotlineRequest.objects \

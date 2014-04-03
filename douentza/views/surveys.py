@@ -13,9 +13,10 @@ from douentza.models import (Survey, HotlineRequest, Question,
                              SurveyTaken, SurveyTakenData)
 from douentza.forms import MiniSurveyForm
 from douentza.utils import get_default_context
+from douentza.decorators import staff_required
 
 
-@login_required()
+@staff_required
 def survey_form(request, survey_id, request_id):
     context = get_default_context(page='mini_survey_form')
 
@@ -68,7 +69,7 @@ def survey_form(request, survey_id, request_id):
     return render(request, "mini_survey.html", context)
 
 
-@login_required()
+@login_required
 def survey_data(request, survey_id, request_id):
     context = get_default_context(page='mini_survey_data')
 

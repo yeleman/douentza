@@ -18,7 +18,8 @@ if PY2:
 else:
     import csv
 
-from douentza.models import HotlineRequest, Project, Survey, Entity, Ethnicity, CachedData
+from douentza.models import (HotlineRequest, Project, Survey, SurveyTaken,
+                             Entity, Ethnicity, CachedData)
 from douentza.utils import (get_default_context, datetime_range,
                             start_or_end_day_from_date, to_jstimestamp,
                             ethinicity_requests, communes_located_requests,
@@ -111,8 +112,10 @@ def get_statistics_dict():
     nb_total_events = hotlinerequest.count()
     nb_total_replies = hotlinerequest.filter(status__in=HotlineRequest.DONE_STATUSES).count()
     nb_survey = Survey.objects.count()
+    nb_survey_taken = SurveyTaken.objects.count()
     projects = Project.objects.all()
     nb_projects = projects.count()
+    nb_non_projects = hotlinerequest.filter(project=None).count()
 
     nb_unique_number = hotlinerequest.values('identity').distinct().count()
 
@@ -152,7 +155,9 @@ def get_statistics_dict():
     context.update({'last_event': last_event,
                     'nb_total_events': nb_total_events,
                     'nb_projects': nb_projects,
+                    'nb_non_projects': nb_non_projects,
                     'nb_survey': nb_survey,
+                    'nb_survey_taken': nb_survey_taken,
                     'nb_unique_number': nb_unique_number,
                     'nb_total_replies': nb_total_replies,
                     'sex_unknown': sex_unknown,

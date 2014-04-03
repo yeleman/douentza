@@ -15,20 +15,12 @@
                 <td class="span4">{{ last_event.received_on|handleddate }}</td>
             </tr>
             <tr>
-                <th>Nombre total de projets</th>
-                <td class="important">{{ nb_projects }}</td>
-            </tr>
-            <tr>
                 <th>Nombre total d'appels</th>
                 <td class="important">{{ nb_total_events }}</td>
             </tr>
             <tr>
                 <th>Nombre total de rappels</th>
                 <td class="important">{{ nb_total_replies }}</td>
-            </tr>
-            <tr>
-                <th>Nombre total de questionnaires</th>
-                <td class="important">{{ nb_survey }}</td>
             </tr>
             <tr>
                 <th>Nombre total de numéros uniques</th>
@@ -55,10 +47,27 @@
                 <th>Total par sexes (Homme/Femme/Inconnu)</th>
                 <td>{{ sex_male }} H/ {{ sex_female }} F/ {{ sex_unknown }} Inconnu{{ sex_unknown|pluralize }}</td>
             </tr>
+            <tr>
+                <th>Nombre total de projets</th>
+                <td class="important">{{ nb_projects }}</td>
+            </tr>
+            <tr>
+                <th>Nombre total de questionnaires</th>
+                <td class="important">{{ nb_survey }}</td>
+            </tr>
+            <tr>
+                <th>Nombre d'appels hors projets</th>
+                <td class="important">{{ nb_projects }}</td>
+            </tr>
+            <tr>
+                <th>Nombre de questionnaires remplis</th>
+                <td class="important">{{ nb_survey_taken }}</td>
+            </tr>
         </tbody>
     </table>
 
     <h2>Localités des appels</h2>
+    <p>Un point par localité. Cliquer sur le point pour voir les statistiques de la localité.</p>
     <div id="map" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
 
     {% include "stats_per_age.html" %}

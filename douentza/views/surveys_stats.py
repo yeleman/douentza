@@ -200,7 +200,7 @@ def export_survey_as_csv(survey, filename):
             'meta_age': survey_taken.request.age,
             'meta_sex': survey_taken.request.sex,
             'meta_call_duration': survey_taken.request.duration,
-            'meta_ethnicity': survey_taken.request.ethnicity.slug,
+            'meta_ethnicity': getattr(survey_taken.request.ethnicity, 'slug'),
             'meta_region': getattr(survey_taken.request.location, 'get_region', lambda: None)(),
             'meta_cercle': getattr(survey_taken.request.location, 'get_cercle', lambda: None)(),
             'meta_commune': getattr(survey_taken.request.location, 'get_commune', lambda: None)(),

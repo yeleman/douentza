@@ -74,11 +74,22 @@ class CustomEthnicity(admin.ModelAdmin):
     exclude = ("slug",)
 
 
+class CustomQuestion(admin.ModelAdmin):
+    list_display = ("label", "question_type", "required")
+    list_filter = ("survey", "question_type", "required")
+
+
+class CustomQuestionChoice(admin.ModelAdmin):
+    list_display = ("slug", "label", "question")
+    exclude = ("slug",)
+    list_filter = ("question",)
+
+
 admin.site.register(HotlineRequest, CustomHotlineRequest)
 admin.site.register(Entity, CustomEntity)
 admin.site.register(Survey)
-admin.site.register(Question)
-admin.site.register(QuestionChoice)
+admin.site.register(Question, CustomQuestion)
+admin.site.register(QuestionChoice, CustomQuestionChoice)
 admin.site.register(Ethnicity, CustomEthnicity)
 admin.site.register(HotlineUser, CustomUserAdmin)
 admin.site.register(CallbackAttempt)

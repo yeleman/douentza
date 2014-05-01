@@ -25,7 +25,7 @@ class Cluster(models.Model):
     class Meta:
         ordering = ('name', )
 
-    slug = models.SlugField(primary_key=True)
+    slug = models.SlugField(max_length=200, primary_key=True)
     name = models.CharField(max_length=70, verbose_name="Nom", unique=True)
 
     def __str__(self):
@@ -66,7 +66,7 @@ class Ethnicity(models.Model):
     class Meta:
         ordering = ('name', )
 
-    slug = models.SlugField(primary_key=True)
+    slug = models.SlugField(max_length=200, primary_key=True)
     name = models.CharField(max_length=40, verbose_name="Nom")
 
     def save(self, *args, **kwargs):

@@ -82,7 +82,7 @@ class CustomQuestion(admin.ModelAdmin):
 class CustomQuestionChoice(admin.ModelAdmin):
     list_display = ("slug", "label", "question")
     exclude = ("slug",)
-    list_filter = ("question",)
+    list_filter = ("question__survey", "question")
 
 
 admin.site.register(HotlineRequest, CustomHotlineRequest)

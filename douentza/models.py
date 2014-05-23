@@ -614,6 +614,10 @@ class Survey(models.Model):
     def cache_slug(self):
         return 'ms_data_{id}'.format(id=self.id)
 
+    @property
+    def meta_cache_slug(self):
+        return 'ms_meta_data_{id}'.format(id=self.id)
+
 
 @implements_to_string
 class Question(models.Model):

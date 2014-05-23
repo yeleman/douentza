@@ -5,6 +5,7 @@
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import datetime
+import copy
 
 import numpy
 from django.utils.text import slugify
@@ -19,8 +20,21 @@ else:
     import csv
 
 from douentza.models import (Survey, Question,
-                             SurveyTakenData, CachedData)
-from douentza.utils import get_default_context, isoformat_date
+                             SurveyTakenData, CachedData,
+                             HotlineRequest, HotlineUser, SurveyTaken,
+                             Cluster, Project, Entity, Ethnicity)
+from douentza.utils import get_default_context, isoformat_date, OPERATORS
+
+main_types = {
+    Question.TYPE_STRING: 'string',
+    Question.TYPE_TEXT: 'string',
+    Question.TYPE_BOOLEAN: 'boolean',
+    Question.TYPE_DATE : 'date',
+    Question.TYPE_INTEGER: 'number',
+    Question.TYPE_FLOAT: 'number',
+    Question.TYPE_CHOICES: 'choice',
+    Question.TYPE_MULTI_CHOICES: 'multi_choice',
+}
 
 
 @login_required
@@ -41,9 +55,12 @@ def stats_for_survey(request, survey_id):
     except ValueError:
         raise Http404
 
+    all_meta_questions_data = CachedData.get_or_fallback(slug=survey.meta_cache_slug,
+                                                         fallback=[])
     all_questions_data = CachedData.get_or_fallback(slug=survey.cache_slug,
                                                     fallback=[])
     context.update({'all_questions_data': all_questions_data,
+                    'all_meta_questions_data': all_meta_questions_data,
                     'survey': survey})
 
     return render(request, "stats_for_survey.html", context)
@@ -140,17 +157,6 @@ def compute_survey_questions_data(survey):
                               if choice.slug in answer.value])})
         return data
 
-    main_types = {
-        Question.TYPE_STRING: 'string',
-        Question.TYPE_TEXT: 'string',
-        Question.TYPE_BOOLEAN: 'boolean',
-        Question.TYPE_DATE : 'date',
-        Question.TYPE_INTEGER: 'number',
-        Question.TYPE_FLOAT: 'number',
-        Question.TYPE_CHOICES: 'choice',
-        Question.TYPE_MULTI_CHOICES: 'multi_choice',
-    }
-
     all_questions_data = []
 
     for question in survey.questions.order_by('-order', 'id'):
@@ -165,6 +171,162 @@ def compute_survey_questions_data(survey):
             'type_template': "ms_question_details_{}.html".format(main_types.get(question.question_type))})
         questions_data.update(custom_stats_for_type(question, total))
         all_questions_data.append(questions_data)
+
+    return all_questions_data
+
+
+def compute_survey_meta_data_as_questions(survey):
+
+    def _safe_percent(numerator, denominator):
+        try:
+            return numerator / denominator * 100
+        except:
+            return 0
+
+    def custom_stats_for_type(question, total):
+        return {
+            Question.TYPE_INTEGER: _stats_for_number,
+            Question.TYPE_FLOAT: _stats_for_number,
+            Question.TYPE_CHOICES: _stats_for_choice,
+        }.get(question['type'])(question, total)
+
+
+    def _stats_for_number(question, total):
+        all_values = [getattr(v.request, question['field'], None)
+                      for v in SurveyTaken.objects.filter(survey=question['survey'])
+                      if getattr(v.request, question['field'], None) is not None]
+        if not len(all_values):
+            return {'min': None,
+                    'max': None,
+                    'avg': None,
+                    'median': None}
+        return {
+            'min': numpy.min(all_values),
+            'max': numpy.max(all_values),
+            'avg': numpy.mean(all_values),
+            'median': numpy.median(all_values)
+        }
+
+
+    def _stats_for_choice(question, total):
+        data = {'choices_count': {}}
+        for choice in question['choices']:
+            count = 0
+            for r in SurveyTaken.objects.filter(survey=question['survey']):
+                val = getattr(r.request, question['field'], None)
+                if val == choice['slug'] \
+                    or getattr(val, 'slug', None) == choice['slug'] \
+                    or getattr(val, 'id', None) == choice['slug']:
+                    count += 1
+            data['choices_count'].update({choice['slug']: choice})
+            data['choices_count'][choice['slug']].update({
+                'count': count,
+                'percent': _safe_percent(count, total)})
+        return data
+
+    all_questions = []
+    question_tmpl = {
+        'survey': survey,
+        'id': None,
+        'order': 0,
+        'label': "[meta] ",
+        'type': Question.TYPE_CHOICES,
+        'has_choices': True,
+        'type_str': Question.TYPES.get(Question.TYPE_CHOICES),
+        'required': False,
+        'choices': []}
+
+    # operator
+    operator = copy.copy(question_tmpl)
+    operator['id'] = 'meta_operator'
+    operator['field'] = 'operator'
+    operator['label'] += "Operators"
+    operator['choices'] = [{'slug': k, 'label': v}
+                           for k, v in OPERATORS.items()]
+    all_questions.append(operator)
+
+    # cluster
+    cluster = copy.copy(question_tmpl)
+    cluster['id'] = 'meta_cluster'
+    cluster['field'] = 'cluster'
+    cluster['label'] += "Clusters"
+    cluster['choices'] = [{'slug': c.slug, 'label': c.name}
+                          for c in Cluster.objects.all()]
+    all_questions.append(cluster)
+
+    # project
+    project = copy.copy(question_tmpl)
+    project['id'] = 'meta_project'
+    project['field'] = 'project'
+    project['label'] += "Projects"
+    project['choices'] = [{'slug': p.id, 'label': p.name}
+                           for p in Project.objects.all()]
+    all_questions.append(project)
+
+    # Age (groups)
+    age = copy.copy(question_tmpl)
+    age['id'] = 'meta_age'
+    age['field'] = 'age'
+    age['label'] += "Age (years)"
+    age['has_choices'] = False
+    age['type'] = Question.TYPE_INTEGER
+    age['type_str'] = Question.TYPES.get(Question.TYPE_INTEGER)
+    all_questions.append(age)
+
+    # Sex
+    gender = copy.copy(question_tmpl)
+    gender['id'] = 'gender'
+    gender['field'] = 'sex'
+    gender['label'] += "Genders"
+    gender['choices'] = [{'slug': k, 'label': v}
+                        for k,v in HotlineRequest.SEXES.items()]
+    all_questions.append(gender)
+
+    # Ethnicity
+    ethnicity = copy.copy(question_tmpl)
+    ethnicity['id'] = 'ethnicity'
+    ethnicity['field'] = 'ethnicity'
+    ethnicity['label'] += "Ethnicity"
+    ethnicity['choices'] = [{'slug': e.slug, 'label': e.name}
+                            for e in Ethnicity.objects.all()]
+    all_questions.append(ethnicity)
+
+    # Respondant
+    respondant = copy.copy(question_tmpl)
+    respondant['field'] = 'respondant'
+    respondant['field'] = 'hotline_user'
+    respondant['label'] += "respondant"
+    respondant['choices'] = [{'slug': u.id, 'label': u.full_name()}
+                            for u in HotlineUser.objects.exclude(
+                                username__in=['admin', 'staff', 'usaid'])]
+    all_questions.append(respondant)
+
+    # Duration
+    duration = copy.copy(question_tmpl)
+    duration['id'] = 'duration'
+    duration['field'] = 'duration'
+    duration['label'] += "Duration (seconds)"
+    duration['has_choices'] = False
+    duration['type'] = Question.TYPE_INTEGER
+    duration['type_str'] = Question.TYPES.get(Question.TYPE_INTEGER)
+    all_questions.append(duration)
+
+    all_questions_data = []
+
+    for question_data in (operator, cluster, project, age, gender,
+                          ethnicity, respondant, duration):
+        print(question_data['label'])
+        total = SurveyTaken.objects.filter(survey=survey).count()
+        nb_null = len([1 for std in SurveyTaken.objects.filter(survey=survey)
+                       if getattr(std.request, question_data['field'], None) is None])
+
+        question_data.update({
+            'nb_values': total,
+            'nb_null_values': nb_null,
+            'percent_null_values': _safe_percent(nb_null, total),
+            'type_template': "ms_question_details_{}.html".format(main_types.get(question_data['type']))})
+        question_data.update(custom_stats_for_type(question_data, total))
+        all_questions_data.append(question_data)
 
     return all_questions_data
 

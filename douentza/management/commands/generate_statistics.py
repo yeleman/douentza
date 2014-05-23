@@ -13,7 +13,9 @@ from django.utils.text import slugify
 from django.core.management.base import BaseCommand
 
 from douentza.views.surveys_stats import (export_survey_as_csv,
-                                    compute_survey_questions_data)
+                                    compute_survey_questions_data,
+                                    # compute_survey_meta_data,
+                                    compute_survey_meta_data_as_questions)
 from douentza.views.statistics import (export_general_stats_as_csv,
                                        get_event_responses_counts,
                                        get_geojson_statistics)
@@ -63,6 +65,13 @@ class Command(BaseCommand):
             ocache.data_type = CachedData.TYPE_OBJECT
             ocache.created_on = now
             ocache.save()
+
+            # Survey Stats Meta Data as Questions
+            mcache, _ = CachedData.objects.get_or_create(slug=survey.meta_cache_slug)
+            mcache.value = compute_survey_meta_data_as_questions(survey)
+            mcache.data_type = CachedData.TYPE_OBJECT
+            mcache.created_on = now
+            mcache.save()
 
         ###
         ## General stats

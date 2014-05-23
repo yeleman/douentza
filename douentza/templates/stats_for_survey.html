@@ -20,8 +20,13 @@ $.each(survey_charts, function (index) {
 
 <table class="table table-bordered table-condensed ">
 <tr><th>Question</th><th>Type</th><th title="Nombre de valeurs nulles pour la question">Nulles</th><th>Détails</th><th>Graph</th></tr>
+<tr><td colspan="5">meta-data questions</td></tr>
+{% for question in all_meta_questions_data %}
+<tr><td><strong>{{ question.label }}</strong></td><td>{{ question.type_str }}</td><td>{{ question.nb_null_values }}</td><td>{% include "ms_question_details.html" with question=question %}</td><td>{% include "ms_question_chart.html" with question=question %}</td></tr>
+{% endfor %}
 {% for question in all_questions_data %}
 <tr><td><strong>{{ question.label }}</strong></td><td>{{ question.type_str }}</td><td>{{ question.nb_null_values }}</td><td>{% include "ms_question_details.html" with question=question %}</td><td>{% include "ms_question_chart.html" with question=question %}</td></tr>
 {% endfor %}
+</table>
 {% endblock %}
 

@@ -136,10 +136,11 @@ def get_form_property(question_dict):
     elif question_type == Question.TYPE_BOOLEAN:
         field = forms.NullBooleanField()
     else:
-
         field = Question.TYPES_CLS.get(question_type)
+
     field.label = question_dict.get('label')
     field.required = question_dict.get('required')
+    field.widget.attrs = {'autocomplete':"off"}
     return field
 
 

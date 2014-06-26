@@ -370,8 +370,11 @@ def export_survey_as_csv(survey, filename):
             'meta_gps': getattr(survey_taken.request.location, 'get_geopoint', lambda: None)(),
         }
         for question in survey_taken.survey.questions.order_by('-order', 'id'):
-            data.update({
-                norm_header(question.label): norm_value(question.survey_taken_data.get(survey_taken=survey_taken).value)})
+            try:
+                q = question.survey_taken_data.get(survey_taken=survey_taken)
+            except SurveyTakenData.DoesNotExist:
+                continue
+            data.update({norm_header(question.label): norm_value(q.value)})
         csv_writer.writerow(data)
 
     csv_file.close()

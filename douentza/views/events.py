@@ -52,9 +52,9 @@ def display_request(request, request_id):
         form = BasicInformationForm(initial={
             'request_id': request_id,
             'age': event.age,
-            'project': event.project.id,
+            'project': getattr(event.project, 'id', None),
             'sex': event.sex,
-            'ethnicity': event.ethnicity.slug,
+            'ethnicity': getattr(event.ethnicity, 'slug', None),
             'region': event.location.get_region().slug if event.location else None,
             'cercle': event.location.get_cercle().slug if event.location else None,
             'commune': event.location.get_commune().slug if event.location else None,

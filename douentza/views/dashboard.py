@@ -25,7 +25,10 @@ from douentza.decorators import staff_required
 def all_events(user):
     today = datetime.date.today()
     yesterday = today - datetime.timedelta(days=1)
-    hotlinerequests = HotlineRequest.incoming.filter(cluster=user.cluster).exclude(cluster=None)
+    if user.cluster:
+        hotlinerequests = HotlineRequest.incoming.filter(cluster=user.cluster).exclude(cluster=None)
+    else:
+        hotlinerequests = HotlineRequest.incoming.all()
     data_event = {'today_events': hotlinerequests.filter(received_on__gte=start_or_end_day_from_date(today, True),
                                                                  received_on__lt=start_or_end_day_from_date(today, False)).all(),
                   'yesterday_events': hotlinerequests.filter(received_on__gte=start_or_end_day_from_date(yesterday, True),
@@ -45,8 +48,12 @@ def all_events(user):
 def dashboard(request):
     user = request.user
     context = get_default_context(page="dashboard")
+    clusters = Cluster.objects
+    if hasattr(request.user.cluster, 'slug'):
+        clusters = clusters.exclude(slug=request.user.cluster.slug)
+    clusters = clusters.all()
     context.update({'all_events': all_events(user),
-                    'clusters': Cluster.objects.exclude(slug=getattr(user.cluster, 'slug', None)).all()})
+                    'clusters': clusters})
     context.update({'now': to_jstimestamp(datetime.datetime.today())})
     return render(request, "dashboard.html", context)
 

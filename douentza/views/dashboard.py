@@ -93,9 +93,13 @@ def ping_html(request):
         + CallbackAttempt.objects.filter(created_on__gte=since).count()
 
     if nb_events:
+        clusters = Cluster.objects
+        if hasattr(request.user.cluster, 'slug'):
+            clusters = clusters.exclude(slug=request.user.cluster.slug)
+        clusters = clusters.all()
         html = render_to_string('dashboard_table.html',
                                 {'all_events': all_events(request.user),
-                                 'clusters': Cluster.objects.exclude(slug=getattr(request.user.cluster, 'slug', None)).all()})
+                                 'clusters': clusters})
     else:
         html = None
 

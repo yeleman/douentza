@@ -56,7 +56,8 @@ def events_api(request):
 
         # retrieve existing events
         qs = HotlineRequest.objects.filter(identity=phone_number,
-                                           project=PROJECT)
+                                           project=PROJECT) \
+                                   .exclude(status__in=HotlineRequest.DONE_STATUSES)
         if qs.count() > 0:
             req = qs.last()
             req.add_additional_request(HotlineRequest.TYPE_WEB, None)

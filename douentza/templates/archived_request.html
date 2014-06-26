@@ -82,7 +82,7 @@ $('.btn-survey').each(function (){
             <tr>
                 <td>{{ request.received_on|handleddate }}</td>
                 <td>{{ request.type_str }}</td>
-                <td>{{ request.sms_message }}</td>
+                <td>{{ request.sms_message|default_if_none:"-" }}</td>
             </tr>
         {% empty %}
         <tr>

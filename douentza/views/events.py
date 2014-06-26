@@ -55,10 +55,14 @@ def display_request(request, request_id):
             'project': getattr(event.project, 'id', None),
             'sex': event.sex,
             'ethnicity': getattr(event.ethnicity, 'slug', None),
-            'region': event.location.get_region().slug if event.location else None,
-            'cercle': event.location.get_cercle().slug if event.location else None,
-            'commune': event.location.get_commune().slug if event.location else None,
-            'village': event.location.get_village().slug if event.location else None,
+            'region': event.location.get_region().slug \
+                if event.location and event.location.get_region() else None,
+            'cercle': event.location.get_cercle().slug \
+                if event.location and event.location.get_cercle() else None,
+            'commune': event.location.get_commune().slug \
+                if event.location and event.location.get_commune() else None,
+            'village': event.location.get_village().slug \
+                if event.location and event.location.get_village() else None,
         })
 
     context.update({"form": form})

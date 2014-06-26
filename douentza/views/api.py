@@ -22,12 +22,19 @@ PROJECT = Project.objects.get(id=9)
 def events_api(request):
 
     def error(message):
-        return HttpResponse(json.dumps({'status': 'error',
-                                        'message': message}),
-                            content_type='application/json')
+        r = HttpResponse(json.dumps({'status': 'error',
+                                     'message': message}),
+                        content_type='application/json')
+        r['Access-Control-Allow-Origin'] = "*"
+        r['Access-Control-Allow-Credentials'] = "false"
+        return r
+
     def resp(payload):
-        return HttpResponse(json.dumps(payload),
-                            content_type='application/json')
+        r = HttpResponse(json.dumps(payload),
+                         content_type='application/json')
+        r['Access-Control-Allow-Origin'] = "*"
+        r['Access-Control-Allow-Credentials'] = "false"
+        return r
 
     payload = {
         'status': None,
@@ -124,5 +131,4 @@ def events_api(request):
     else:
         return error("No action matching `{}`".format(jsdata.get('action')))
 
-    return HttpResponse(json.dumps(payload),
-                        content_type='application/json')
+    return resp(payload)

@@ -49,7 +49,17 @@ def display_request(request, request_id):
             event.save()
             return redirect('dashboard')
     else:
-        form = BasicInformationForm(initial={'request_id': request_id})
+        form = BasicInformationForm(initial={
+            'request_id': request_id,
+            'age': event.age,
+            'project': event.project.id,
+            'sex': event.sex,
+            'ethnicity': event.ethnicity.slug,
+            'region': event.location.get_region().slug if event.location else None,
+            'cercle': event.location.get_cercle().slug if event.location else None,
+            'commune': event.location.get_commune().slug if event.location else None,
+            'village': event.location.get_village().slug if event.location else None,
+        })
 
     context.update({"form": form})
 

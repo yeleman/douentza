@@ -62,8 +62,14 @@ class BasicInformationForm(forms.Form):
 
         all_ethinicty = [('#', "Inconnue")] + [(e.slug, e.name) for e in Ethnicity.objects.order_by('name')]
         all_project = [('#', "Aucun")] + [(p.id, p.name) for p in Project.objects.order_by('name')]
-        all_region = [(EMPTY_ENTITY, "INCONNUE")] + [(e.slug, e.name)
-                      for e in Entity.objects.filter(entity_type=Entity.TYPE_REGION)]
+        all_region = [(EMPTY_ENTITY, "INCONNUE")] \
+                     + [(e.slug, e.name)
+                        for e in Entity.objects.filter(entity_type=Entity.TYPE_REGION)
+                                               .exclude(slug__startswith='99999')] \
+                     + [(e.slug, e.name)
+                        for e in Entity.objects.filter(entity_type=Entity.TYPE_REGION)
+                                               .filter(slug__startswith='99999')
+                                               .order_by('name')]
 
         self.fields['ethnicity'].choices = all_ethinicty
         self.fields['project'].choices = all_project

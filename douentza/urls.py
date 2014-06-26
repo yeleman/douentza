@@ -37,6 +37,8 @@ urlpatterns = patterns('',
         name='fondasms'),
 
     # API
+    url(r'^api/events/?$', 'douentza.views.api.events_api', name='events_api'),
+
     url(r'^api/event_response_counts/?$', 'douentza.views.statistics.event_response_counts_json',
         name='event_response_counts'),
     url(r'^api/all_tags/?$', 'douentza.views.tags.all_tags',

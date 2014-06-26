@@ -1,7 +1,9 @@
-Django==1.5.4
+Django==1.6.5
+South==0.8.4
+batbelt==0.5.1
 django-mptt==0.6.0
-South==0.8.2
 django-picklefield==0.3.0
+fondasms
 numpy
 py3compat
-fondasms
+unicodecsv

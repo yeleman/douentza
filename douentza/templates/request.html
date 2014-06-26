@@ -20,7 +20,7 @@ $('.request-tags').each(function () {
 });
 
 // Basic Infos Location Tricks
-{% if form.errors %}fill_from_previous();{% endif %}
+{% if form.errors or form.cercle.value or form.commune.value or form.village.value %}fill_from_previous();{% endif %}
 
 // popovers survey data
 {% for survey in surveys %}
@@ -87,7 +87,7 @@ $('button[type="submit"]').on('click', function () {
             </div>
         </div>
     </div>
-{% if form.errors %}
+{% if form.errors or form.cercle.value or form.commune.value or form.village.value %}
     <input type="hidden" id="previous_cercle" value="{{ form.cercle.value }}" />
     <input type="hidden" id="previous_commune" value="{{ form.commune.value }}" />
     <input type="hidden" id="previous_village" value="{{ form.village.value }}" />

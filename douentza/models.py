@@ -353,12 +353,14 @@ class HotlineRequest(models.Model):
     TYPE_RING = 'RING'
     TYPE_SMS = 'SMS'
     TYPE_SMS_SPAM = 'SMS_SPAM'
+    TYPE_WEB = 'WEB'
 
     TYPES = {
         TYPE_CALL_ME: "Rappele moi",
         TYPE_CHARGE_ME: "Recharges mon compte",
         TYPE_RING: "Bip.",
         TYPE_SMS: "SMS",
+        TYPE_WEB: "Web",
         TYPE_SMS_SPAM: "SMS (SPAM)"}
 
     HOTLINE_TYPES = (TYPE_CALL_ME, TYPE_CHARGE_ME, TYPE_SMS, TYPE_RING)
@@ -388,6 +390,7 @@ class HotlineRequest(models.Model):
     tags = models.ManyToManyField('Tag', null=True, blank=True, verbose_name="Tags", related_name='requests')
     project = models.ForeignKey('Project', null=True, blank=True, verbose_name="Projet")
     cluster = models.ForeignKey('Cluster', null=True, blank=True)
+    email = models.EmailField(max_length=250, verbose_name="E-mail", null=True, blank=True)
 
     objects = models.Manager()
     incoming = IncomingManager()

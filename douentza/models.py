@@ -589,7 +589,8 @@ class Survey(models.Model):
 
 
     def to_dict(self):
-        d = {'title': self.title,
+        d = {'id': self.id,
+             'title': self.title,
              'description': self.description,
              'questions': []}
         for question in self.questions.order_by('order', '-id'):

@@ -338,7 +338,8 @@ def export_survey_as_csv(survey, filename):
                     'meta_cluster', 'meta_project', 'meta_age', 'meta_sex',
                     'meta_call_duration', 'meta_ethnicity', 'meta_region',
                     'meta_cercle', 'meta_commune', 'meta_village', 'meta_gps']
-    headers = meta_headers + [norm_header(q['label']) for q in survey.to_dict()['questions']]
+    headers = meta_headers + ["{}-{}".format(q['id'], norm_header(q['label']))
+                              for q in survey.to_dict()['questions']]
 
     def norm_value(value):
         if isinstance(value, list):
@@ -374,7 +375,9 @@ def export_survey_as_csv(survey, filename):
                 q = question.survey_taken_data.get(survey_taken=survey_taken)
             except SurveyTakenData.DoesNotExist:
                 continue
-            data.update({norm_header(question.label): norm_value(q.value)})
+            column_name = "{}-{}".format(question.id,
+                                         norm_header(question.label))
+            data.update({column_name: norm_value(q.value)})
         csv_writer.writerow(data)
 
     csv_file.close()

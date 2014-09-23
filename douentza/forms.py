@@ -33,7 +33,7 @@ class DurationField(forms.IntegerField):
         except:
             raise ValidationError("Impossible de comprendre la durée",
                                   code='invalid')
-        return super(DurationField, self).to_python(value)
+        return value
 
 
 class BasicInformationForm(forms.Form):
@@ -43,33 +43,44 @@ class BasicInformationForm(forms.Form):
                                        help_text="Format: JJ/MM/AAAA",
                                        widget=forms.SplitDateTimeWidget)
 
-    age = forms.IntegerField(label="Âge", required=False, widget=forms.TextInput(attrs={'placeholder': help_age}))
+    age = forms.IntegerField(
+        label="Âge", required=False,
+        widget=forms.TextInput(attrs={'placeholder': help_age}))
     sex = forms.ChoiceField(label="Sexe", required=False,
                             choices=HotlineRequest.SEXES.items(),
                             widget=forms.Select)
-    duration = DurationField(label="Durée", required=True,
-                             widget=forms.TextInput(attrs={'placeholder': help_duration}))
-    ethnicity = forms.ChoiceField(label="Ethnie", required=False, widget=forms.Select)
-    project = forms.ChoiceField(label="Projet", required=False, widget=forms.Select)
+    duration = DurationField(
+        label="Durée", required=True,
+        widget=forms.TextInput(attrs={'placeholder': help_duration}))
+    ethnicity = forms.ChoiceField(
+        label="Ethnie", required=False, widget=forms.Select)
+    project = forms.ChoiceField(
+        label="Projet", required=False, widget=forms.Select)
 
-    region = forms.ChoiceField(label="Région", choices=[], widget=forms.Select)
-    cercle = forms.CharField(label="Cercle", widget=forms.Select, required=False)
-    commune = forms.CharField(label="Commune", widget=forms.Select, required=False)
-    village = forms.CharField(label="Village", widget=forms.Select, required=False)
+    region = forms.ChoiceField(
+        label="Région", choices=[], widget=forms.Select)
+    cercle = forms.CharField(
+        label="Cercle", widget=forms.Select, required=False)
+    commune = forms.CharField(
+        label="Commune", widget=forms.Select, required=False)
+    village = forms.CharField(
+        label="Village", widget=forms.Select, required=False)
 
     def __init__(self, *args, **kwargs):
         super(BasicInformationForm, self).__init__(*args, **kwargs)
 
-        all_ethinicty = [('#', "Inconnue")] + [(e.slug, e.name) for e in Ethnicity.objects.order_by('name')]
-        all_project = [('#', "Aucun")] + [(p.id, p.name) for p in Project.objects.order_by('name')]
-        all_region = [(EMPTY_ENTITY, "INCONNUE")] \
-                     + [(e.slug, e.name)
-                        for e in Entity.objects.filter(entity_type=Entity.TYPE_REGION)
-                                               .exclude(slug__startswith='99999')] \
-                     + [(e.slug, e.name)
-                        for e in Entity.objects.filter(entity_type=Entity.TYPE_REGION)
-                                               .filter(slug__startswith='99999')
-                                               .order_by('name')]
+        all_ethinicty = [('#', "Inconnue")] + \
+            [(e.slug, e.name) for e in Ethnicity.objects.order_by('name')]
+        all_project = [('#', "Aucun")] + \
+            [(p.id, p.name) for p in Project.objects.order_by('name')]
+        all_region = [(EMPTY_ENTITY, "INCONNUE")] +\
+            [(e.slug, e.name)
+             for e in Entity.objects.filter(entity_type=Entity.TYPE_REGION)
+                                    .exclude(slug__startswith='99999')] + \
+            [(e.slug, e.name)
+             for e in Entity.objects.filter(entity_type=Entity.TYPE_REGION)
+                                    .filter(slug__startswith='99999')
+                                    .order_by('name')]
 
         self.fields['ethnicity'].choices = all_ethinicty
         self.fields['project'].choices = all_project
@@ -94,7 +105,8 @@ class BasicInformationForm(forms.Form):
     def clean_request_id(self):
         ''' Return a HotlineRequest from the id '''
         try:
-            return HotlineRequest.objects.get(id=int(self.cleaned_data.get('request_id')))
+            return HotlineRequest.objects.get(
+                id=int(self.cleaned_data.get('request_id')))
         except HotlineRequest.DoesNotExist:
             raise forms.ValidationError("Évennement incorrect")
 
@@ -121,6 +133,7 @@ class BasicInformationForm(forms.Form):
     def clean_duration(self):
         if not self.cleaned_data.get('duration'):
             raise forms.ValidationError("Durée d'appel incorrecte.")
+        return self.cleaned_data.get('duration')
 
 
 def get_form_property(question_dict):
@@ -130,11 +143,13 @@ def get_form_property(question_dict):
     question_type = question_dict.get('type', Question.TYPE_STRING)
 
     if question_type == Question.TYPE_CHOICES:
-        field = forms.ChoiceField(choices=[(c.get('slug'), c.get('label'))
-                                           for c in question_dict.get('choices')])
+        field = forms.ChoiceField(
+            choices=[(c.get('slug'), c.get('label'))
+                     for c in question_dict.get('choices')])
     elif question_type == Question.TYPE_MULTI_CHOICES:
-        field = forms.MultipleChoiceField(choices=[(c.get('slug'), c.get('label'))
-                                           for c in question_dict.get('choices')])
+        field = forms.MultipleChoiceField(
+            choices=[(c.get('slug'), c.get('label'))
+                     for c in question_dict.get('choices')])
     elif question_type == Question.TYPE_STRING:
         field = forms.CharField(max_length=250)
     elif question_type == Question.TYPE_TEXT:
@@ -146,7 +161,7 @@ def get_form_property(question_dict):
 
     field.label = question_dict.get('label')
     field.required = question_dict.get('required')
-    field.widget.attrs = {'autocomplete':"off"}
+    field.widget.attrs = {'autocomplete': "off"}
     return field
 
 
@@ -161,7 +176,8 @@ class MiniSurveyForm(forms.Form):
             return
 
         for idx, question in enumerate(questions):
-            self.fields["question_{}".format(question.get('id'))] = get_form_property(question)
+            self.fields["question_{}".format(
+                question.get('id'))] = get_form_property(question)
 
 
 class MiniSurveyInitForm(forms.ModelForm):

@@ -7,6 +7,7 @@ from __future__ import (unicode_literals, absolute_import,
 import json
 import datetime
 
+import numpy as np
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.db.models import Avg, Max, Min, Sum
@@ -37,16 +38,25 @@ def get_event_responses_counts():
 
     events = []
     responses = []
+    durations = []
 
     for date in datetime_range(start):
         ts = to_jstimestamp(date)
-        qcount = hotlinerequest.filter(received_on__gte=start_or_end_day_from_date(date),
-                                       received_on__lt=start_or_end_day_from_date(date, False)).count()
-        scount = hotlinerequest.filter(responded_on__gte=start_or_end_day_from_date(date),
-                                       responded_on__lt=start_or_end_day_from_date(date, False)).count()
+        qcount = hotlinerequest.filter(
+            received_on__gte=start_or_end_day_from_date(date),
+            received_on__lt=start_or_end_day_from_date(date, False)).count()
+        sqs = hotlinerequest.filter(
+            responded_on__gte=start_or_end_day_from_date(date),
+            responded_on__lt=start_or_end_day_from_date(date, False))
+        scount = sqs.count()
+        duration = np.ceil(sum([r.duration
+                                for r in sqs if r.duration]) / 60)
         events.append((ts, qcount))
         responses.append((ts, scount))
-    event_response_data = {'events': events, 'responses': responses}
+        durations.append((ts, duration))
+    event_response_data = {'events': events,
+                           'responses': responses,
+                           'duration': durations}
 
     return event_response_data
 

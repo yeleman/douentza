@@ -39,18 +39,45 @@ function graph_event_response_counts(data_url) {
             },
             xAxis: { type: 'datetime',
             },
-            yAxis: {
-                title: { text: "APPELS"
-                },
-            },
+            // yAxis: {
+            //     title: { text: "APPELS"
+            //     },
+            // },
+            yAxis: [{ // Primary yAxis
+	            title: {
+	                text: 'Nb. appels',
+	                style: {
+	                    color: Highcharts.getOptions().colors[1]
+	                }
+	            }
+	        }, { // Secondary yAxis
+	            title: {
+	                text: 'Durée rappels',
+	                style: {
+	                    color: Highcharts.getOptions().colors[0]
+	                }
+	            },
+		            labels: {
+		                format: '{value} mn',
+		                style: {
+		                    color: Highcharts.getOptions().colors[0]
+		                }
+	            },
+	            opposite: true
+	        }],
             tooltip: { valueSuffix: null,
             },
             legend: {},
             series: [{name: "Appels à la hotline",
                       data: data.events},
                      {name: "Rappels par la hotline",
-                      data: data.responses,}]
-        });
+                      data: data.responses,},
+                     {name: "Rappels par la hotline",
+                      type: 'column',
+                      yAxis: 1,
+                      data: data.duration,
+                  	  tooltip: {valueSuffix: 'mn'}}]
+        	});
     });
 }
 

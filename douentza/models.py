@@ -7,6 +7,7 @@ from __future__ import (unicode_literals, absolute_import,
 import datetime
 import json
 
+from django.utils import timezone
 from django.db import models
 from django import forms
 from django.contrib.auth.models import AbstractUser
@@ -420,6 +421,14 @@ class HotlineRequest(models.Model):
         }
 
     def add_busy_call(self, new_status):
+        now = timezone.now()
+        existings = self.callbackattempts.exclude(
+            status=self.STATUS_BLACK_LIST)
+        if existings.count() and \
+                existings.last().created_on \
+                >= (now - datetime.timedelta(seconds=60*10)):
+            # can't mark busy 2 times within 10mn.
+            return
         callbackattempt = CallbackAttempt(event=self, status=new_status)
         callbackattempt.save()
 

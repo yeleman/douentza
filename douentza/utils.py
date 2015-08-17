@@ -207,7 +207,7 @@ def operator_from_mali_number(number, default=ORANGE):
 
 
 def to_jstimestamp(adate):
-    if not adate is None:
+    if adate is not None:
         return int(to_timestamp(adate)) * 1000
 
 
@@ -215,30 +215,35 @@ def to_timestamp(dt):
     """
     Return a timestamp for the given datetime object.
     """
-    if not dt is None:
+    if dt is not None:
         return (dt - datetime.datetime(1970, 1, 1)).total_seconds()
 
 
-def ethinicity_requests(ethnicity):
+def hotline_requests_qs():
     from douentza.models import HotlineRequest
-    count = HotlineRequest.objects.filter(ethnicity=ethnicity).count()
-    total = HotlineRequest.objects.all().count()
+    return HotlineRequest.objects.filter(survey_takens__isnull=False)
+
+
+def ethinicity_requests(ethnicity):
+    qs = hotline_requests_qs()
+    count = qs.filter(ethnicity=ethnicity).count()
+    total = qs.count()
     percent = percent_calculation(count, total)
     return ethnicity, count, percent
 
 
 def communes_located_requests(entity):
-    from douentza.models import HotlineRequest
-    count = HotlineRequest.objects.filter(location__in=entity.get_descendants(True)).count()
-    total = HotlineRequest.objects.all().count()
+    qs = hotline_requests_qs()
+    count = qs.filter(location__in=entity.get_descendants(True)).count()
+    total = qs.count()
     percent = percent_calculation(count, total)
     return entity, count, percent
 
-def stats_per_age(begin=0, end=0):
-    from douentza.models import HotlineRequest
 
-    count = HotlineRequest.objects.filter(age__gte=begin, age__lte=end).count()
-    total = HotlineRequest.objects.all().count()
+def stats_per_age(begin=0, end=0):
+    qs = hotline_requests_qs()
+    count = qs.filter(age__gte=begin, age__lte=end).count()
+    total = qs.count()
 
     percent = percent_calculation(count, total)
     return count, percent

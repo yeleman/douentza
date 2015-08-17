@@ -112,7 +112,7 @@ def get_geojson_statistics():
 def get_statistics_dict():
     context = {}
 
-    hotlinerequest = HotlineRequest.objects
+    hotlinerequest = HotlineRequest.objects.filter(survey_takens__isnull=False)
 
     try:
         last_event = hotlinerequest.latest('received_on')

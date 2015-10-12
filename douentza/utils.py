@@ -79,6 +79,10 @@ def datetime_range(start, stop=None, days=1):
         start/stop = date or datetime
         days = increment number of days '''
 
+    # remove offset
+    start = start.replace(tzinfo=None)
+    if stop:
+        stop = stop.replace(tzinfo=None)
     # stop at 00h00 today so we don't have an extra
     # point for today if the last period ends today.
     stop = stop or datetime.datetime(*datetime.date.today().timetuple()[:-4])

@@ -18,7 +18,7 @@ def summary(request):
 
     users = HotlineUser.objects.filter(username__in=usernames)
     data = []
-    for day in range(32):
+    for _ in range(32):
         end = start + timedelta(days=1)
         qs = SurveyTaken.objects.filter(taken_on__gte=start, taken_on__lt=end)
         qs2 = HotlineRequest.objects.all()

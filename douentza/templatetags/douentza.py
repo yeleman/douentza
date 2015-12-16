@@ -98,6 +98,11 @@ def event_date_short(adate):
     return date(adate, "D H\hi")
 
 
+@register.filter(name='datemonintoring')
+def date_monintoring(adate):
+    return date(adate, "D d b")
+
+
 @register.filter(name='orderby')
 def queryset_order_by(queryset, order_by):
     return queryset.order_by(order_by)

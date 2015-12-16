@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load douentza %}
 
-{% block title %}Statistiques{% endblock %}
+{% block title %}Monitoring{% endblock %}
 
 {% block content %}
     <h3>Monintoring </h3>
@@ -9,9 +9,9 @@
         <tbody>
             <tr>
                 <th class="span8">Jour</th>
-                <th class="span8">NB bips </th>
-                <th class="span8">Nb rappel</th>
-                <th class="span8">Nb Questionnaire</th>
+                <th class="span8">Bips</th>
+                <th class="span8">Rappels</th>
+                <th class="span8">Quest. total</th>
                 {% for user in users %}
                     <th class="span8">{{ user }}</th>
                 {% endfor %}
@@ -19,9 +19,9 @@
             {% for d in data %}
                 <tr>
                     <td class="span4">{{ d.day|datemonintoring }}</td>
-                    <td class="span4">{{ d.takens }}</td>
                     <td class="span4">{{ d.nb_received }}</td>
                     <td class="span4">{{ d.nb_responded }}</td>
+                    <td class="span4">{{ d.takens }}</td>
                     {% for count in d.counts %}
                         <td class="span4">{{ count }}</td>
                     {% endfor %}

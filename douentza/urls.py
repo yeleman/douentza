@@ -87,7 +87,8 @@ urlpatterns = patterns(
         name='admin_survey_toggle'),
 
     url(r'^$', 'douentza.views.dashboard.dashboard', name='dashboard'),
-    url(r'^monintoring', 'douentza.views.monintoring.monintoring', name='monintoring'),
+    url(r'^monitoring', 'douentza.views.monitoring.summary',
+        name='monitoring'),
     url(r'^change/' + REQUEST_ID + r'/(?P<new_status>[a-zA-Z\_]+)$',
         'douentza.views.dashboard.change_event_status', name='change_event'),
     url(r'^blacklist/(?P<blacknum_id>[0-9]+)?$',

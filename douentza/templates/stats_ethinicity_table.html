@@ -1,17 +1,17 @@
 {% load douentza %}
 
 {% if nb_ethinicity_requests %}
-    <h3>Répartition des rappels par éthnie</h3>
+    <h3>Repartition of Callbacks by Ethnicity</h3>
     <table class="table table-condensed table-hover table-bordered table-striped table-stats">
         <thead>
-            <tr><th>Éthnie</th>
-                <th>Taux</th>
-                <th>Nombre</th>
+            <tr><th>Ethnicity</th>
+                <th>Rate</th>
+                <th>Number</th>
             </tr>
         </thead>
         <tbody>
             {% for ethnicity, count, percent in nb_ethinicity_requests %}
-                <tr><td>{{ ethnicity|default_if_none:"Inconnue" }}</td>
+                <tr><td>{{ ethnicity|default_if_none:"Unknown" }}</td>
                     <td class='important'>{{ percent|floatformat:2 }}%</td>
                     <td class='important'> {{ count }} </td>
                 </tr>

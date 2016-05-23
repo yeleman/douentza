@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Questionnaires{% endblock %}
+{% block title %}Surveys{% endblock %}
 
 {% block extra_js %}
 styleFormElements();
@@ -11,41 +11,41 @@ $('.survey-content-btn').each(function (){
 {% endblock %}
 
 {% block content %}
-<h2>Gestion des questionnaires</h2>
+<h2>Surveys Management</h2>
 
 {% if surveys %}
-<legend>Tous les questionnaires</legend>
-<p>Parmis les formulaires suivants, seuls les validés sont disponibles pour tous les appels.</p>
-<p>Vous ne pouvez modifier que ceux qui ne sont pas validés.</p>
-<p>Pour ne plus voir apparaître un questionnaire, il suffit de le désactiver. Ses données apparaitront toujours dans les exports. Il est aussi ré-activable à tout môment.</p>
+<legend>All Surveys</legend>
+<p>Within the following surveys, only validated ones are available for data-entry.</p>
+<p>You can only edit those which are not validated.</p>
+<p>To hide a survey, disable it. Its data will still appear in exports. It can also be enabled-back any time.</p>
 <table class="table table-striped table-condensed table-bordered">
-<tr><th>Questionnaires</th><th>Nb.</th><th>Statut</th><th>Actions</th></tr>
+<tr><th>Surveys</th><th>Quest. count</th><th>Status</th><th>Actions</th></tr>
 {% for survey in surveys %}
     <tr>
         <td>{{ survey.title }}</td>
         <td>{{ survey.questions.count }}</td>
         <td><span class="label {% if survey.status = survey.STATUS_CREATED %}label-warning{% elif survey.status = survey.STATUS_DISABLED%}label-inverse{% else %}label-default{% endif %}">{{ survey.status_str }}</span>
             {% if survey.status = survey.STATUS_CREATED %}
-            <a href="{% url 'admin_survey' survey.id %}"><button class="btn btn-xs btn-default">modifier</button></a>
+            <a href="{% url 'admin_survey' survey.id %}"><button class="btn btn-xs btn-default">edit</button></a>
             {% endif %}
         </td>
         <td>
             {% if survey.questions.count %}{% include "survey_schema.html" with survey=survey %}
-            <button class="btn btn-xs btn-info survey-content-btn" survey-id="{{ survey.id }}">contenu</button>
+            <button class="btn btn-xs btn-info survey-content-btn" survey-id="{{ survey.id }}">content</button>
             <button class="btn btn-xs btn-default">stats</button>{% endif %}
-            <a href="{% url 'admin_survey_toggle' survey.id %}"><button class="btn btn-xs btn-danger">{% if survey.status = survey.STATUS_DISABLED %} re-activer{% else %}désactiver{% endif %}</button></a></td>
+            <a href="{% url 'admin_survey_toggle' survey.id %}"><button class="btn btn-xs btn-danger">{% if survey.status = survey.STATUS_DISABLED %} enable{% else %}disable{% endif %}</button></a></td>
     </tr>
 {% endfor %}
 </table>
 <hr />
 {% endif %}
 
-<legend>Nouveau questionnaire</legend>
+<legend>New Survey</legend>
 <form role="form" action="{% url 'admin_surveys' %}" method="post">
 {% csrf_token %}
     {% include "form_field.html" with field=form.title %}
     {% include "form_field.html" with field=form.description %}
-  <button type="submit" class="btn btn-primary">Créer le questionaire</button>
+  <button type="submit" class="btn btn-primary">Create</button>
 </form>
 
 {% endblock %}

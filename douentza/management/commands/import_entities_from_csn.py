@@ -16,6 +16,7 @@ else:
 
 from douentza.models import Entity
 
+
 class Command(BaseCommand):
 
     option_list = BaseCommand.option_list + (
@@ -31,15 +32,18 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        admin_headers = ['IDENT_Code', 'IDENT_Name', 'IDENT_Type', 'IDENT_ParentCode',
-                         'IDENT_ModifiedOn', 'IDENT_RegionName', 'IDENT_CercleName',
+        admin_headers = ['IDENT_Code', 'IDENT_Name', 'IDENT_Type',
+                         'IDENT_ParentCode',
+                         'IDENT_ModifiedOn', 'IDENT_RegionName',
+                         'IDENT_CercleName',
                          'IDENT_CommuneName',
                          'IDENT_HealthAreaCode', 'IDENT_HealthAreaName',
                          'IDENT_HealthAreaCenterDistance',
                          'IDENT_Latitude', 'IDENT_Longitude', 'IDENT_Geometry']
 
         input_admin_file = open(options.get('input_admin_file'), 'r')
-        admin_csv_reader = csv.DictReader(input_admin_file, fieldnames=admin_headers)
+        admin_csv_reader = csv.DictReader(input_admin_file,
+                                          fieldnames=admin_headers)
 
         if options.get('clear'):
             print("Removing all entities...")
@@ -60,11 +64,12 @@ class Command(BaseCommand):
             latitude = entry.get('IDENT_Latitude')
             longitude = entry.get('IDENT_Longitude')
 
-            entity = Entity.objects.create(slug=slug,
-                                        name=name,
-                                        entity_type=type_matrix.get(type_slug),
-                                        latitude=latitude or None,
-                                        longitude=longitude or None)
+            entity = Entity.objects.create(
+                slug=slug,
+                name=name,
+                entity_type=type_matrix.get(type_slug),
+                latitude=latitude or None,
+                longitude=longitude or None)
             if parent_slug and not parent_slug == 'mali':
                 parent = Entity.objects.get(slug=parent_slug)
                 entity.parent = parent
@@ -79,4 +84,3 @@ class Command(BaseCommand):
                 continue
 
             add_entity(entry, True)
-

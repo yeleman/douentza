@@ -13,7 +13,7 @@
         {% include 'pagination.html' with paginator=requests_paginator %}
       </div>
       <div class="col-md-4 text-right">
-        <div class="form-group col-md-9"><input id="id_identity" name="identity" type="number" class="form-control" placeholder="Numéro"></div><button class="btn btn-primary" type="submit">Recherche</button>
+        <div class="form-group col-md-9"><input id="id_identity" name="identity" type="number" class="form-control" placeholder="Numéro"></div><button class="btn btn-primary" type="submit">Search</button>
       </div>
     </div>
 </form>
@@ -21,12 +21,12 @@
 <table class="table table-condensed table-hover table-bordered table-striped table-stats">
     <thead>
         <tr>
-            <th>Numéro</th>
-            <th>Date de l'appel</th>
-            <th>Localité</th>
-            <th>Ethnie</th>
-            <th>Âge</th>
-            <th>Projet</th>
+            <th>Phone Number</th>
+            <th>Date of Call</th>
+            <th>Location</th>
+            <th>Ethnicity</th>
+            <th>Age</th>
+            <th>Project</th>
         </tr>
     </thead>
     <tbody>
@@ -41,7 +41,7 @@
             </tr>
         {% empty %}
         <tr>
-            <td colspan="6">Aucun</td>
+            <td colspan="6">None</td>
         </tr>
         {% endfor %}
     </tbody>

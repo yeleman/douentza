@@ -22,14 +22,14 @@ else:
 from douentza.models import (Survey, Question,
                              SurveyTakenData, CachedData,
                              HotlineRequest, HotlineUser, SurveyTaken,
-                             Cluster, Project, Entity, Ethnicity)
+                             Cluster, Project, Ethnicity)
 from douentza.utils import get_default_context, isoformat_date, OPERATORS
 
 main_types = {
     Question.TYPE_STRING: 'string',
     Question.TYPE_TEXT: 'string',
     Question.TYPE_BOOLEAN: 'boolean',
-    Question.TYPE_DATE : 'date',
+    Question.TYPE_DATE: 'date',
     Question.TYPE_INTEGER: 'number',
     Question.TYPE_FLOAT: 'number',
     Question.TYPE_CHOICES: 'choice',
@@ -55,8 +55,8 @@ def stats_for_survey(request, survey_id):
     except ValueError:
         raise Http404
 
-    all_meta_questions_data = CachedData.get_or_fallback(slug=survey.meta_cache_slug,
-                                                         fallback=[])
+    all_meta_questions_data = CachedData.get_or_fallback(
+        slug=survey.meta_cache_slug, fallback=[])
     all_questions_data = CachedData.get_or_fallback(slug=survey.cache_slug,
                                                     fallback=[])
     context.update({'all_questions_data': all_questions_data,
@@ -79,13 +79,12 @@ def compute_survey_questions_data(survey):
             Question.TYPE_STRING: lambda x, y: {},
             Question.TYPE_TEXT: lambda x, y: {},
             Question.TYPE_BOOLEAN: _stats_for_boolean,
-            Question.TYPE_DATE : _stats_for_date,
+            Question.TYPE_DATE: _stats_for_date,
             Question.TYPE_INTEGER: _stats_for_number,
             Question.TYPE_FLOAT: _stats_for_number,
             Question.TYPE_CHOICES: _stats_for_choice,
             Question.TYPE_MULTI_CHOICES: _stats_for_multi_choice,
         }.get(question.question_type)(question, total)
-
 
     def _stats_for_boolean(question, total):
         nb_true = SurveyTakenData.objects.filter(question=question,
@@ -100,10 +99,9 @@ def compute_survey_questions_data(survey):
         }
         return data
 
-
     def _stats_for_date(question, total):
-        all_values = [v.value
-                      for v in SurveyTakenData.objects.filter(question=question)
+        all_values = [v.value for v in SurveyTakenData.objects.filter(
+                      question=question)
                       if v.value is not None]
         if len(all_values):
             first = numpy.min(all_values)
@@ -119,11 +117,9 @@ def compute_survey_questions_data(survey):
             'last': last
         }
 
-
     def _stats_for_number(question, total):
-        all_values = [v.value
-                      for v in SurveyTakenData.objects.filter(question=question)
-                      if v.value is not None]
+        all_values = [v.value for v in SurveyTakenData.objects.filter(
+            question=question) if v.value is not None]
         if not len(all_values):
             return {'min': None,
                     'max': None,
@@ -136,12 +132,11 @@ def compute_survey_questions_data(survey):
             'median': numpy.median(all_values)
         }
 
-
     def _stats_for_choice(question, total):
         data = {'choices_count': {}}
         for choice in question.questionchoices.order_by('id'):
-            count = SurveyTakenData.objects.filter(question=question,
-                                                   value__exact=choice.slug).count()
+            count = SurveyTakenData.objects.filter(
+                question=question, value__exact=choice.slug).count()
             data['choices_count'].update({choice.slug: choice.to_dict()})
             data['choices_count'][choice.slug].update({
                 'count': count,
@@ -153,8 +148,8 @@ def compute_survey_questions_data(survey):
         for choice in question.questionchoices.order_by('id'):
             data['choices_count'].update({choice.slug: choice.to_dict()})
             data['choices_count'][choice.slug].update({
-                'count': sum([1 for answer in SurveyTakenData.objects.filter(question=question)
-                              if choice.slug in answer.value])})
+                'count': sum([1 for answer in SurveyTakenData.objects.filter(
+                    question=question) if choice.slug in answer.value])})
         return data
 
     all_questions_data = []
@@ -168,7 +163,8 @@ def compute_survey_questions_data(survey):
             'nb_values': total,
             'nb_null_values': nb_null,
             'percent_null_values': _safe_percent(nb_null, total),
-            'type_template': "ms_question_details_{}.html".format(main_types.get(question.question_type))})
+            'type_template': "ms_question_details_{}.html".format(
+                main_types.get(question.question_type))})
         questions_data.update(custom_stats_for_type(question, total))
         all_questions_data.append(questions_data)
 
@@ -190,11 +186,12 @@ def compute_survey_meta_data_as_questions(survey):
             Question.TYPE_CHOICES: _stats_for_choice,
         }.get(question['type'])(question, total)
 
-
     def _stats_for_number(question, total):
         all_values = [getattr(v.request, question['field'], None)
-                      for v in SurveyTaken.objects.filter(survey=question['survey'])
-                      if getattr(v.request, question['field'], None) is not None]
+                      for v in SurveyTaken.objects.filter(
+                      survey=question['survey'])
+                      if getattr(v.request, question['field'], None)
+                      is not None]
         if not len(all_values):
             return {'min': None,
                     'max': None,
@@ -207,7 +204,6 @@ def compute_survey_meta_data_as_questions(survey):
             'median': numpy.median(all_values)
         }
 
-
     def _stats_for_choice(question, total):
         data = {'choices_count': {}}
         for choice in question['choices']:
@@ -215,8 +211,8 @@ def compute_survey_meta_data_as_questions(survey):
             for r in SurveyTaken.objects.filter(survey=question['survey']):
                 val = getattr(r.request, question['field'], None)
                 if val == choice['slug'] \
-                    or getattr(val, 'slug', None) == choice['slug'] \
-                    or getattr(val, 'id', None) == choice['slug']:
+                        or getattr(val, 'slug', None) == choice['slug'] \
+                        or getattr(val, 'id', None) == choice['slug']:
                     count += 1
             data['choices_count'].update({choice['slug']: choice})
             data['choices_count'][choice['slug']].update({
@@ -240,7 +236,7 @@ def compute_survey_meta_data_as_questions(survey):
     operator = copy.copy(question_tmpl)
     operator['id'] = 'meta_operator'
     operator['field'] = 'operator'
-    operator['label'] += "Operators"
+    operator['label'] += "Agents"
     operator['choices'] = [{'slug': k, 'label': v}
                            for k, v in OPERATORS.items()]
     all_questions.append(operator)
@@ -260,7 +256,7 @@ def compute_survey_meta_data_as_questions(survey):
     project['field'] = 'project'
     project['label'] += "Projects"
     project['choices'] = [{'slug': p.id, 'label': p.name}
-                           for p in Project.objects.all()]
+                          for p in Project.objects.all()]
     all_questions.append(project)
 
     # Age (groups)
@@ -279,7 +275,7 @@ def compute_survey_meta_data_as_questions(survey):
     gender['field'] = 'sex'
     gender['label'] += "Genders"
     gender['choices'] = [{'slug': k, 'label': v}
-                        for k,v in HotlineRequest.SEXES.items()]
+                         for k, v in HotlineRequest.SEXES.items()]
     all_questions.append(gender)
 
     # Ethnicity
@@ -297,8 +293,8 @@ def compute_survey_meta_data_as_questions(survey):
     respondant['field'] = 'hotline_user'
     respondant['label'] += "respondant"
     respondant['choices'] = [{'slug': u.id, 'label': u.full_name()}
-                            for u in HotlineUser.objects.exclude(
-                                username__in=['admin', 'staff', 'usaid'])]
+                             for u in HotlineUser.objects.exclude(
+                             username__in=['admin', 'staff', 'usaid'])]
     all_questions.append(respondant)
 
     # Duration
@@ -318,13 +314,15 @@ def compute_survey_meta_data_as_questions(survey):
         print(question_data['label'])
         total = SurveyTaken.objects.filter(survey=survey).count()
         nb_null = len([1 for std in SurveyTaken.objects.filter(survey=survey)
-                       if getattr(std.request, question_data['field'], None) is None])
+                       if getattr(std.request, question_data['field'], None)
+                       is None])
 
         question_data.update({
             'nb_values': total,
             'nb_null_values': nb_null,
             'percent_null_values': _safe_percent(nb_null, total),
-            'type_template': "ms_question_details_{}.html".format(main_types.get(question_data['type']))})
+            'type_template': "ms_question_details_{}.html".format(
+                main_types.get(question_data['type']))})
         question_data.update(custom_stats_for_type(question_data, total))
         all_questions_data.append(question_data)
 
@@ -355,20 +353,28 @@ def export_survey_as_csv(survey, filename):
 
     for survey_taken in survey.survey_takens.order_by('taken_on'):
         data = {
-            'meta_received_on': isoformat_date(survey_taken.request.received_on),
-            'meta_responded_on': isoformat_date(survey_taken.request.responded_on),
+            'meta_received_on': isoformat_date(
+                survey_taken.request.received_on),
+            'meta_responded_on': isoformat_date(
+                survey_taken.request.responded_on),
             'meta_operator': survey_taken.request.operator,
             'meta_cluster': survey_taken.request.cluster,
             'meta_project': survey_taken.request.project,
             'meta_age': survey_taken.request.age,
             'meta_sex': survey_taken.request.sex,
             'meta_call_duration': survey_taken.request.duration,
-            'meta_ethnicity': getattr(survey_taken.request.ethnicity, 'slug', None),
-            'meta_region': getattr(survey_taken.request.location, 'get_region', lambda: None)(),
-            'meta_cercle': getattr(survey_taken.request.location, 'get_cercle', lambda: None)(),
-            'meta_commune': getattr(survey_taken.request.location, 'get_commune', lambda: None)(),
-            'meta_village': getattr(survey_taken.request.location, 'get_village', lambda: None)(),
-            'meta_gps': getattr(survey_taken.request.location, 'get_geopoint', lambda: None)(),
+            'meta_ethnicity': getattr(survey_taken.request.ethnicity,
+                                      'slug', None),
+            'meta_region': getattr(survey_taken.request.location,
+                                   'get_region', lambda: None)(),
+            'meta_cercle': getattr(survey_taken.request.location,
+                                   'get_cercle', lambda: None)(),
+            'meta_commune': getattr(survey_taken.request.location,
+                                    'get_commune', lambda: None)(),
+            'meta_village': getattr(survey_taken.request.location,
+                                    'get_village', lambda: None)(),
+            'meta_gps': getattr(survey_taken.request.location,
+                                'get_geopoint', lambda: None)(),
         }
         for question in survey_taken.survey.questions.order_by('-order', 'id'):
             try:

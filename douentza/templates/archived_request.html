@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load douentza %}
 
-{% block title %}Archives de {{ event.identity|phone }}{% endblock %}
+{% block title %}Archives for {{ event.identity|phone }}{% endblock %}
 
 {% block extra_js %}
 // Read Only Tag Manager
@@ -22,39 +22,39 @@ $('.btn-survey').each(function (){
 <table class="table table-condensed table-hover table-bordered table-striped table-stats">
     <tbody>
         <tr>
-            <th>Date de l'appel</th>
+            <th>Date of Call</th>
             <td>{{ event.received_on|handleddate }}</td>
         </tr>
         <tr>
-            <th>Date du rappel</th>
+            <th>Date of Callback</th>
             <td>{{ event.responded_on|handleddate }}</td>
         </tr>
         <tr>
-            <th>Operateur</th>
+            <th>Agent</th>
             <td>{{ event.operator_str }}</td>
         </tr>
         <tr>
-            <th>Âge</th>
+            <th>Age</th>
             <td>{% include "_age_span.html" with event=event always=True %}</td>
         </tr>
         <tr>
-            <th>Sexe</th>
+            <th>Gender</th>
             <td>{% include "_gender_span.html" with event=event always=True %}</td>
         </tr>
         <tr>
-            <th>Durée</th>
+            <th>Duration</th>
             <td>{% include "_duration_span.html" with event=event always=True %}</td>
         </tr>
         <tr>
-            <th>Ethnie</th>
+            <th>Ethnicity</th>
             <td>{% include "_ethnicity_span.html" with event=event always=True %}</td>
         </tr>
         <tr>
-            <th>Projet</th>
+            <th>Project</th>
             <td>{% include "_project_span.html" with event=event always=True %}</td>
         </tr>
         <tr>
-            <th>Localité</th>
+            <th>Location</th>
             <td>{% include "_location_span.html" with event=event always=True %}</td>
         </tr>
         <tr>
@@ -62,13 +62,13 @@ $('.btn-survey').each(function (){
             <td>{% if event.tags.all %}<div class="tags_container"></div>{% endif %}</td>
         </tr>
         <tr>
-            <th>Questionnaires</th>
+            <th>Surveys</th>
             <td>{% include "_surveys_span.html" with event=event always=True %}</td>
         </tr>
     </tbody>
 </table>
 
-<h2>Historique des tentatives</h2>
+<h2>Attempts history</h2>
 <table class="table table-condensed table-hover table-bordered table-striped table-stats">
     <thead>
         <tr>
@@ -86,7 +86,7 @@ $('.btn-survey').each(function (){
             </tr>
         {% empty %}
         <tr>
-            <td colspan="3">Aucun</td>
+            <td colspan="3">None</td>
         </tr>
         {% endfor %}
     </tbody>

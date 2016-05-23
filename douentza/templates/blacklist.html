@@ -1,18 +1,18 @@
 {% extends "base.html" %}
 {% load douentza %}
 
-{% block title %}Liste noire{% endblock %}
+{% block title %}Black List{% endblock %}
 
 {% block content %}
 
 <div class="alert alert-info">
-<p>Tout événement (bip, SMS, etc) provenant d'un numéro sur liste noire sera ignoré et n'apparaîtra donc pas dans le tableau de bord (ni ailleurs).</p>
-<p>Le chiffre indique le nombre de tentatives (infructueuses donc) du numéro.</p>
+<p>Any event (ring, SMS, etc.) coming from a number in the black list will be ignored and won't appear on the dashboard (nor elsewhere).</p>
+<p>Number bellow indicates the number of (unprocessed) attempts from that number.</p>
 </div>
 
 <table class="table table-hover table-bordered ancient_events_table">
     <thead>
-        <tr><th colspan=5>La liste noire</th></tr>
+        <tr><th colspan=5>The black list</th></tr>
     </thead>
     <tbody>
         {% for blacknum in blacknums %}
@@ -23,12 +23,12 @@
             </td>
             <td>
                 <a href="{% url 'blacklist' blacknum.id %}">
-                    <button type="button" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-ok-sign"> </span> Retirer de la liste noire</button>
+                    <button type="button" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-ok-sign"> </span> Release from black list</button>
                 </a>
             </td>
         </tr>
         {% empty %}
-        <td colspan=3>Aucun numéro dans la liste !</td>
+        <td colspan=3>No blacklisted number!</td>
         {% endfor %}
     </tbody>
 </table>

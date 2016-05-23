@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Statistiques de “{{ survey.title }}”{% endblock %}
+{% block title %}Stats for “{{ survey.title }}”{% endblock %}
 
 {% block extra_js %}
 $.each(survey_charts, function (index) {
@@ -11,15 +11,15 @@ $.each(survey_charts, function (index) {
 {% block content %}
 
 <h2>{{ survey.title }}</h2>
-<h3>Statistiques d'utilisation du questionnaire.</h3>
+<h3>Survey statistics.</h3>
 <table class="table table-bordered table-condensed">
-<tr><th>Nb. de questionnaires remplis</th><td>{{ survey.survey_takens.count }}</td></tr>
+<tr><th>Nb. of surveys taken</th><td>{{ survey.survey_takens.count }}</td></tr>
 </table>
 
 <script type="text/javascript">survey_charts = [];</script>
 
 <table class="table table-bordered table-condensed ">
-<tr><th>Question</th><th>Type</th><th title="Nombre de valeurs nulles pour la question">Nulles</th><th>Détails</th><th>Graph</th></tr>
+<tr><th>Question</th><th>Type</th><th title="Number of null answers for the question">Nulls</th><th>Details</th><th>Graph</th></tr>
 <tr><td colspan="5">meta-data questions</td></tr>
 {% for question in all_meta_questions_data %}
 <tr><td><strong>{{ question.label }}</strong></td><td>{{ question.type_str }}</td><td>{{ question.nb_null_values }}</td><td>{% include "ms_question_details.html" with question=question %}</td><td>{% include "ms_question_chart.html" with question=question %}</td></tr>

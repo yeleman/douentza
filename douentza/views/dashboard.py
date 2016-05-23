@@ -26,21 +26,27 @@ def all_events(user):
     today = datetime.date.today()
     yesterday = today - datetime.timedelta(days=1)
     if user.cluster:
-        hotlinerequests = HotlineRequest.incoming.filter(cluster=user.cluster).exclude(cluster=None)
+        hotlinerequests = HotlineRequest.incoming \
+            .filter(cluster=user.cluster).exclude(cluster=None)
     else:
         hotlinerequests = HotlineRequest.incoming.all()
-    data_event = {'today_events': hotlinerequests.filter(received_on__gte=start_or_end_day_from_date(today, True),
-                                                                 received_on__lt=start_or_end_day_from_date(today, False)).all(),
-                  'yesterday_events': hotlinerequests.filter(received_on__gte=start_or_end_day_from_date(yesterday, True),
-                                                                 received_on__lt=start_or_end_day_from_date(yesterday, False)).all(),
-                  'ancient_events': hotlinerequests.filter(received_on__lt=start_or_end_day_from_date(yesterday, True)).all(),
-                  'unsorted_events': HotlineRequest.incoming.filter(cluster=None).all()
-                  }
-    data_event.update({'has_events': bool(len(data_event['today_events'])
-                                     + len(data_event['yesterday_events'])
-                                     + len(data_event['ancient_events'])
-                                     + len(data_event['unsorted_events'])
-                                     )})
+    data_event = {
+        'today_events': hotlinerequests.filter(
+            received_on__gte=start_or_end_day_from_date(today, True),
+            received_on__lt=start_or_end_day_from_date(today, False)).all(),
+        'yesterday_events': hotlinerequests.filter(
+            received_on__gte=start_or_end_day_from_date(yesterday, True),
+            received_on__lt=start_or_end_day_from_date(
+                yesterday, False)).all(),
+        'ancient_events': hotlinerequests.filter(
+            received_on__lt=start_or_end_day_from_date(yesterday, True)).all(),
+        'unsorted_events': HotlineRequest.incoming.filter(cluster=None).all()
+    }
+    data_event.update({'has_events': bool(
+        len(data_event['today_events']) +
+        len(data_event['yesterday_events']) +
+        len(data_event['ancient_events']) +
+        len(data_event['unsorted_events']))})
     return data_event
 
 
@@ -61,7 +67,8 @@ def dashboard(request):
 @staff_required
 def ping_json(request):
     try:
-        since = datetime.datetime.fromtimestamp(int(request.GET.get('since')) / 1000)
+        since = datetime.datetime.fromtimestamp(
+            int(request.GET.get('since')) / 1000)
     except:
         raise Http404
 
@@ -91,7 +98,8 @@ def ping_html(request):
     now = datetime.datetime.now()
 
     try:
-        since = datetime.datetime.fromtimestamp(int(request.GET.get('since')) / 1000)
+        since = datetime.datetime.fromtimestamp(
+            int(request.GET.get('since')) / 1000)
     except:
         raise Http404
 
@@ -119,7 +127,7 @@ def ping_html(request):
 
 @staff_required
 def change_event_status(request, request_id, new_status):
-    if not new_status in HotlineRequest.STATUSES.keys():
+    if new_status not in HotlineRequest.STATUSES.keys():
         raise Http404
     try:
         event = HotlineRequest.objects \

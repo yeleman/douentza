@@ -3,14 +3,14 @@
 {% block content %}
 {% if error %}
 <div class="frameside alert alert-danger">
-    <h2>Erreur. Impossible d'enregistrer le questionnaire</h2>
-    <p>Il semblerait que ce questionnaire ai déjà été saisi (pour cette requête).</p>
-    <p>Il n'a donc pas été enregistré à nouveau.</p>
+	<h2>Error. Unable to record the survey.</h2>
+	<p>It seems that this survey has already been taken (for this request).</p>
+	<p>It thus wasn't recorded again.</p>
 </div>
 {% else %}
 <div class="frameside">
-    <h2>Terminé !</h2>
-    <p>Le questionnaire a bien été enregistré.</p>
+    <h2>Done!</h2>
+    <p>Survey recorded successfuly.</p>
 </div>
 {% endif %}
 {% endblock %}

@@ -18,13 +18,14 @@ logger = logging.getLogger(__name__)
 
 PROJECT = Project.objects.get(id=9)
 
+
 @csrf_exempt
 def events_api(request):
 
     def error(message):
         r = HttpResponse(json.dumps({'status': 'error',
                                      'message': message}),
-                        content_type='application/json')
+                         content_type='application/json')
         r['Access-Control-Allow-Origin'] = "*"
         r['Access-Control-Allow-Credentials'] = "false"
         return r
@@ -55,9 +56,10 @@ def events_api(request):
             return error("phone_number is required for registration")
 
         # retrieve existing events
-        qs = HotlineRequest.objects.filter(identity=phone_number,
-                                           project=PROJECT) \
-                                   .exclude(status__in=HotlineRequest.DONE_STATUSES)
+        qs = HotlineRequest.objects \
+            .filter(identity=phone_number,
+                    project=PROJECT) \
+            .exclude(status__in=HotlineRequest.DONE_STATUSES)
         if qs.count() > 0:
             req = qs.last()
             req.add_additional_request(HotlineRequest.TYPE_WEB, None)
@@ -92,7 +94,8 @@ def events_api(request):
     elif jsdata.get('action') in ('update',):
         # update event with ID
         try:
-            req = HotlineRequest.objects.get(id=int(jsdata.get('event_id', None)))
+            req = HotlineRequest.objects.get(
+                id=int(jsdata.get('event_id', None)))
         except:
             return error("Unable to retrieve request #{}"
                          .format(jsdata.get('event_id')))

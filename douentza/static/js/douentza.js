@@ -34,7 +34,7 @@ function graph_event_response_counts(data_url) {
         $('#container').highcharts({
             chart: { type: 'spline',
             },
-            title: { text: "Nombre d'appels par jour",
+            title: { text: "Calls per day",
                 x: -20 //center
             },
             xAxis: { type: 'datetime',
@@ -45,14 +45,14 @@ function graph_event_response_counts(data_url) {
             // },
             yAxis: [{ // Primary yAxis
 	            title: {
-	                text: 'Nb. appels',
+	                text: 'Nb. calls',
 	                style: {
 	                    color: Highcharts.getOptions().colors[1]
 	                }
 	            }
 	        }, { // Secondary yAxis
 	            title: {
-	                text: 'Durée rappels',
+	                text: 'Callbacks duration',
 	                style: {
 	                    color: Highcharts.getOptions().colors[0]
 	                }
@@ -68,11 +68,11 @@ function graph_event_response_counts(data_url) {
             tooltip: { valueSuffix: null,
             },
             legend: {},
-            series: [{name: "Appels à la hotline",
+            series: [{name: "Calls",
                       data: data.events},
-                     {name: "Rappels par la hotline",
+                     {name: "Callbacks",
                       data: data.responses,},
-                     {name: "Rappels par la hotline",
+                     {name: "Callbacks (duration)",
                       type: 'column',
                       yAxis: 1,
                       data: data.duration,
@@ -337,7 +337,7 @@ function getTagManager(options) {
 
     TagManager.prototype._create_addtag_element = function() {
         var elem = $('<input class="form-control add_tag_input"/>');
-        elem.attr('placeholder', "Taggez ici.");
+        elem.attr('placeholder', "Tag here.");
 
         elem.autocomplete(this.autocomple_options);
         elem.autocomplete('setOptions', {lookup: this.remaining_items});
@@ -557,7 +557,7 @@ function setupDatetimePicker(options) {
 function createMiniSurvey(options) {
     var survey_id = options.survey_id || null;
     var request_id = options.request_id || null;
-    var title = options.title || "Mini Questionnaire";
+    var title = options.title || "Mini Survey";
 
     if (!survey_id)
         return $('<h2>failed</h2>');

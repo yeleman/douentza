@@ -9,9 +9,8 @@ import json
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
 
-from douentza.models import HotlineRequest, HotlineUser, Entity, Survey
+from douentza.models import HotlineRequest, Entity, Survey
 from douentza.utils import get_default_context, EMPTY_ENTITY
 from douentza.forms import BasicInformationForm
 from douentza.decorators import staff_required
@@ -55,14 +54,14 @@ def display_request(request, request_id):
             'project': getattr(event.project, 'id', None),
             'sex': event.sex,
             'ethnicity': getattr(event.ethnicity, 'slug', None),
-            'region': event.location.get_region().slug \
-                if event.location and event.location.get_region() else None,
-            'cercle': event.location.get_cercle().slug \
-                if event.location and event.location.get_cercle() else None,
-            'commune': event.location.get_commune().slug \
-                if event.location and event.location.get_commune() else None,
-            'village': event.location.get_village().slug \
-                if event.location and event.location.get_village() else None,
+            'region': event.location.get_region().slug
+            if event.location and event.location.get_region() else None,
+            'cercle': event.location.get_cercle().slug
+            if event.location and event.location.get_cercle() else None,
+            'commune': event.location.get_commune().slug
+            if event.location and event.location.get_commune() else None,
+            'village': event.location.get_village().slug
+            if event.location and event.location.get_village() else None,
         })
 
     context.update({"form": form})

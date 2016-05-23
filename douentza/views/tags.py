@@ -22,9 +22,9 @@ def all_tags(request):
 
 def tags_for(request, request_id):
     hotline_req = get_object_or_404(HotlineRequest, id=request_id)
-    return HttpResponse(json.dumps([t.slug
-                                    for t in hotline_req.tags.order_by('slug')]),
-                        mimetype='application/json')
+    return HttpResponse(json.dumps(
+        [t.slug for t in hotline_req.tags.order_by('slug')]),
+        mimetype='application/json')
 
 
 @csrf_exempt

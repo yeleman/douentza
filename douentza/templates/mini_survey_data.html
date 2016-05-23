@@ -1,6 +1,6 @@
 <div class="hidden survey-data" survey-id="{{ survey_taken.survey.id }}" request-id="{{ survey_taken.request.id }}">
 <table class="table table-striped table-hover table-condensed table-data">
-<caption>Répondu le {{ survey_taken.taken_on }}</caption>
+<caption>Taken on {{ survey_taken.taken_on }}</caption>
 {% for question in survey_taken.to_dict.questions %}
 <tr><th>{{ question.label }}</th><td>{% if question.type == 'multi_choice' %}{% for value in question.value %}<small><span class="label label-default">{{ value }}</span></small> {% empty %}-{% endfor %}{% else %}{{ question.value }}{% endif %}</td></tr>
 {% endfor %}

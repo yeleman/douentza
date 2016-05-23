@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% load douentza %}
 
-{% block title %}Statistiques questionnaires{% endblock %}
+{% block title %}Surveys Statistics{% endblock %}
 
 {% block content %}
 
-<h2>Statistiques par questionnaire</h2>
+<h2>Surveys Statistics</h2>
 
 <table class="table">
-<tr><th>Questionnaire</th><th>Réponses</th><th>Export Data</th></tr>
+<tr><th>Survey</th><th>Answers</th><th>Export Data</th></tr>
 {% for survey in surveys %}
 <tr><td><a href="{% url 'stats_for_survey' survey.id %}">{{ survey.title}}</a></td><td>{{ survey.survey_takens.count }}</td><td><a href="{{ survey.cache_file_slug|cachedslug }}"><button class="btn btn-success btn-xs"><span class="glyphicon glyphicon-download"></span> Export Data as CSV</button></a></td></tr>
 {% endfor %}

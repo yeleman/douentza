@@ -9,7 +9,8 @@ from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 
-from douentza.models import Survey, QuestionChoice, Question, Project, BlacklistedNumber, HotlineRequest
+from douentza.models import (Survey, QuestionChoice, Question, Project,
+                             BlacklistedNumber, HotlineRequest)
 from douentza.forms import (MiniSurveyInitForm, MiniSurveyAddQuestion,
                             AddProjectForm)
 from douentza.decorators import staff_required
@@ -56,7 +57,8 @@ def admin_survey(request, survey_id):
                 question.order = survey.questions.count() + 1
             question.save()
 
-            if question.question_type in (question.TYPE_CHOICES, question.TYPE_MULTI_CHOICES):
+            if question.question_type in (question.TYPE_CHOICES,
+                                          question.TYPE_MULTI_CHOICES):
                 for slug, label in form.cleaned_data.get('question_choices'):
                     try:
                         QuestionChoice.objects.create(slug=slug,
@@ -153,15 +155,15 @@ def admin_blacklist(request, blacknum_id=None):
         except:
             raise Http404
 
-        for hotline_request in HotlineRequest.objects.filter(identity=identity,
-                                                             status=HotlineRequest.STATUS_BLACK_LIST):
+        for hotline_request in HotlineRequest.objects.filter(
+                identity=identity, status=HotlineRequest.STATUS_BLACK_LIST):
             hotline_request.status = hotline_request.previous_status()
             hotline_request.save()
         return redirect("blacklist")
 
         messages.success(request,
-                         "{identity} à été retiré la liste noire".format(
-                         identity=blacknum.identity))
+                         "{identity} à été retiré la liste noire"
+                         .format(identity=blacknum.identity))
     context.update({'blacknums': BlacklistedNumber.objects.all()})
 
     return render(request, "blacklist.html", context)

@@ -1,36 +1,36 @@
 {% load douentza %}
 
-<h3>Répartition des rappels par tranche d'âge</h3>
+<h3>Reparition of Callbacks by Age Group</h3>
 <table class="table table-condensed table-hover table-bordered table-striped table-stats">
     <thead>
         <tr>
-            <th class="span2">Tranche d'âge</th>
-            <th class="span2">Taux</th>
-            <th class="span2">Nombre</th>
+            <th class="span2">Age Group</th>
+            <th class="span2">Rate</th>
+            <th class="span2">Number</th>
         </tr>
     </thead>
     <tbody>
-        <tr><td>moins de 18</td>
+        <tr><td>Under 18</td>
             <td>{{ under_18.1|floatformat:2 }}% </td>
             <td>{{ under_18.0 }}</td>
         </tr>
-        <tr><td>de 19 à 25</td>
+        <tr><td>19-25 y/o</td>
             <td>{{ stats_19_25.1|floatformat:2 }}%</td>
             <td>{{ stats_19_25.0 }}</td>
         </tr>
-        <tr><td>de 26 à 40</td>
+        <tr><td>26-40 y/o.</td>
             <td>{{ stats_26_40.1|floatformat:2 }}%</td>
             <td>{{ stats_26_40.0 }}</td>
         </tr>
-        <tr><td>de 41 à 55</td>
+        <tr><td>41-55 y/o.</td>
             <td>{{ stats_41_55.1|floatformat:2 }}%</td>
             <td>{{ stats_41_55.0 }}</td>
         </tr>
-        <tr><td>56 et plus</td>
+        <tr><td>Over 56</td>
             <td>{{ other_56.1|floatformat:2 }}%</td>
             <td>{{ other_56.0 }}</td>
         </tr>
-        <tr><td>Inconnus</td>
+        <tr><td>Unknown</td>
             <td>{{ unknown_age_percent|floatformat:2 }}%</td>
             <td>{{ unknown_age }}</td>
         </tr>

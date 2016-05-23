@@ -4,10 +4,8 @@
 
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
-import crypt
 
 from django.contrib import admin
-from django.conf import settings
 from django.contrib.auth.admin import UserAdmin
 from django import forms
 
@@ -45,13 +43,15 @@ class CustomUserAdmin(UserAdmin):
 
     fieldsets = (
         (None, {'fields': ('username', 'email', 'password', 'first_name',
-                           'last_name', 'is_superuser', 'is_staff', 'is_active')}),
+                           'last_name', 'is_superuser', 'is_staff',
+                           'is_active')}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username', 'email', 'password', 'first_name', 'last_name',
-                       'is_superuser', 'is_staff', 'is_active', 'cluster')}),
+            'fields': ('username', 'email', 'password', 'first_name',
+                       'last_name', 'is_superuser', 'is_staff',
+                       'is_active', 'cluster')}),
     )
 
 

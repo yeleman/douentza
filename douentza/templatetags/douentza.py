@@ -5,8 +5,6 @@
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 
-import datetime
-
 from django import template, forms
 from django.template.defaultfilters import stringfilter, date
 from django.core.urlresolvers import reverse
@@ -31,11 +29,14 @@ def auto_datetimepicker(field):
     dirty = str(field.form.is_bound).lower()
 
     if isinstance(field.field.widget, forms.widgets.DateInput):
-        return 'setupDatetimePicker({date_selector: "'+field.name+'", dirty: '+dirty+'});'
+        return 'setupDatetimePicker({date_selector: "' + field.name + \
+               '", dirty: '+dirty+'});'
     elif isinstance(field.field.widget, forms.widgets.TimeInput):
-        return 'setupDatetimePicker({time_selector: "'+field.name+'", dirty: '+dirty+'});'
+        return 'setupDatetimePicker({time_selector: "' + field.name + \
+               '", dirty: '+dirty+'});'
     elif isinstance(field.field.widget, forms.widgets.SplitDateTimeWidget):
-        return 'setupDatetimePicker({split_widget: true, split_selector: "'+field.name+'", dirty: '+dirty+'});'
+        return 'setupDatetimePicker({split_widget: true, split_selector: "' + \
+               field.name+'", dirty: '+dirty+'});'
 
     return ''
 
@@ -85,12 +86,12 @@ def human_delta(delta):
 
 @register.filter(name='eventdate')
 def event_date(adate):
-    return date(adate, "D d b, H\hi")
+    return date(adate, "D b d, H\hi")
 
 
 @register.filter(name='handleddate')
 def event_handled_date(adate):
-    return date(adate, "l d F Y à H\hi")
+    return date(adate, "l F d Y at H\hi")
 
 
 @register.filter(name='eventdateshort')
@@ -100,7 +101,7 @@ def event_date_short(adate):
 
 @register.filter(name='datemonintoring')
 def date_monintoring(adate):
-    return date(adate, "D d b")
+    return date(adate, "D b d")
 
 
 @register.filter(name='orderby')
@@ -130,11 +131,10 @@ def duration(seconds):
     else:
         seconds = int(seconds)
 
-    data= {
-         'days': 0,
-         'hours': 0,
-         'minutes': 0,
-         'seconds': 0}
+    data = {'days': 0,
+            'hours': 0,
+            'minutes': 0,
+            'seconds': 0}
     if seconds > 86400:
         data['days'] = seconds // 86400
         seconds -= data['days'] * 86400
@@ -148,7 +148,7 @@ def duration(seconds):
 
     s = ""
     if data['days']:
-        s += "{}j ".format(data['days'])
+        s += "{}d ".format(data['days'])
     if data['hours']:
         s += "{}h ".format(data['hours'])
     if data['minutes']:

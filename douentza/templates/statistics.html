@@ -1,80 +1,80 @@
 {% extends "base.html" %}
 {% load douentza %}
 
-{% block title %}Statistiques{% endblock %}
+{% block title %}Statistics{% endblock %}
 
 {% block content %}
 
-    <h2>Statistiques Générales</h2>
-    <p class="pull-left">Les statistiques (ainsi que celles des mini-questionnaires) sont mises à jour périodiquement (environ chaque 2 heures).<br />Dernière mise à jour: {{ last_update|handleddate }}</p>
+    <h2>General Statistics</h2>
+    <p class="pull-left">Statistics (including mini surveys ones) are updated periodicaly (approx. every 2 hours).<br />Last update: {{ last_update|handleddate }}</p>
     <a href="{{ general_stats_slug|cachedslug }}" class="pull-right"><button class="btn btn-success"><span class="glyphicon glyphicon-download"></span> Export Data as CSV</button></a>
     <table class="table table-condensed table-hover table-bordered table-striped table-stats-vertical">
         <tbody>
             <tr>
-                <th class="span8">Dernier appel</th>
+                <th class="span8">Last Call</th>
                 <td class="span4">{{ last_event.received_on|handleddate }}</td>
             </tr>
             <tr>
-                <th>Nombre total d'appels</th>
+                <th>Total Nb. of Calls</th>
                 <td class="important">{{ nb_total_events }}</td>
             </tr>
             <tr>
-                <th>Nombre total de rappels</th>
+                <th>Total Nb. of Callbacks</th>
                 <td class="important">{{ nb_total_replies }}</td>
             </tr>
             <tr>
-                <th>Nombre total de numéros uniques</th>
+                <th>Total Nb. of unique numbers</th>
                 <td class="important">{{ nb_unique_number }}</td>
             </tr>
             <tr>
-                <th>Durée des rappels:</th>
+                <th>Callbacks duration:</th>
                 <td><strong>{{ sum_duration.duration__sum|duration|default_if_none:"-" }}</strong></td>
             </tr>
 
             <tr>
-                <th class="ident">Le plus long</th>
+                <th class="ident">Longest</th>
                 <td><strong>{{ longest_duration.duration__max|duration|default_if_none:"-" }}</strong></td>
             </tr>
             <tr>
-                <th class="ident">La moyenne</th>
+                <th class="ident">Average</th>
                 <td><strong>{{ average_duration.duration__avg|duration|default_if_none:"-" }}</strong></td>
             </tr>
             <tr>
-                <th class="ident">La minimale</th>
+                <th class="ident">Shortest</th>
                 <td><strong>{{ short_duration.duration__min|duration|default_if_none:"-" }}</strong></td>
             </tr>
             <tr>
-                <th>Total par sexes (Homme/Femme/Inconnu)</th>
-                <td>{{ sex_male }} H/ {{ sex_female }} F/ {{ sex_unknown }} Inconnu{{ sex_unknown|pluralize }}</td>
+                <th>Total by Gender (Male/Female/Unnown)</th>
+                <td>{{ sex_male }} M/ {{ sex_female }} F/ {{ sex_unknown }} Unknown{{ sex_unknown|pluralize }}</td>
             </tr>
             <tr>
-                <th>Nombre total de projets</th>
+                <th>Total Nb. of Projects</th>
                 <td class="important">{{ nb_projects }}</td>
             </tr>
             <tr>
-                <th>Nombre total de questionnaires</th>
+                <th>Total Nb. of Surveys</th>
                 <td class="important">{{ nb_survey }}</td>
             </tr>
             <tr>
-                <th>Nombre d'appels hors projets</th>
+                <th>Nb. of calls outside a Project</th>
                 <td class="important">{{ nb_projects }}</td>
             </tr>
             <tr>
-                <th>Nombre de questionnaires remplis</th>
+                <th>Nb. of Surveys Taken</th>
                 <td class="important">{{ nb_survey_taken }}</td>
             </tr>
         </tbody>
     </table>
 
-    <h2>Localités des appels</h2>
-    <p>Un point par localité. Cliquer sur le point pour voir les statistiques de la localité.</p>
+    <h2>Locations of calls</h2>
+    <p>One dot per location. Click on point to see location statistics.</p>
     <div id="map" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
 
     {% include "stats_per_age.html" %}
     {% include "stats_per_project.html" %}
     {% include "stats_ethinicity_table.html" %}
 
-    <h2>Graphe des appels</h2>
+    <h2>Calls graph</h2>
     <div id="container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
 
     {% include "stats_commune_table.html" %}
@@ -85,7 +85,7 @@
 graph_event_response_counts("{% url 'event_response_counts' %}");
 //var map = L.mapbox.map('map', 'examples.map-9ijuk24y').setView([40, -74.50], 9);
 map = L.mapbox.map('map', 'rgaudin.gfak5lf0')
-        .setView([17.874, -5.493], 6)
+        .setView([9.270, 8.954], 7)
         .addControl(L.mapbox.geocoderControl('rgaudin.gfak5lf0'));
 
 var display_fields = ['nb_calls', 'nb_unique_numbers', 'nb_male', 'nb_female', 'nb_unknown_gender', 'nb_answered', 'first_call', 'last_call'];
@@ -111,14 +111,14 @@ $.getJSON(geojson_url, function(geojson) {
 
             var content = '<h1>' + layer.feature.properties.display_full_name + '</h1>' +
                           '<ul>' +
-                          gen_line('nb_calls', "Nb. appels") +
-                          gen_line('nb_unique_numbers', "Nb. numéros uniques") +
-                          gen_line('nb_male', "Nb. appels Homme") +
-                          gen_line('nb_female', "Nb. appels Femme") +
-                          gen_line('nb_unknown_gender', "Nb. appels Inconnus") +
-                          gen_line('nb_answered', "Nb. appels répondus") +
-                          gen_line('first_call', "Premier appel", true) +
-                          gen_line('last_call', "Dernier appel", true) +
+                          gen_line('nb_calls', "Nb. of Calls") +
+                          gen_line('nb_unique_numbers', "Nb. of unique numbers") +
+                          gen_line('nb_male', "Nb. calls Men") +
+                          gen_line('nb_female', "Nb. calls Women") +
+                          gen_line('nb_unknown_gender', "Nb. calls Unknown") +
+                          gen_line('nb_answered', "Nb. calls answered") +
+                          gen_line('first_call', "First call", true) +
+                          gen_line('last_call', "Last call", true) +
                           '</ul>';
             layer.bindPopup(content);
        }

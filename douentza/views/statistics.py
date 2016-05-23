@@ -63,7 +63,8 @@ def get_event_responses_counts():
 
 def data_for_entity(entity, descendants=False):
     if descendants:
-        qs = HotlineRequest.objects.filter(location__in=entity.get_descendants(True))
+        qs = HotlineRequest.objects.filter(
+            location__in=entity.get_descendants(True))
     else:
         qs = HotlineRequest.objects.filter(location=entity)
     return {
@@ -73,8 +74,10 @@ def data_for_entity(entity, descendants=False):
         'nb_female': qs.filter(sex=HotlineRequest.SEX_FEMALE).count(),
         'nb_unknown_gender': qs.filter(sex=HotlineRequest.SEX_UNKNOWN).count(),
         'nb_answered': qs.filter(status=HotlineRequest.STATUS_HANDLED).count(),
-        'first_call': isoformat_date(qs.order_by('created_on').first().created_on),
-        'last_call': isoformat_date(qs.order_by('created_on').last().created_on),
+        'first_call': isoformat_date(
+            qs.order_by('created_on').first().created_on),
+        'last_call': isoformat_date(
+            qs.order_by('created_on').last().created_on),
         'marker-size': 'medium',
         'marker-color': '#2C3E50',
         'marker-symbol': 'mobilephone',
@@ -93,12 +96,13 @@ def get_geojson_statistics():
     }
 
     data['properties'].update({
-        'name': "Localités des personnes ayant émis des appels vers la Hotline"
+        'name': "Location of people who called the Hotline"
     })
 
-    entities_with_data = list(set([Entity.get_or_none(r['location'])
-                          for r in HotlineRequest.objects.all().values('location')
-                          if not r['location'] is None]))
+    entities_with_data = list(
+        set([Entity.get_or_none(r['location'])
+            for r in HotlineRequest.objects.all().values('location')
+            if not r['location'] is None]))
 
     for entity in entities_with_data:
         if entity.get_geopoint() is None:
@@ -120,7 +124,8 @@ def get_statistics_dict():
         last_event = []
 
     nb_total_events = hotlinerequest.count()
-    nb_total_replies = hotlinerequest.filter(status__in=HotlineRequest.DONE_STATUSES).count()
+    nb_total_replies = hotlinerequest.filter(
+        status__in=HotlineRequest.DONE_STATUSES).count()
     nb_survey = Survey.objects.count()
     nb_survey_taken = SurveyTaken.objects.count()
     projects = Project.objects.all()
@@ -134,21 +139,24 @@ def get_statistics_dict():
     sex_female = hotlinerequest.filter(sex=HotlineRequest.SEX_FEMALE).count()
 
     unknown_location_count = hotlinerequest.filter(location=None).count()
-    unknown_location_percent = percent_calculation(unknown_location_count, nb_total_events)
+    unknown_location_percent = percent_calculation(unknown_location_count,
+                                                   nb_total_events)
     unknown_age = hotlinerequest.filter(age=None).count()
     unknown_age_percent = percent_calculation(unknown_age, nb_total_events)
 
-    handled_hotline_request = hotlinerequest.filter(status=HotlineRequest.STATUS_HANDLED)
+    handled_hotline_request = hotlinerequest.filter(
+        status=HotlineRequest.STATUS_HANDLED)
     sum_duration = handled_hotline_request.aggregate(Sum("duration"))
     average_duration = handled_hotline_request.aggregate(Avg("duration"))
     longest_duration = handled_hotline_request.aggregate(Max("duration"))
     short_duration = handled_hotline_request.aggregate(Min("duration"))
 
-    hotlinerequest_project_count = [(project.name,
-                                     handled_hotline_request.filter(project=project).count(),
-                                     percent_calculation(handled_hotline_request.filter(project=project).count(),
-                                                         handled_hotline_request.count()))
-                                     for project in projects]
+    hotlinerequest_project_count = [(
+        project.name,
+        handled_hotline_request.filter(project=project).count(),
+        percent_calculation(
+            handled_hotline_request.filter(project=project).count(),
+            handled_hotline_request.count())) for project in projects]
 
     under_18 = stats_per_age(0, 18)
     stats_19_25 = stats_per_age(19, 25)
@@ -160,7 +168,8 @@ def get_statistics_dict():
         communes_located_requests(commune)
         for commune in list(Entity.objects.filter(entity_type='commune'))] + \
         [("Inconnue", unknown_location_count, unknown_location_percent)]
-    communes_located_requests_list = [c for c in communes_located_requests_list if c[1] > 0]
+    communes_located_requests_list = [
+        c for c in communes_located_requests_list if c[1] > 0]
 
     context.update({'last_event': last_event,
                     'nb_total_events': nb_total_events,
@@ -183,11 +192,15 @@ def get_statistics_dict():
                     'longest_duration': longest_duration,
                     'short_duration': short_duration,
                     'unknown_age_percent': unknown_age_percent,
-                    'hotlinerequest_project_count': hotlinerequest_project_count,
+                    'hotlinerequest_project_count':
+                        hotlinerequest_project_count,
                     'sum_duration': sum_duration,
-                    'nb_ethinicity_requests': [ethinicity_requests(ethinicity)
-                                               for ethinicity in list(Ethnicity.objects.all()) + [None]],
-                    'communes_located_requests': communes_located_requests_list,
+                    'nb_ethinicity_requests': [
+                        ethinicity_requests(ethinicity)
+                        for ethinicity in list(Ethnicity.objects.all()) +
+                        [None]],
+                    'communes_located_requests':
+                        communes_located_requests_list,
                     'general_stats_slug': "general_stats",
                     })
 
@@ -219,39 +232,46 @@ def export_general_stats_as_csv(filename):
     additional_nb_total = "additional_nb_total"
     cluster = "cluster"
 
-    names_until = lambda slug, nb, suffix=None: ["{slug}_{incr}".format(slug=slug, incr=incr)
-                                    for incr in range(1, nb + 1)]
-    prefix_list = lambda prefix, alist: ["{prefix}_{slug}".format(slug=slug, prefix=prefix)
-                                         for slug in alist]
+    names_until = lambda slug, nb, suffix=None: [
+        "{slug}_{incr}".format(slug=slug, incr=incr)
+        for incr in range(1, nb + 1)]
+    prefix_list = lambda prefix, alist: [
+        "{prefix}_{slug}".format(slug=slug, prefix=prefix)
+        for slug in alist]
 
     tags_headers = names_until("tag", nb_cols_tags) + ["tags", tag_total_nb]
-    entity_headers = prefix_list('location', ["slug", "type", "gps", "name",
-                                              "latitude", "longitude", "parent"])
+    entity_headers = prefix_list('location', [
+        "slug", "type", "gps", "name", "latitude", "longitude", "parent"])
 
-    additional_headers = [prefix + '_' + suffix
-                         for prefix in names_until("additional_request", nb_cols_additional_request)
-                         for suffix in [created_on, "request_type", sms_message]] + [additional_nb_total]
+    additional_headers = [
+        prefix + '_' + suffix
+        for prefix in names_until("additional_request",
+                                  nb_cols_additional_request)
+        for suffix in [created_on, "request_type", sms_message]] + \
+        [additional_nb_total]
 
     attempt_headers = [prefix + '_' + suffix
                        for prefix in names_until("attempt", nb_cols_attempt)
                        for suffix in [created_on, status]] + [attempt_nb_total]
 
-    headers = [received_on,
-                identity,
-                operator,
-                age,
-                sex,
-                duration,
-                ethnicity_name,
-                ethnicity_slug,
-                event_type,
-                sms_message,
-                responded_on,
-                project,
-                status,
-                cluster]
+    headers = [
+        received_on,
+        identity,
+        operator,
+        age,
+        sex,
+        duration,
+        ethnicity_name,
+        ethnicity_slug,
+        event_type,
+        sms_message,
+        responded_on,
+        project,
+        status,
+        cluster]
 
-    headers += tags_headers + entity_headers + additional_headers + attempt_headers
+    headers += tags_headers + entity_headers + additional_headers + \
+        attempt_headers
 
     csv_file = open(filename, 'w')
     if PY2:
@@ -275,8 +295,7 @@ def export_general_stats_as_csv(filename):
                 tag_total_nb: hotlinerequest.tags.count(),
                 additional_nb_total: hotlinerequest.additionalrequests.count(),
                 attempt_nb_total: hotlinerequest.callbackattempts.count(),
-                cluster: hotlinerequest.cluster
-        }
+                cluster: hotlinerequest.cluster}
 
         if hotlinerequest.ethnicity:
             data.update({'ethnicity_name': hotlinerequest.ethnicity.name,
@@ -301,17 +320,25 @@ def export_general_stats_as_csv(filename):
 
         attempts = hotlinerequest.callbackattempts.all()[:nb_cols_attempt]
         for n, attempt in enumerate(attempts):
-            data.update({'attempt_{nb}_{status}'.format(nb=(n + 1), status=status): attempt.type_str(),
-                         'attempt_{nb}_{created_on}'.format(nb=(n + 1),
-                                                            created_on=created_on): isoformat_date(attempt.created_on)})
+            data.update({
+                'attempt_{nb}_{status}'.format(nb=(n + 1), status=status):
+                    attempt.type_str(),
+                'attempt_{nb}_{created_on}'.format(nb=(n + 1),
+                        created_on=created_on):
+                    isoformat_date(attempt.created_on)})
 
-        additionalrequests = hotlinerequest.additionalrequests.all()[:nb_cols_additional_request]
+        additionalrequests = hotlinerequest.additionalrequests.all()[
+            :nb_cols_additional_request]
         for n, additionalrequest in enumerate(additionalrequests):
-            data.update({'additional_request_{nb}_request_type'.format(nb=(n + 1)): additionalrequest.event_type,
-                        'additional_request_{nb}_{created_on}'.format(nb=(n + 1),
-                                                                      created_on=created_on): isoformat_date(additionalrequest.created_on),
-                        'additional_request_{nb}_{sms_message}'.format(nb=(n + 1),
-                                                                       sms_message=sms_message ): additionalrequest.sms_message})
+            data.update({
+                'additional_request_{nb}_request_type'.format(nb=(n + 1)):
+                    additionalrequest.event_type,
+                'additional_request_{nb}_{created_on}'.format(nb=(n + 1),
+                        created_on=created_on):
+                    isoformat_date(additionalrequest.created_on),
+                'additional_request_{nb}_{sms_message}'.format(
+                    nb=(n + 1),
+                    sms_message=sms_message): additionalrequest.sms_message})
 
         csv_writer.writerow(data)
     csv_file.close()
@@ -325,7 +352,8 @@ def dashboard(request):
 
     context.update(get_statistics_dict())
     context.update({'graph_slug': "general_stats_graph",
-                    'last_update': CachedData.objects.get(slug="general_stats").created_on})
+                    'last_update': CachedData.objects.get(
+                        slug="general_stats").created_on})
 
     return render(request, "statistics.html", context)
 

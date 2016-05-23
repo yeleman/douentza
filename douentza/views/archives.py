@@ -24,7 +24,8 @@ def archives(request):
 
     if request.method == "POST":
         search_string = re.sub(r'[^0-9]+', '', request.POST.get('identity'))
-        done_requests = HotlineRequest.done.filter(identity__icontains=search_string)
+        done_requests = HotlineRequest.done.filter(
+            identity__icontains=search_string)
 
     paginator = Paginator(done_requests, 25)
 

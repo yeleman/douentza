@@ -32,10 +32,8 @@ urlpatterns = patterns(
         {'handler_module': 'douentza.fondasms_handlers',
          'send_automatic_reply': False,
          'automatic_reply_via_handler': False,
-         'automatic_reply_text': ("Merci. On a bien enregistré votre demande. "
-                                  "On vous rappelle bientôt depuis l’un de "
-                                  "ces numéros: 78 93 81 59 ou 71 87 71 49 "
-                                  "ou 67 17 87 65 ou 67 17 87 78.")},
+         'automatic_reply_text': ("Thank You, we recorded your request."
+                                  "You'll be called back shortly.")},
         name='fondasms'),
 
     # API

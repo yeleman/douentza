@@ -113,11 +113,12 @@ def reply_with_phone_number(payload):
 
 
 def get_phone_number_for(operator):
-    return random.choice(INCOMING_NUMBERS_BY_OPERATOR.get(operator, [None])) or None
+    return random.choice(
+        INCOMING_NUMBERS_BY_OPERATOR.get(operator, [None])) or None
 
 for number in settings.FONDA_INCOMING_NUMBERS:
     operator = operator_from_mali_number(number)
-    if not operator in INCOMING_NUMBERS_BY_OPERATOR.keys():
+    if operator not in INCOMING_NUMBERS_BY_OPERATOR.keys():
         INCOMING_NUMBERS_BY_OPERATOR.update({operator: []})
     INCOMING_NUMBERS_BY_OPERATOR[operator].append(number)
     INCOMING_NUMBERS_WITH_OPERATOR.update({number: operator})

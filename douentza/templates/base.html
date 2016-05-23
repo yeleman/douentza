@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>{% block title %}Accueil{% endblock %} - Hotline - Douentza</title>
+        <title>{% block title %}Home{% endblock %} - Hotline - NERI</title>
         {% include "css_tags.html" %}
         <link href="{{ STATIC_URL }}favicon.ico?b=20130928" rel="icon" type="image/x-icon" />
         <link href='https://api.tiles.mapbox.com/mapbox.js/v1.6.2/mapbox.css' rel='stylesheet' />
@@ -18,19 +18,19 @@
           </div>
           <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
-                <li {% ifequal page 'dashboard' %} class="active"{% endifequal %}><a href="{% url 'dashboard' %}">Tableau de bord&nbsp;<span class="new_calls badge pull-right">{% if events_count %}<span class="glyphicon glyphicon-earphone"></span> {{ events_count|default:""}}{% endif %}</span></a></li>
+                <li {% ifequal page 'dashboard' %} class="active"{% endifequal %}><a href="{% url 'dashboard' %}">Dashboard&nbsp;<span class="new_calls badge pull-right">{% if events_count %}<span class="glyphicon glyphicon-earphone"></span> {{ events_count|default:""}}{% endif %}</span></a></li>
                 <li {% ifequal page 'archives' %} class="active"{% endifequal %}><a href="{% url 'archives' %}">Archives</a></li>
-                <li {% ifequal page 'statistics' %} class="active"{% endifequal %}><a href="{% url 'statistics' %}">Statistiques</a></li>
-                <li {% ifequal page 'stats_for_surveys' %} class="active"{% endifequal %}><a href="{% url 'stats_for_surveys' %}">Stats Questionnaires</a></li>
-                {% if user.is_staff %}<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Configuration <span class="caret"></span></a>
+                <li {% ifequal page 'statistics' %} class="active"{% endifequal %}><a href="{% url 'statistics' %}">Statistics</a></li>
+                <li {% ifequal page 'stats_for_surveys' %} class="active"{% endifequal %}><a href="{% url 'stats_for_surveys' %}">Surveys Stats</a></li>
+                {% if user.is_staff %}<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Settings <span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                    <li><a href="{% url 'admin_surveys' %}">Mini questionnaires</a></li>
-                    <li><a href="{% url 'admin_projects' %}">Projets</a></li>
-                    <li><a href="{% url 'blacklist' %}">Liste noire</a></li>
+                    <li><a href="{% url 'admin_surveys' %}">Mini surveys</a></li>
+                    <li><a href="{% url 'admin_projects' %}">Projects</a></li>
+                    <li><a href="{% url 'blacklist' %}">Black List</a></li>
                 </ul>
                 </li>{% endif %}
-                {% if user.is_authenticated %}<li><a href="{% url 'logout' %}">Déconnexion <strong>({{ user }})</strong></a></li>{% endif %}
-                <li><a class="sms-type" data-container="body" data-tidtle="Numéros Hotline" data-content="<h3 style='color:orange;font-weight: bold;'>Orange: 94 42 43 44</h3><h3 style='color: blue;font-weight: bold;'>Malitel: 63 70 22 22</h3><table class='table table-striped '><tr><th>Agent</th><th>Orange</th><th>Malitel</th></tr><tr><td>Soŋay Gao (A.T)</td><td>78 93 81 59</td><td>67 17 87 65</td></tr><tr><td>Peulh (?)</td><td>?</td><td>?</td></tr><tr><td>Soŋay Tombouctou (K.D)</td><td>71 87 71 49</td><td>67 17 87 78</td></tr><tr><td>Anciens Hotline</td><td>71 74 71 28</td><td>67 17 87 97</td></tr></table>" data-placement="bottom" data-html="true">Numéros Hotline</a>    </li>
+                {% if user.is_authenticated %}<li><a href="{% url 'logout' %}">Sign out <strong>({{ user }})</strong></a></li>{% endif %}
+                <li><a class="sms-type" data-container="body" data-tidtle="Hotline Numbers" data-content="<h3 style='color:orange;font-weight: bold;'>Orange: 94 42 43 44</h3><h3 style='color: blue;font-weight: bold;'>Malitel: 63 70 22 22</h3><table class='table table-striped '><tr><th>Agent</th><th>Orange</th><th>Malitel</th></tr><tr><td>Soŋay Gao (A.T)</td><td>78 93 81 59</td><td>67 17 87 65</td></tr><tr><td>Peulh (?)</td><td>?</td><td>?</td></tr><tr><td>Soŋay Tombouctou (K.D)</td><td>71 87 71 49</td><td>67 17 87 78</td></tr><tr><td>Anciens Hotline</td><td>71 74 71 28</td><td>67 17 87 97</td></tr></table>" data-placement="bottom" data-html="true">Hotline Numbers</a>    </li>
             </ul>
           </div>
         </nav>

@@ -50,7 +50,7 @@ survey_charts.push({
     {% if question.type == 'choice' or question.type == 'multi_choice' %}
         [{
             type: 'pie',
-            name: 'Pourcentage',
+            name: 'Percentage',
             data: [
                 {% for slug, choice in question.choices_count.items %}
                 {% localize off %}["{{ choice.label }}", {{ choice.count }}],{% endlocalize %}
@@ -61,11 +61,11 @@ survey_charts.push({
     {% if question.type == 'boolean2' %}
         [{
             type: 'pie',
-            name: 'Pourcentage',
+            name: 'Percentage',
             data: [
                 {% localize off %}
-                ["Vrai", {{ question.nb_true }}],
-                ["Faux", {{ question.nb_false }}],
+                ["True", {{ question.nb_true }}],
+                ["False", {{ question.nb_false }}],
                 {% endlocalize %}
             ]
         }],
@@ -75,12 +75,12 @@ survey_charts.push({
         {% localize off %}
         {
             type: 'column',
-            name: "Vrai",
+            name: "True",
             data: [{{ question.percent_true }}]
         },
         {
             type: 'column',
-            name: "Faux",
+            name: "False",
             data: [{{ question.percent_false }}]
         },
         {

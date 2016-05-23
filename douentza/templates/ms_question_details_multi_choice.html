@@ -1,4 +1,4 @@
-<tr><th>choix</th><th>nb.</th></tr>
+<tr><th>choice</th><th>nb.</th></tr>
 {% for slug, choice in question.choices_count.items %}
 <tr><th>{{ choice.label }}</td><td>{{ choice.count }}</td></tr>
 {% endfor %}

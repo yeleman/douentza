@@ -22,7 +22,8 @@ def survey_form(request, survey_id, request_id):
 
     def terminate_survey(error=False, survey_taken=None):
         context.update({'error': error})
-        if survey_taken is not None and not survey_taken.survey_taken_data.count():
+        if survey_taken is not None and \
+                not survey_taken.survey_taken_data.count():
             survey_taken.delete()
         return render(request, "modal_over.html", context)
 
@@ -45,7 +46,8 @@ def survey_form(request, survey_id, request_id):
             # loop on question
             for question_name, question_data in form.cleaned_data.items():
                 try:
-                    question = Question.objects.get(id=int(question_name.split('_')[-1]))
+                    question = Question.objects.get(
+                        id=int(question_name.split('_')[-1]))
                 except:
                     return terminate_survey(True, survey_taken=survey_taken)
 
@@ -76,8 +78,8 @@ def survey_data(request, survey_id, request_id):
     try:
         survey = get_object_or_404(Survey, id=int(survey_id))
         event = get_object_or_404(HotlineRequest, id=int(request_id))
-        survey_taken = get_object_or_404(SurveyTaken, survey=survey,
-                                                      request=event)
+        survey_taken = get_object_or_404(SurveyTaken,
+                                         survey=survey, request=event)
     except ValueError:
         raise Http404
 

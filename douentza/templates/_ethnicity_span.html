@@ -1,1 +1,1 @@
-{% if event.ethnicity or always %}<span class="label label-default label-xs label-duration" {% if event.ethnicity %}title="Ethnie: {{ event.ethnicity }}s{% endif %}">{{ event.ethnicity|default:"Inconnue" }}</span>{% endif %}
+{% if event.ethnicity or always %}<span class="label label-default label-xs label-duration" {% if event.ethnicity %}title="Ethnie: {{ event.ethnicity }}s{% endif %}">{{ event.ethnicity|default:"Unknown" }}</span>{% endif %}

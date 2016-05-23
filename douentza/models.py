@@ -27,7 +27,7 @@ class Cluster(models.Model):
         ordering = ('name', )
 
     slug = models.SlugField(max_length=200, primary_key=True)
-    name = models.CharField(max_length=70, verbose_name="Nom", unique=True)
+    name = models.CharField(max_length=70, verbose_name="Name", unique=True)
 
     def __str__(self):
         return self.name
@@ -68,7 +68,7 @@ class Ethnicity(models.Model):
         ordering = ('name', )
 
     slug = models.SlugField(max_length=200, primary_key=True)
-    name = models.CharField(max_length=40, verbose_name="Nom")
+    name = models.CharField(max_length=40, verbose_name="Name")
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
@@ -153,12 +153,12 @@ class Entity(MPTTModel):
     TYPE_OTHER = 'autre'
 
     TYPES = {
-        TYPE_REGION: "Région",
+        TYPE_REGION: "Region",
         TYPE_CERCLE: "Cercle",
         TYPE_ARRONDISSEMENT: "Arrondissement",
         TYPE_COMMUNE: "Commune",
         TYPE_VILLAGE: "Village",
-        TYPE_OTHER: 'Autre',
+        TYPE_OTHER: 'Other',
     }
 
     slug = models.CharField(max_length=20, primary_key=True)
@@ -186,7 +186,8 @@ class Entity(MPTTModel):
         if self.entity_type == etype:
             return self
         try:
-            return [e for e in self.get_ancestors() if e.entity_type == etype][-1]
+            return [e for e in self.get_ancestors()
+                    if e.entity_type == etype][-1]
         except IndexError:
             return None
 
@@ -206,7 +207,7 @@ class Entity(MPTTModel):
         return self.get_ancestor_of('arrondissement')
 
     def get_autre(self):
-        return self.get_ancestor_of('autre')
+        return self.get_ancestor_of('other')
 
     def display_name(self):
         return self.name.title()
@@ -254,7 +255,8 @@ class Entity(MPTTModel):
                                         name=self.display_name())
 
     def display_typed_name(self):
-        return "{type} de {name}".format(type=self.TYPES.get(self.entity_type), name=self.name)
+        return "{type} of {name}".format(
+            type=self.TYPES.get(self.entity_type), name=self.name)
 
     def to_dict(self):
         return {'slug': self.slug,
@@ -274,7 +276,7 @@ class Project(models.Model):
     class Meta:
         ordering = ('name', )
 
-    name = models.CharField(max_length=70, verbose_name="Nom", unique=True)
+    name = models.CharField(max_length=70, verbose_name="Name", unique=True)
     description = models.TextField(null=True, blank=True)
 
     def __str__(self):
@@ -292,23 +294,25 @@ class IncomingManager(models.Manager):
 
     def get_query_set(self):
         return super(IncomingManager, self).get_query_set() \
-                                           .exclude(status__in=(HotlineRequest.STATUS_GAVE_UP,
-                                                                HotlineRequest.STATUS_HANDLED,
-                                                                HotlineRequest.STATUS_BLACK_LIST))
+                                           .exclude(
+            status__in=(HotlineRequest.STATUS_GAVE_UP,
+                        HotlineRequest.STATUS_HANDLED,
+                        HotlineRequest.STATUS_BLACK_LIST))
 
 
 class DoneManager(models.Manager):
 
     def get_query_set(self):
-        return super(DoneManager, self).get_query_set() \
-                                          .filter(status__in=HotlineRequest.DONE_STATUSES)
+        return super(DoneManager, self). \
+            get_query_set().filter(status__in=HotlineRequest.DONE_STATUSES)
 
 
 class AllManager(models.Manager):
 
     def get_query_set(self):
-        return super(AllManager, self).get_query_set() \
-                                          .exclude(status=Survey.STATUS_CREATED)
+        return super(AllManager, self). \
+            get_query_set().exclude(status=Survey.STATUS_CREATED)
+
 
 class ReadyManager(models.Manager):
 
@@ -329,9 +333,9 @@ class HotlineRequest(models.Model):
     SEX_MALE = 'male'
     SEX_FEMALE = 'female'
     SEXES = {
-        SEX_UNKNOWN: 'Inconnu',
-        SEX_MALE: "Homme",
-        SEX_FEMALE: "Femme"
+        SEX_UNKNOWN: 'Unknown',
+        SEX_MALE: "Male",
+        SEX_FEMALE: "Female"
     }
 
     STATUS_NEW_REQUEST = 'NEW_REQUEST'
@@ -342,12 +346,12 @@ class HotlineRequest(models.Model):
     STATUS_BLACK_LIST = 'BLACK_LIST'
 
     STATUSES = {
-        STATUS_NEW_REQUEST: "Nouveau",
-        STATUS_NOT_ANSWERING: "Ne réponds pas",
-        STATUS_HANDLED: "Traité",
-        STATUS_IS_BUSY: "Indisponible",
-        STATUS_BLACK_LIST: "Liste noire",
-        STATUS_GAVE_UP: "Ne réponds jamais"}
+        STATUS_NEW_REQUEST: "New",
+        STATUS_NOT_ANSWERING: "Not answering",
+        STATUS_HANDLED: "Handled",
+        STATUS_IS_BUSY: "Busy",
+        STATUS_BLACK_LIST: "Black listed",
+        STATUS_GAVE_UP: "Gave up"}
 
     TYPE_CALL_ME = 'CALL_ME'
     TYPE_CHARGE_ME = 'CHARGE_ME'
@@ -357,9 +361,9 @@ class HotlineRequest(models.Model):
     TYPE_WEB = 'WEB'
 
     TYPES = {
-        TYPE_CALL_ME: "Rappele moi",
-        TYPE_CHARGE_ME: "Recharges mon compte",
-        TYPE_RING: "Bip.",
+        TYPE_CALL_ME: "Call me",
+        TYPE_CHARGE_ME: "Top-up my account",
+        TYPE_RING: "Ring.",
         TYPE_SMS: "SMS",
         TYPE_WEB: "Web",
         TYPE_SMS_SPAM: "SMS (SPAM)"}
@@ -369,7 +373,7 @@ class HotlineRequest(models.Model):
     DONE_STATUSES = (STATUS_GAVE_UP, STATUS_HANDLED)
 
     created_on = models.DateTimeField(auto_now_add=True)
-    identity = models.CharField(max_length=30, verbose_name="Numéro")
+    identity = models.CharField(max_length=30, verbose_name="Number")
     operator = models.CharField(max_length=50, choices=OPERATORS.items())
     hotline_number = models.CharField(max_length=30, blank=True, null=True)
     status = models.CharField(max_length=50, choices=STATUSES.items(),
@@ -379,28 +383,34 @@ class HotlineRequest(models.Model):
     sms_message = models.TextField(null=True, blank=True)
     hotline_user = models.ForeignKey('HotlineUser', null=True, blank=True)
     responded_on = models.DateTimeField(null=True, blank=True,
-                                        verbose_name="Date de l'appel")
-    age = models.PositiveIntegerField(null=True, blank=True, verbose_name="Age")
+                                        verbose_name="Date of Call")
+    age = models.PositiveIntegerField(null=True, blank=True,
+                                      verbose_name="Age")
     sex = models.CharField(max_length=20, choices=SEXES.items(),
-                           default=SEX_UNKNOWN, verbose_name="Sexe")
+                           default=SEX_UNKNOWN, verbose_name="Gender")
     duration = models.PositiveIntegerField(max_length=4, null=True, blank=True,
-                                           help_text="Durée de l'appel en seconde",
-                                           verbose_name="Durée appel")
-    location = models.ForeignKey('Entity', null=True, blank=True, verbose_name="Localité")
-    ethnicity = models.ForeignKey('Ethnicity', null=True, blank=True, verbose_name="Éthnie")
-    tags = models.ManyToManyField('Tag', null=True, blank=True, verbose_name="Tags", related_name='requests')
-    project = models.ForeignKey('Project', null=True, blank=True, verbose_name="Projet")
+                                           help_text="Call duration (seconds)",
+                                           verbose_name="Callback duration")
+    location = models.ForeignKey('Entity', null=True, blank=True,
+                                 verbose_name="Location")
+    ethnicity = models.ForeignKey('Ethnicity', null=True,
+                                  blank=True, verbose_name="Ethnicity")
+    tags = models.ManyToManyField('Tag', null=True, blank=True,
+                                  verbose_name="Tags", related_name='requests')
+    project = models.ForeignKey('Project', null=True, blank=True,
+                                verbose_name="Project")
     cluster = models.ForeignKey('Cluster', null=True, blank=True)
-    email = models.EmailField(max_length=250, verbose_name="E-mail", null=True, blank=True)
+    email = models.EmailField(max_length=250, verbose_name="E-mail",
+                              null=True, blank=True)
 
     objects = models.Manager()
     incoming = IncomingManager()
     done = DoneManager()
 
     def __str__(self):
-        return "{event_type}-{number}-{status}".format(event_type=self.event_type,
-                                                       status=self.status,
-                                                       number=self.identity)
+        return "{event_type}-{number}-{status}".format(
+            event_type=self.event_type, status=self.status,
+            number=self.identity)
 
     @classmethod
     def get_or_none(cls, ident):
@@ -432,7 +442,8 @@ class HotlineRequest(models.Model):
         callbackattempt = CallbackAttempt(event=self, status=new_status)
         callbackattempt.save()
 
-        if self.callbackattempts.exclude(status=self.STATUS_BLACK_LIST).count() >= 3:
+        if self.callbackattempts.exclude(
+                status=self.STATUS_BLACK_LIST).count() >= 3:
             self.status = HotlineRequest.STATUS_GAVE_UP
         else:
             self.status = new_status
@@ -470,7 +481,8 @@ class HotlineRequest(models.Model):
         return self.TYPES.get(self.event_type)
 
     def all_events(self, reverse=False):
-        events = [self] + list(self.additionalrequests.all()) + list(self.callbackattempts.all())
+        events = [self] + list(self.additionalrequests.all()) + list(
+            self.callbackattempts.all())
         return sorted(events, key=lambda e: e.received_on, reverse=reverse)
 
     def previous_status(self, but_type=STATUS_BLACK_LIST):
@@ -488,7 +500,8 @@ class AdditionalRequest(models.Model):
     class Meta:
         ordering = ('-created_on', '-id')
 
-    event = models.ForeignKey(HotlineRequest, related_name='additionalrequests')
+    event = models.ForeignKey(HotlineRequest,
+                              related_name='additionalrequests')
     created_on = models.DateTimeField(auto_now_add=True)
     request_type = models.CharField(max_length=50,
                                     choices=HotlineRequest.TYPES.items())
@@ -496,7 +509,7 @@ class AdditionalRequest(models.Model):
 
     def __str__(self):
         return "{event}/{type}".format(event=self.event,
-                                         type=self.request_type)
+                                       type=self.request_type)
 
     def type_str(self):
         return HotlineRequest.TYPES.get(self.request_type)
@@ -515,7 +528,6 @@ class AdditionalRequest(models.Model):
             return cls.objects.get(id=ident)
         except cls.DoesNotExist:
             return None
-
 
 
 @implements_to_string
@@ -567,14 +579,14 @@ class Survey(models.Model):
     STATUS_DISABLED = 'disabled'
 
     STATUSES = {
-        STATUS_CREATED: "Commencé",
-        STATUS_READY: "Utilisable",
-        STATUS_DISABLED: "Désactivé"
+        STATUS_CREATED: "Started",
+        STATUS_READY: "Ready",
+        STATUS_DISABLED: "Disabled"
     }
 
     title = models.CharField(max_length=200,
-                             verbose_name="Titre",
-                             help_text="Nom du formulaire")
+                             verbose_name="Title",
+                             help_text="Survey name")
     description = models.TextField(null=True,
                                    blank=True,
                                    verbose_name="Description")
@@ -596,7 +608,6 @@ class Survey(models.Model):
         except cls.DoesNotExist:
             return None
 
-
     def to_dict(self):
         d = {'id': self.id,
              'title': self.title,
@@ -608,7 +619,8 @@ class Survey(models.Model):
 
     @classmethod
     def availables(cls, request):
-        return cls.validated.exclude(id__in=[st.id for st in request.survey_takens.all()]).order_by('id')
+        return cls.validated.exclude(id__in=[
+            st.id for st in request.survey_takens.all()]).order_by('id')
 
     def available_for(self, request):
         return not request.survey_takens.filter(survey__id=self.id).count()
@@ -649,14 +661,14 @@ class Question(models.Model):
     TYPE_TEXT = 'text'
 
     TYPES = {
-        TYPE_STRING: "Texte court",
-        TYPE_TEXT: "Texte",
-        TYPE_BOOLEAN: "Vrai/Faux",
+        TYPE_STRING: "Short text",
+        TYPE_TEXT: "Text",
+        TYPE_BOOLEAN: "True/False",
         TYPE_DATE: "Date",
-        TYPE_INTEGER: "Nombre (entier)",
-        TYPE_FLOAT: "Nombre (réel)",
-        TYPE_CHOICES: "Liste de choix",
-        TYPE_MULTI_CHOICES: "Liste de choix multiples"
+        TYPE_INTEGER: "Number (integer)",
+        TYPE_FLOAT: "Number (float)",
+        TYPE_CHOICES: "Choice List",
+        TYPE_MULTI_CHOICES: "Multiple Choice List"
     }
 
     TYPES_CLS = {
@@ -670,15 +682,15 @@ class Question(models.Model):
         TYPE_CHOICES: forms.MultipleChoiceField(),
     }
 
-    order = models.PositiveIntegerField(default=0,
-        verbose_name="Ordre",
-        help_text="Ordre d'apparition. Le plus élévé en premier. "
-                  "0 égal aucune priorité particulière (ordre d'ajout)")
+    order = models.PositiveIntegerField(
+        default=0, verbose_name="Order",
+        help_text="Display order. Higher is displayed first. "
+                  "0 equals no priority (cration order)")
     label = models.CharField(max_length=200,
                              verbose_name="Question",
-                             help_text="Libellé de la question")
+                             help_text="Question label")
     question_type = models.CharField(max_length=30, choices=TYPES.items())
-    required = models.BooleanField(verbose_name="Réponse requise")
+    required = models.BooleanField(verbose_name="Answer required")
     survey = models.ForeignKey('Survey', related_name='questions')
 
     def __str__(self):
@@ -692,7 +704,6 @@ class Question(models.Model):
         except cls.DoesNotExist:
             return None
 
-
     def type_str(self):
         return self.TYPES.get(self.question_type)
 
@@ -701,7 +712,8 @@ class Question(models.Model):
              'order': self.order,
              'label': self.label,
              'type': self.question_type,
-             'has_choices': self.question_type in (self.TYPE_CHOICES, self.TYPE_MULTI_CHOICES),
+             'has_choices': self.question_type in (self.TYPE_CHOICES,
+                                                   self.TYPE_MULTI_CHOICES),
              'type_str': self.type_str(),
              'required': self.required,
              'choices': []}
@@ -718,7 +730,7 @@ class QuestionChoice(models.Model):
         ordering = ('id', )
 
     slug = models.CharField(max_length=20)
-    label = models.CharField(max_length=70, verbose_name="Choix")
+    label = models.CharField(max_length=70, verbose_name="Choice")
     question = models.ForeignKey('Question', related_name='questionchoices')
 
     def __str__(self):
@@ -783,7 +795,8 @@ class SurveyTakenData(models.Model):
     class Meta:
         unique_together = ('survey_taken', 'question')
 
-    survey_taken = models.ForeignKey('SurveyTaken', related_name='survey_taken_data')
+    survey_taken = models.ForeignKey('SurveyTaken',
+                                     related_name='survey_taken_data')
     question = models.ForeignKey('Question', related_name='survey_taken_data')
     value = PickledObjectField(null=True, blank=True)
 
@@ -804,8 +817,8 @@ class CachedData(models.Model):
     TYPE_OBJECT = 'object'
     TYPE_FILE = 'file'
     TYPES = {
-        TYPE_OBJECT: "Objet",
-        TYPE_FILE: "Fichier"
+        TYPE_OBJECT: "Object",
+        TYPE_FILE: "File"
     }
 
     slug = models.CharField(max_length=75, primary_key=True)

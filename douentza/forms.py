@@ -13,8 +13,8 @@ from douentza.models import (HotlineRequest, Project, Ethnicity,
                              Entity, Survey, Question)
 from douentza.utils import EMPTY_ENTITY
 
-help_duration = "Durée en secondes ou sous la forme 2:30"
-help_age = "L'âge en année"
+help_duration = "Duration in seconds formatted like 2:30"
+help_age = "Age in years"
 
 
 class DurationField(forms.IntegerField):
@@ -31,7 +31,7 @@ class DurationField(forms.IntegerField):
                 seconds = 0
             value = int(minutes) * 60 + int(seconds)
         except:
-            raise ValidationError("Impossible de comprendre la durée",
+            raise ValidationError("Unparsable duration",
                                   code='invalid')
         return value
 
@@ -39,14 +39,14 @@ class DurationField(forms.IntegerField):
 class BasicInformationForm(forms.Form):
 
     request_id = forms.IntegerField(widget=forms.HiddenInput)
-    responded_on = forms.DateTimeField(label="Date de l'appel",
-                                       help_text="Format: JJ/MM/AAAA",
+    responded_on = forms.DateTimeField(label="Date of call",
+                                       help_text="Format: DD/MM/YYYY",
                                        widget=forms.SplitDateTimeWidget)
 
     age = forms.IntegerField(
-        label="Âge", required=False,
+        label="Age", required=False,
         widget=forms.TextInput(attrs={'placeholder': help_age}))
-    sex = forms.ChoiceField(label="Sexe", required=False,
+    sex = forms.ChoiceField(label="Gender", required=False,
                             choices=HotlineRequest.SEXES.items(),
                             widget=forms.Select)
     duration = DurationField(
@@ -69,11 +69,11 @@ class BasicInformationForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(BasicInformationForm, self).__init__(*args, **kwargs)
 
-        all_ethinicty = [('#', "Inconnue")] + \
+        all_ethinicty = [('#', "Unknown")] + \
             [(e.slug, e.name) for e in Ethnicity.objects.order_by('name')]
-        all_project = [('#', "Aucun")] + \
+        all_project = [('#', "None")] + \
             [(p.id, p.name) for p in Project.objects.order_by('name')]
-        all_region = [(EMPTY_ENTITY, "INCONNUE")] +\
+        all_region = [(EMPTY_ENTITY, "UNKNOWN")] +\
             [(e.slug, e.name)
              for e in Entity.objects.filter(entity_type=Entity.TYPE_REGION)
                                     .exclude(slug__startswith='99999')] + \
@@ -100,7 +100,7 @@ class BasicInformationForm(forms.Form):
             try:
                 return Entity.objects.get(slug=location)
             except Entity.DoesNotExist:
-                raise forms.ValidationError("Localité incorrecte.")
+                raise forms.ValidationError("Incorrect location.")
 
     def clean_request_id(self):
         ''' Return a HotlineRequest from the id '''
@@ -108,7 +108,7 @@ class BasicInformationForm(forms.Form):
             return HotlineRequest.objects.get(
                 id=int(self.cleaned_data.get('request_id')))
         except HotlineRequest.DoesNotExist:
-            raise forms.ValidationError("Évennement incorrect")
+            raise forms.ValidationError("Incorrect Event")
 
     def clean_project(self):
         project_id = self.cleaned_data.get('project')
@@ -132,7 +132,7 @@ class BasicInformationForm(forms.Form):
 
     def clean_duration(self):
         if not self.cleaned_data.get('duration'):
-            raise forms.ValidationError("Durée d'appel incorrecte.")
+            raise forms.ValidationError("Incorrect call duration")
         return self.cleaned_data.get('duration')
 
 
@@ -191,8 +191,8 @@ class MiniSurveyAddQuestion(forms.ModelForm):
 
     question_choices = forms.CharField(widget=forms.Textarea,
                                        required=False,
-                                       help_text="Insérez les choix ici ; "
-                                                 "un par ligne.")
+                                       help_text="Insert choices here ; "
+                                                 "one per line.")
 
     class Meta:
         model = Question

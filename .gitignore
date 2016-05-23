@@ -7,3 +7,6 @@ settings_local.py
 *.csv
 cached_data/
 node_modules
+*.backup
+*.db
+*.bz2

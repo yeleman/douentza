@@ -1,3 +1,4 @@
-<script type="text/javascript" src="{{ STATIC_URL }}js/jquery-1.9.1.min.js?v=1.9.1"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}js/thirdparties.min.js?v=1.0"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}js/douentza.js?b=20130928"></script>
+{% load static from staticfiles %}
+<script type="text/javascript" src="{% static "js/jquery-1.9.1.min.js" %}?v=1.9.1"></script>
+<script type="text/javascript" src="{% static "js/thirdparties.min.js" %}?v=1.0"></script>
+<script type="text/javascript" src="{% static "js/douentza.js" %}?b=20130928"></script>

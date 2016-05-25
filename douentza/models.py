@@ -378,14 +378,14 @@ class HotlineRequest(models.Model):
                                       verbose_name="Age")
     sex = models.CharField(max_length=20, choices=SEXES.items(),
                            default=SEX_UNKNOWN, verbose_name="Gender")
-    duration = models.PositiveIntegerField(max_length=4, null=True, blank=True,
+    duration = models.PositiveIntegerField(null=True, blank=True,
                                            help_text="Call duration (seconds)",
                                            verbose_name="Callback duration")
     location = models.ForeignKey('Entity', null=True, blank=True,
                                  verbose_name="Location")
     ethnicity = models.ForeignKey('Ethnicity', null=True,
                                   blank=True, verbose_name="Ethnicity")
-    tags = models.ManyToManyField('Tag', null=True, blank=True,
+    tags = models.ManyToManyField('Tag', blank=True,
                                   verbose_name="Tags", related_name='requests')
     project = models.ForeignKey('Project', null=True, blank=True,
                                 verbose_name="Project")

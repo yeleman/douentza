@@ -19,6 +19,7 @@ from douentza.models import (HotlineRequest, HotlineUser, Cluster,
 class UserModificationForm(forms.ModelForm):
     class Meta:
         model = HotlineUser
+        exclude = ()
 
 
 class UserCreationForm(forms.ModelForm):

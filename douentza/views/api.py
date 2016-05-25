@@ -16,7 +16,7 @@ from douentza.utils import operator_from_mali_number, normalize_phone_number
 
 logger = logging.getLogger(__name__)
 
-PROJECT = Project.objects.get(id=9)
+# PROJECT = Project.objects.get(id=9)
 
 
 @csrf_exempt
@@ -57,8 +57,7 @@ def events_api(request):
 
         # retrieve existing events
         qs = HotlineRequest.objects \
-            .filter(identity=phone_number,
-                    project=PROJECT) \
+            .filter(identity=phone_number) \
             .exclude(status__in=HotlineRequest.DONE_STATUSES)
         if qs.count() > 0:
             req = qs.last()
@@ -80,7 +79,7 @@ def events_api(request):
                     received_on=received_on,
                     sms_message=None,
                     operator=operator,
-                    project=PROJECT,
+                    project=None,
                     email=email,
                     cluster=None)
             except Exception as e:

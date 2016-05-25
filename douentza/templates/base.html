@@ -1,3 +1,4 @@
+{% load static from staticfiles %}
 <!DOCTYPE html>
     <html lang="fr">
     <head>
@@ -5,7 +6,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>{% block title %}Home{% endblock %} - Hotline - NERI</title>
         {% include "css_tags.html" %}
-        <link href="{{ STATIC_URL }}favicon.ico?b=20130928" rel="icon" type="image/x-icon" />
+        <link href="{% static "favicon.ico" %}?b=20130928" rel="icon" type="image/x-icon" />
         <link href='https://api.tiles.mapbox.com/mapbox.js/v1.6.2/mapbox.css' rel='stylesheet' />
     </head>
     <body class="{{ page }}">
@@ -40,7 +41,7 @@
         </div>
 
         {% include "javascript_tags.html" %}
-        {% if page == "statistics" or page == "stats_for_survey" %}<script type="text/javascript" src="{{ STATIC_URL }}js/highcharts.js?v=3.0.5"></script>
+        {% if page == "statistics" or page == "stats_for_survey" %}<script type="text/javascript" src="{% static "js/highcharts.js" %}?v=3.0.5"></script>
         <script type="text/javascript" src="http://code.highcharts.com/modules/exporting.js"></script>
         <script src='https://api.tiles.mapbox.com/mapbox.js/v1.6.2/mapbox.js'></script>
         <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/leaflet.markercluster.js'></script>

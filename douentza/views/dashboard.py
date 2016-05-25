@@ -8,7 +8,7 @@ from __future__ import (unicode_literals, absolute_import,
 import json
 import datetime
 
-from django.http import Http404, HttpResponse
+from django.http import Http404, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
@@ -89,7 +89,7 @@ def ping_json(request):
         'now': to_jstimestamp(datetime.datetime.today()),
         'events': events
     }
-    return HttpResponse(json.dumps(data), mimetype='application/json')
+    return JsonResponse(data)
 
 
 @staff_required
@@ -122,7 +122,7 @@ def ping_html(request):
         'now': to_jstimestamp(now),
         'events': nb_events,
         'html': html}
-    return HttpResponse(json.dumps(data), mimetype='application/json')
+    return JsonResponse(data)
 
 
 @staff_required

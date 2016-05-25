@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<django-objects version="1.0">
+    <object model="douentza.ethnicity" pk="asbghana">
+        <field name="name" type="CharField">Asbghana</field>
+    </object>
+    <object model="douentza.ethnicity" pk="babur">
+        <field name="name" type="CharField">Babur</field>
+    </object>
+    <object model="douentza.ethnicity" pk="baburbura">
+        <field name="name" type="CharField">Baburbura</field>
+    </object>
+    <object model="douentza.ethnicity" pk="bachama">
+        <field name="name" type="CharField">Bachama</field>
+    </object>
+    <object model="douentza.ethnicity" pk="bade">
+        <field name="name" type="CharField">Bade</field>
+    </object>
+    <object model="douentza.ethnicity" pk="batta">
+        <field name="name" type="CharField">Batta</field>
+    </object>
+    <object model="douentza.ethnicity" pk="betso">
+        <field name="name" type="CharField">Betso</field>
+    </object>
+    <object model="douentza.ethnicity" pk="bolewa">
+        <field name="name" type="CharField">Bolewa</field>
+    </object>
+    <object model="douentza.ethnicity" pk="bura">
+        <field name="name" type="CharField">Bura</field>
+    </object>
+    <object model="douentza.ethnicity" pk="burs">
+        <field name="name" type="CharField">Burs</field>
+    </object>
+    <object model="douentza.ethnicity" pk="chamba">
+        <field name="name" type="CharField">Chamba</field>
+    </object>
+    <object model="douentza.ethnicity" pk="chibok">
+        <field name="name" type="CharField">Chibok</field>
+    </object>
+    <object model="douentza.ethnicity" pk="daka">
+        <field name="name" type="CharField">Daka</field>
+    </object>
+    <object model="douentza.ethnicity" pk="falli">
+        <field name="name" type="CharField">Falli</field>
+    </object>
+    <object model="douentza.ethnicity" pk="fulani">
+        <field name="name" type="CharField">Fulani</field>
+    </object>
+    <object model="douentza.ethnicity" pk="gaanda">
+        <field name="name" type="CharField">Gaánda</field>
+    </object>
+    <object model="douentza.ethnicity" pk="gamargu">
+        <field name="name" type="CharField">Gamargu</field>
+    </object>
+    <object model="douentza.ethnicity" pk="gduf">
+        <field name="name" type="CharField">Gduf</field>
+    </object>
+    <object model="douentza.ethnicity" pk="goba">
+        <field name="name" type="CharField">Goba</field>
+    </object>
+    <object model="douentza.ethnicity" pk="gonla">
+        <field name="name" type="CharField">Gonla</field>
+    </object>
+    <object model="douentza.ethnicity" pk="gude">
+        <field name="name" type="CharField">Gude</field>
+    </object>
+    <object model="douentza.ethnicity" pk="guduf">
+        <field name="name" type="CharField">Guduf</field>
+    </object>
+    <object model="douentza.ethnicity" pk="hausa">
+        <field name="name" type="CharField">Hausa</field>
+    </object>
+    <object model="douentza.ethnicity" pk="hausa-fulani">
+        <field name="name" type="CharField">Hausa-Fulani</field>
+    </object>
+    <object model="douentza.ethnicity" pk="higgi">
+        <field name="name" type="CharField">Higgi</field>
+    </object>
+    <object model="douentza.ethnicity" pk="holma">
+        <field name="name" type="CharField">Holma</field>
+    </object>
+    <object model="douentza.ethnicity" pk="hona">
+        <field name="name" type="CharField">Hona</field>
+    </object>
+    <object model="douentza.ethnicity" pk="jeni">
+        <field name="name" type="CharField">Jeni</field>
+    </object>
+    <object model="douentza.ethnicity" pk="kanakaru">
+        <field name="name" type="CharField">Kanakaru</field>
+    </object>
+    <object model="douentza.ethnicity" pk="kanakuru">
+        <field name="name" type="CharField">Kanakuru</field>
+    </object>
+    <object model="douentza.ethnicity" pk="kanuri">
+        <field name="name" type="CharField">Kanuri</field>
+    </object>
+    <object model="douentza.ethnicity" pk="kare-kare">
+        <field name="name" type="CharField">Kare Kare</field>
+    </object>
+    <object model="douentza.ethnicity" pk="kilba">
+        <field name="name" type="CharField">Kilba</field>
+    </object>
+    <object model="douentza.ethnicity" pk="kirya">
+        <field name="name" type="CharField">Kirya</field>
+    </object>
+    <object model="douentza.ethnicity" pk="koma-venni">
+        <field name="name" type="CharField">Koma-Venni</field>
+    </object>
+    <object model="douentza.ethnicity" pk="kugama">
+        <field name="name" type="CharField">Kugama</field>
+    </object>
+    <object model="douentza.ethnicity" pk="laka">
+        <field name="name" type="CharField">Laka</field>
+    </object>
+    <object model="douentza.ethnicity" pk="lalla">
+        <field name="name" type="CharField">Lalla</field>
+    </object>
+    <object model="douentza.ethnicity" pk="libbo">
+        <field name="name" type="CharField">Libbo</field>
+    </object>
+    <object model="douentza.ethnicity" pk="loskuri">
+        <field name="name" type="CharField">Loskuri</field>
+    </object>
+    <object model="douentza.ethnicity" pk="luguda">
+        <field name="name" type="CharField">Luguda</field>
+    </object>
+    <object model="douentza.ethnicity" pk="madara">
+        <field name="name" type="CharField">Madara</field>
+    </object>
+    <object model="douentza.ethnicity" pk="mafa">
+        <field name="name" type="CharField">Mafa</field>
+    </object>
+    <object model="douentza.ethnicity" pk="maga">
+        <field name="name" type="CharField">Maga</field>
+    </object>
+    <object model="douentza.ethnicity" pk="mandara">
+        <field name="name" type="CharField">Mandara</field>
+    </object>
+    <object model="douentza.ethnicity" pk="margi">
+        <field name="name" type="CharField">Margi</field>
+    </object>
+    <object model="douentza.ethnicity" pk="mboi">
+        <field name="name" type="CharField">Mboi</field>
+    </object>
+    <object model="douentza.ethnicity" pk="mbulla">
+        <field name="name" type="CharField">Mbulla</field>
+    </object>
+    <object model="douentza.ethnicity" pk="mogori">
+        <field name="name" type="CharField">Mogori</field>
+    </object>
+    <object model="douentza.ethnicity" pk="muchalla">
+        <field name="name" type="CharField">Muchalla</field>
+    </object>
+    <object model="douentza.ethnicity" pk="mulgwai">
+        <field name="name" type="CharField">Mulgwai</field>
+    </object>
+    <object model="douentza.ethnicity" pk="mumuye">
+        <field name="name" type="CharField">Mumuye</field>
+    </object>
+    <object model="douentza.ethnicity" pk="ngamo">
+        <field name="name" type="CharField">Ngamo</field>
+    </object>
+    <object model="douentza.ethnicity" pk="ngizim">
+        <field name="name" type="CharField">Ngizim</field>
+    </object>
+    <object model="douentza.ethnicity" pk="nyadan">
+        <field name="name" type="CharField">Nyadan</field>
+    </object>
+    <object model="douentza.ethnicity" pk="shuwa-arab">
+        <field name="name" type="CharField">Shuwa Arab</field>
+    </object>
+    <object model="douentza.ethnicity" pk="verre">
+        <field name="name" type="CharField">Verre</field>
+    </object>
+    <object model="douentza.ethnicity" pk="vitim">
+        <field name="name" type="CharField">Vitim</field>
+    </object>
+    <object model="douentza.ethnicity" pk="waha">
+        <field name="name" type="CharField">Waha</field>
+    </object>
+    <object model="douentza.ethnicity" pk="wula">
+        <field name="name" type="CharField">Wula</field>
+    </object>
+    <object model="douentza.ethnicity" pk="yaguru">
+        <field name="name" type="CharField">Yaguru</field>
+    </object>
+    <object model="douentza.ethnicity" pk="yugur">
+        <field name="name" type="CharField">Yugur</field>
+    </object>
+</django-objects>

@@ -8,7 +8,7 @@ import json
 
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
+from django.http import JsonResponse
 
 from douentza.models import HotlineRequest, Entity, Survey
 from douentza.utils import get_default_context, EMPTY_ENTITY
@@ -47,6 +47,8 @@ def display_request(request, request_id):
             event.cluster = request.user.cluster
             event.save()
             return redirect('dashboard')
+        else:
+            print(form.errors)
     else:
         form = BasicInformationForm(initial={
             'request_id': request_id,
@@ -75,4 +77,4 @@ def entities_api(request, parent_slug=None):
         [{'slug': e.slug, 'name': e.name}
             for e in Entity.objects.filter(parent__slug=parent_slug)]
 
-    return HttpResponse(json.dumps(response), mimetype='application/json')
+    return JsonResponse(response, safe=False)

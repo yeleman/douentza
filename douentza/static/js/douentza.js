@@ -149,66 +149,49 @@ function changeSelectContent(selectElement, content) {
     });
 }
 
-function changeRegion(regionElem, cercle_id, commune_id, village_id) {
-    var region_id = regionElem.val();
-    var cercle = $('#id_cercle');
-    $.getJSON('/entities/' + region_id).done(function (response) {
-        changeSelectContent(cercle, response);
-        if (cercle_id !== undefined && cercle_id !== null) {
-            cercle.val(cercle_id);
+function changeState(stateElem, lga_id, ward_id) {
+    var state_id = stateElem.val();
+    var lga = $('#id_lga');
+    $.getJSON('/entities/' + state_id).done(function (response) {
+        changeSelectContent(lga, response);
+        if (lga_id !== undefined && lga_id !== null) {
+            lga.val(lga_id);
         }
-        changeCercle(cercle, commune_id, village_id);
+        changeLga(lga, ward_id);
     });
 }
 
-function changeCercle(cercleElem, commune_id, village_id) {
-    var cercle_id = cercleElem.val();
-    var commune = $('#id_commune');
-    $.getJSON('/entities/' + cercle_id).done(function (response) {
-        changeSelectContent(commune, response);
-        if (commune_id !== undefined && commune_id !== null) {
-            commune.val(commune_id);
-        }
-        changeCommune(commune, village_id);
-    });
-}
-
-function changeCommune(communeElem, village_id) {
-    var commune_id = communeElem.val();
-    var village = $('#id_village');
-    $.getJSON('/entities/' + commune_id).done(function (response) {
-        changeSelectContent(village, response);
-        if (village_id !== undefined && village_id !== null) {
-            village.val(village_id);
+function changeLga(lgaElem, ward_id) {
+    var lga_id = lgaElem.val();
+    var ward = $('#id_ward');
+    $.getJSON('/entities/' + lga_id).done(function (response) {
+        changeSelectContent(ward, response);
+        if (ward_id !== undefined && ward_id !== null) {
+            ward.val(ward_id);
         }
     });
 }
 
 function fill_from_previous() {
-    var cercle_id = $('#previous_cercle').val();
-    var commune_id = $('#previous_commune').val();
-    var village_id = $('#previous_village').val();
-    if (cercle_id !== undefined && cercle_id !== null) {
-        changeRegion($('#id_region'), cercle_id, commune_id, village_id);
+    var lga_id = $('#previous_lga').val();
+    var ward_id = $('#previous_ward').val();
+    if (lga_id !== undefined && lga_id !== null) {
+        changeState($('#id_state'), lga_id, ward_id);
     }
 }
 
-$('#id_region').change(function () {
-    var region_id = $(this).val();
-    var cercle = $('#id_cercle');
-    console.log("Changed region: " + region_id);
-    $.getJSON('/entities/' + region_id).done(function (response) {
-        changeSelectContent(cercle, response);
-        changeCercle($("#id_cercle"));
+$('#id_state').change(function () {
+    var state_id = $(this).val();
+    var lga = $('#id_lga');
+    console.log("Changed state: " + state_id);
+    $.getJSON('/entities/' + state_id).done(function (response) {
+        changeSelectContent(lga, response);
+        changeLga($("#id_lga"));
     });
 });
 
-$('#id_cercle').change(function () {
-    changeCercle($(this));
-});
-
-$('#id_commune').change(function () {
-    changeCommune($(this));
+$('#id_lga').change(function () {
+    changeLga($(this));
 });
 
 // Tag Manager

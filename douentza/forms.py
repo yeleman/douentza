@@ -39,9 +39,13 @@ class DurationField(forms.IntegerField):
 class BasicInformationForm(forms.Form):
 
     request_id = forms.IntegerField(widget=forms.HiddenInput)
-    responded_on = forms.DateTimeField(label="Date of callback",
-                                       help_text="Format: DD/MM/YYYY",
-                                       widget=forms.SplitDateTimeWidget)
+    responded_on = forms.SplitDateTimeField(label="Date of callback",
+                                            help_text="Format: DD/MM/YYYY",
+                                            input_date_formats=['%d/%m/%Y'],
+                                            input_time_formats=['%H:%M:%S'],
+                                            widget=forms.SplitDateTimeWidget(
+                                                date_format='%d/%m/%Y',
+                                                time_format='%H:%M:%S'))
 
     age = forms.IntegerField(
         label="Age", required=False,

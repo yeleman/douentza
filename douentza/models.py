@@ -282,8 +282,8 @@ class Project(models.Model):
 
 class IncomingManager(models.Manager):
 
-    def get_query_set(self):
-        return super(IncomingManager, self).get_query_set() \
+    def get_queryset(self):
+        return super(IncomingManager, self).get_queryset() \
                                            .exclude(
             status__in=(HotlineRequest.STATUS_GAVE_UP,
                         HotlineRequest.STATUS_HANDLED,
@@ -292,22 +292,22 @@ class IncomingManager(models.Manager):
 
 class DoneManager(models.Manager):
 
-    def get_query_set(self):
+    def get_queryset(self):
         return super(DoneManager, self). \
-            get_query_set().filter(status__in=HotlineRequest.DONE_STATUSES)
+            get_queryset().filter(status__in=HotlineRequest.DONE_STATUSES)
 
 
 class AllManager(models.Manager):
 
-    def get_query_set(self):
+    def get_queryset(self):
         return super(AllManager, self). \
-            get_query_set().exclude(status=Survey.STATUS_CREATED)
+            get_queryset().exclude(status=Survey.STATUS_CREATED)
 
 
 class ReadyManager(models.Manager):
 
-    def get_query_set(self):
-        return super(ReadyManager, self).get_query_set() \
+    def get_queryset(self):
+        return super(ReadyManager, self).get_queryset() \
                                         .filter(status=Survey.STATUS_READY)
 
 

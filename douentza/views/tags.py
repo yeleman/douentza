@@ -6,7 +6,7 @@ from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import json
 
-from django.http import HttpResponse
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.shortcuts import get_object_or_404
@@ -15,16 +15,14 @@ from douentza.models import Tag, HotlineRequest
 
 
 def all_tags(request):
-    return HttpResponse(json.dumps([t.slug
-                                    for t in Tag.objects.order_by('slug')]),
-                        mimetype='application/json')
+    return JsonResponse([t.slug for t in Tag.objects.order_by('slug')],
+                        safe=False)
 
 
 def tags_for(request, request_id):
     hotline_req = get_object_or_404(HotlineRequest, id=request_id)
-    return HttpResponse(json.dumps(
-        [t.slug for t in hotline_req.tags.order_by('slug')]),
-        mimetype='application/json')
+    return JsonResponse(
+        [t.slug for t in hotline_req.tags.order_by('slug')], safe=False)
 
 
 @csrf_exempt

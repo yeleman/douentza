@@ -7,32 +7,27 @@ from __future__ import (unicode_literals, absolute_import,
 import logging
 import json
 
-from django.http import HttpResponse
+from django.http import JsonResponse
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 
-from douentza.models import HotlineRequest, Project, Ethnicity, Entity
+from douentza.models import HotlineRequest, Ethnicity, Entity
 from douentza.utils import operator_from_mali_number, normalize_phone_number
 
 logger = logging.getLogger(__name__)
-
-# PROJECT = Project.objects.get(id=9)
 
 
 @csrf_exempt
 def events_api(request):
 
     def error(message):
-        r = HttpResponse(json.dumps({'status': 'error',
-                                     'message': message}),
-                         content_type='application/json')
+        r = JsonResponse({'status': 'error', 'message': message})
         r['Access-Control-Allow-Origin'] = "*"
         r['Access-Control-Allow-Credentials'] = "false"
         return r
 
     def resp(payload):
-        r = HttpResponse(json.dumps(payload),
-                         content_type='application/json')
+        r = JsonResponse(payload)
         r['Access-Control-Allow-Origin'] = "*"
         r['Access-Control-Allow-Credentials'] = "false"
         return r

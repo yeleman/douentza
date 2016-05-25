@@ -20,7 +20,7 @@ $('.request-tags').each(function () {
 });
 
 // Basic Infos Location Tricks
-{% if form.errors or form.cercle.value or form.commune.value or form.village.value %}fill_from_previous();{% endif %}
+{% if form.errors or form.lga.value or form.ward.value %}fill_from_previous();{% endif %}
 
 // popovers survey data
 {% for survey in surveys %}
@@ -73,24 +73,20 @@ $('button[type="submit"]').on('click', function () {
         </div>
 
         <div class="col-md-6">
-            <div class="form-group {% if form.region.errors %} has-error {% endif %}">
-                <label class="col-lg-3 control-label">{{ form.region.label }}</label> <div class="col-lg-9">{% include "form_error_span.html" with errors=form.region.errors %}{{ form.region }}</div>
+            <div class="form-group {% if form.state.errors %} has-error {% endif %}">
+                <label class="col-lg-3 control-label">{{ form.state.label }}</label> <div class="col-lg-9">{% include "form_error_span.html" with errors=form.state.errors %}{{ form.state }}</div>
             </div>
-            <div class="form-group {% if form.cercle.errors %} has-error {% endif %}">
-                <label class="col-lg-3 control-label">{{ form.cercle.label }}</label> <div class="col-lg-9">{% include "form_error_span.html" with errors=form.cercle.errors %}{{ form.cercle }}</div>
+            <div class="form-group {% if form.lga.errors %} has-error {% endif %}">
+                <label class="col-lg-3 control-label">{{ form.lga.label }}</label> <div class="col-lg-9">{% include "form_error_span.html" with errors=form.lga.errors %}{{ form.lga }}</div>
             </div>
-            <div class="form-group {% if form.commune.errors %} has-error {% endif %}">
-                <label class="col-lg-3 control-label">{{ form.commune.label }}</label> <div class="col-lg-9">{% include "form_error_span.html" with errors=form.commune.errors %}{{ form.commune }}</div>
-            </div>
-            <div class="form-group {% if form.village.errors %} has-error {% endif %}">
-                <label class="col-lg-3 control-label">{{ form.village.label }}</label> <div class="col-lg-9">{% include "form_error_span.html" with errors=form.village.errors %}{{ form.village }}</div>
+            <div class="form-group {% if form.ward.errors %} has-error {% endif %}">
+                <label class="col-lg-3 control-label">{{ form.ward.label }}</label> <div class="col-lg-9">{% include "form_error_span.html" with errors=form.ward.errors %}{{ form.ward }}</div>
             </div>
         </div>
     </div>
-{% if form.errors or form.cercle.value or form.commune.value or form.village.value %}
-    <input type="hidden" id="previous_cercle" value="{{ form.cercle.value }}" />
-    <input type="hidden" id="previous_commune" value="{{ form.commune.value }}" />
-    <input type="hidden" id="previous_village" value="{{ form.village.value }}" />
+{% if form.errors or form.lga.value or form.ward.value %}
+    <input type="hidden" id="previous_lga" value="{{ form.lga.value }}" />
+    <input type="hidden" id="previous_ward" value="{{ form.ward.value }}" />
 {% endif %}
 </form>
 

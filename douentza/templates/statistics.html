@@ -4,7 +4,9 @@
 {% block title %}Statistics{% endblock %}
 
 {% block content %}
-
+{% if no_stats %}
+<p class="alert alert-warning">Statistics have not been generated yet.</p>
+{% else %}
     <h2>General Statistics</h2>
     <p class="pull-left">Statistics (including mini surveys ones) are updated periodicaly (approx. every 2 hours).<br />Last update: {{ last_update|handleddate }}</p>
     <a href="{{ general_stats_slug|cachedslug }}" class="pull-right"><button class="btn btn-success"><span class="glyphicon glyphicon-download"></span> Export Data as CSV</button></a>
@@ -79,6 +81,7 @@
 
     {% include "stats_commune_table.html" %}
 
+{% endif %}
 {% endblock %}
 
 {% block extra_js %}

@@ -349,11 +349,13 @@ def export_general_stats_as_csv(filename):
 @login_required
 def dashboard(request):
     context = get_default_context(page='statistics')
-
-    context.update(get_statistics_dict())
-    context.update({'graph_slug': "general_stats_graph",
-                    'last_update': CachedData.objects.get(
-                        slug="general_stats").created_on})
+    last_update = CachedData.get_or_none("general_stats")
+    if last_update is None:
+        context.update({'no_stats': True})
+    else:
+        context.update(get_statistics_dict())
+        context.update({'graph_slug': "general_stats_graph",
+                        'last_update': last_update.created_on})
 
     return render(request, "statistics.html", context)
 

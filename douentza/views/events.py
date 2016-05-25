@@ -43,7 +43,7 @@ def display_request(request, request_id):
             event.sex = form.cleaned_data.get('sex')
             event.ethnicity = form.cleaned_data.get('ethnicity')
             event.duration = form.cleaned_data.get('duration')
-            event.location = form.cleaned_data.get('village')
+            event.location = form.cleaned_data.get('ward')
             event.cluster = request.user.cluster
             event.save()
             return redirect('dashboard')
@@ -54,14 +54,12 @@ def display_request(request, request_id):
             'project': getattr(event.project, 'id', None),
             'sex': event.sex,
             'ethnicity': getattr(event.ethnicity, 'slug', None),
-            'region': event.location.get_region().slug
-            if event.location and event.location.get_region() else None,
-            'cercle': event.location.get_cercle().slug
-            if event.location and event.location.get_cercle() else None,
-            'commune': event.location.get_commune().slug
-            if event.location and event.location.get_commune() else None,
-            'village': event.location.get_village().slug
-            if event.location and event.location.get_village() else None,
+            'state': event.location.get_state().slug
+            if event.location and event.location.get_state() else None,
+            'lga': event.location.get_lga().slug
+            if event.location and event.location.get_lga() else None,
+            'ward': event.location.get_ward().slug
+            if event.location and event.location.get_ward() else None,
         })
 
     context.update({"form": form})
@@ -73,7 +71,7 @@ def display_request(request, request_id):
 def entities_api(request, parent_slug=None):
     ''' JSON list of Entity whose parent has the slug provided '''
 
-    response = [{'slug': EMPTY_ENTITY, 'name': "INCONNU"}] + \
+    response = [{'slug': EMPTY_ENTITY, 'name': "UNKNOWN"}] + \
         [{'slug': e.slug, 'name': e.name}
             for e in Entity.objects.filter(parent__slug=parent_slug)]
 

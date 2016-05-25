@@ -39,7 +39,7 @@ class DurationField(forms.IntegerField):
 class BasicInformationForm(forms.Form):
 
     request_id = forms.IntegerField(widget=forms.HiddenInput)
-    responded_on = forms.DateTimeField(label="Date of call",
+    responded_on = forms.DateTimeField(label="Date of callback",
                                        help_text="Format: DD/MM/YYYY",
                                        widget=forms.SplitDateTimeWidget)
 
@@ -50,21 +50,22 @@ class BasicInformationForm(forms.Form):
                             choices=HotlineRequest.SEXES.items(),
                             widget=forms.Select)
     duration = DurationField(
-        label="Durée", required=True,
+        label="Duration", required=True,
         widget=forms.TextInput(attrs={'placeholder': help_duration}))
     ethnicity = forms.ChoiceField(
-        label="Ethnie", required=False, widget=forms.Select)
+        label="Ethnicity", required=False, widget=forms.Select)
     project = forms.ChoiceField(
-        label="Projet", required=False, widget=forms.Select)
+        label="Project", required=False, widget=forms.Select)
 
-    region = forms.ChoiceField(
-        label="Région", choices=[], widget=forms.Select)
-    cercle = forms.CharField(
-        label="Cercle", widget=forms.Select, required=False)
-    commune = forms.CharField(
-        label="Commune", widget=forms.Select, required=False)
-    village = forms.CharField(
-        label="Village", widget=forms.Select, required=False)
+    state = forms.ChoiceField(
+        label=Entity.TYPES.get(Entity.TYPE_STATE),
+        choices=[], widget=forms.Select)
+    lga = forms.CharField(
+        label=Entity.TYPES.get(Entity.TYPE_LGA),
+        widget=forms.Select, required=False)
+    ward = forms.CharField(
+        label=Entity.TYPES.get(Entity.TYPE_WARD),
+        widget=forms.Select, required=False)
 
     def __init__(self, *args, **kwargs):
         super(BasicInformationForm, self).__init__(*args, **kwargs)
@@ -73,24 +74,24 @@ class BasicInformationForm(forms.Form):
             [(e.slug, e.name) for e in Ethnicity.objects.order_by('name')]
         all_project = [('#', "None")] + \
             [(p.id, p.name) for p in Project.objects.order_by('name')]
-        all_region = [(EMPTY_ENTITY, "UNKNOWN")] +\
+        all_state = [(EMPTY_ENTITY, "UNKNOWN")] +\
             [(e.slug, e.name)
-             for e in Entity.objects.filter(entity_type=Entity.TYPE_REGION)
+             for e in Entity.objects.filter(entity_type=Entity.TYPE_STATE)
                                     .exclude(slug__startswith='99999')] + \
             [(e.slug, e.name)
-             for e in Entity.objects.filter(entity_type=Entity.TYPE_REGION)
+             for e in Entity.objects.filter(entity_type=Entity.TYPE_STATE)
                                     .filter(slug__startswith='99999')
                                     .order_by('name')]
 
         self.fields['ethnicity'].choices = all_ethinicty
         self.fields['project'].choices = all_project
-        self.fields['region'].choices = all_region
+        self.fields['state'].choices = all_state
 
-    def clean_village(self):
-            ''' Returns a Village Entity from the multiple selects '''
+    def clean_ward(self):
+            ''' Returns a Ward Entity from the multiple selects '''
             is_empty = lambda l: l is None or l == EMPTY_ENTITY
             location = None
-            levels = ['region', 'cercle', 'commune', 'village']
+            levels = ['state', 'lga', 'ward']
             while len(levels) and is_empty(location):
                 location = self.cleaned_data.get(levels.pop()) or None
 

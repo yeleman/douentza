@@ -334,8 +334,8 @@ def export_survey_as_csv(survey, filename):
     norm_header = lambda label: slugify(label)
     meta_headers = ['meta_received_on', 'meta_responded_on', 'meta_operator',
                     'meta_cluster', 'meta_project', 'meta_age', 'meta_sex',
-                    'meta_call_duration', 'meta_ethnicity', 'meta_region',
-                    'meta_cercle', 'meta_commune', 'meta_village', 'meta_gps']
+                    'meta_call_duration', 'meta_ethnicity', 'meta_state',
+                    'meta_lga', 'meta_ward', 'meta_gps']
     headers = meta_headers + ["{}-{}".format(q['id'], norm_header(q['label']))
                               for q in survey.to_dict()['questions']]
 
@@ -365,14 +365,12 @@ def export_survey_as_csv(survey, filename):
             'meta_call_duration': survey_taken.request.duration,
             'meta_ethnicity': getattr(survey_taken.request.ethnicity,
                                       'slug', None),
-            'meta_region': getattr(survey_taken.request.location,
-                                   'get_region', lambda: None)(),
-            'meta_cercle': getattr(survey_taken.request.location,
-                                   'get_cercle', lambda: None)(),
-            'meta_commune': getattr(survey_taken.request.location,
-                                    'get_commune', lambda: None)(),
-            'meta_village': getattr(survey_taken.request.location,
-                                    'get_village', lambda: None)(),
+            'meta_state': getattr(survey_taken.request.location,
+                                  'get_state', lambda: None)(),
+            'meta_lga': getattr(survey_taken.request.location,
+                                'get_lga', lambda: None)(),
+            'meta_ward': getattr(survey_taken.request.location,
+                                 'get_ward', lambda: None)(),
             'meta_gps': getattr(survey_taken.request.location,
                                 'get_geopoint', lambda: None)(),
         }

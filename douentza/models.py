@@ -145,20 +145,16 @@ class BlacklistedNumber(models.Model):
 @implements_to_string
 class Entity(MPTTModel):
 
-    TYPE_REGION = 'region'
-    TYPE_CERCLE = 'cercle'
-    TYPE_ARRONDISSEMENT = 'arrondissement'
-    TYPE_COMMUNE = 'commune'
-    TYPE_VILLAGE = 'village'
+    TYPE_STATE = 'state'
+    TYPE_LGA = 'lga'
+    TYPE_WARD = 'ward'
     TYPE_OTHER = 'autre'
 
     TYPES = {
-        TYPE_REGION: "Region",
-        TYPE_CERCLE: "Cercle",
-        TYPE_ARRONDISSEMENT: "Arrondissement",
-        TYPE_COMMUNE: "Commune",
-        TYPE_VILLAGE: "Village",
-        TYPE_OTHER: 'Other',
+        TYPE_STATE: "State",
+        TYPE_LGA: "LGA",
+        TYPE_WARD: "Ward",
+        TYPE_OTHER: "Other",
     }
 
     slug = models.CharField(max_length=20, primary_key=True)
@@ -191,20 +187,14 @@ class Entity(MPTTModel):
         except IndexError:
             return None
 
-    def get_village(self):
-        return self.get_ancestor_of('village')
+    def get_ward(self):
+        return self.get_ancestor_of('ward')
 
-    def get_commune(self):
-        return self.get_ancestor_of('commune')
+    def get_lga(self):
+        return self.get_ancestor_of('lga')
 
-    def get_cercle(self):
-        return self.get_ancestor_of('cercle')
-
-    def get_region(self):
-        return self.get_ancestor_of('region')
-
-    def get_arrondissement(self):
-        return self.get_ancestor_of('arrondissement')
+    def get_state(self):
+        return self.get_ancestor_of('state')
 
     def get_autre(self):
         return self.get_ancestor_of('other')
@@ -255,7 +245,7 @@ class Entity(MPTTModel):
                                         name=self.display_name())
 
     def display_typed_name(self):
-        return "{type} of {name}".format(
+        return "{name} {type}".format(
             type=self.TYPES.get(self.entity_type), name=self.name)
 
     def to_dict(self):

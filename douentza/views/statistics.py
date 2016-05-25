@@ -23,7 +23,7 @@ from douentza.models import (HotlineRequest, Project, Survey, SurveyTaken,
                              Entity, Ethnicity, CachedData)
 from douentza.utils import (get_default_context, datetime_range,
                             start_or_end_day_from_date, to_jstimestamp,
-                            ethinicity_requests, communes_located_requests,
+                            ethinicity_requests, lga_located_requests,
                             stats_per_age, percent_calculation, isoformat_date)
 
 
@@ -164,12 +164,12 @@ def get_statistics_dict():
     stats_41_55 = stats_per_age(41, 55)
     other_56 = stats_per_age(56, 180)
 
-    communes_located_requests_list = [
-        communes_located_requests(commune)
-        for commune in list(Entity.objects.filter(entity_type='commune'))] + \
-        [("Inconnue", unknown_location_count, unknown_location_percent)]
-    communes_located_requests_list = [
-        c for c in communes_located_requests_list if c[1] > 0]
+    lga_located_requests_list = [
+        lga_located_requests(lga)
+        for lga in list(Entity.objects.filter(entity_type=Entity.TYPE_LGA))] \
+        + [("Unknown", unknown_location_count, unknown_location_percent)]
+    lga_located_requests_list = [
+        c for c in lga_located_requests_list if c[1] > 0]
 
     context.update({'last_event': last_event,
                     'nb_total_events': nb_total_events,
@@ -199,8 +199,8 @@ def get_statistics_dict():
                         ethinicity_requests(ethinicity)
                         for ethinicity in list(Ethnicity.objects.all()) +
                         [None]],
-                    'communes_located_requests':
-                        communes_located_requests_list,
+                    'lga_located_requests':
+                        lga_located_requests_list,
                     'general_stats_slug': "general_stats",
                     })
 

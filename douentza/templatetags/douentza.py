@@ -91,7 +91,7 @@ def event_date(adate):
 
 @register.filter(name='handleddate')
 def event_handled_date(adate):
-    return date(adate, "l F d Y at H\hi")
+    return date(adate, "l F d Y @ H\hi")
 
 
 @register.filter(name='eventdateshort')

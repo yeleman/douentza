@@ -236,7 +236,7 @@ def ethinicity_requests(ethnicity):
     return ethnicity, count, percent
 
 
-def communes_located_requests(entity):
+def lga_located_requests(entity):
     qs = hotline_requests_qs()
     count = qs.filter(location__in=entity.get_descendants(True)).count()
     total = qs.count()

@@ -28,7 +28,6 @@ def archives(request):
             identity__icontains=search_string)
 
     paginator = Paginator(done_requests, 25)
-
     page = request.GET.get('page')
     try:
         requests_paginator = paginator.page(page)
@@ -36,6 +35,12 @@ def archives(request):
         requests_paginator = paginator.page(1)
     except EmptyPage:
         requests_paginator = paginator.page(paginator.num_pages)
+
+    prl = len(list(paginator.page_range))
+    paginator.page_range2 = range(1, prl, int(prl / 10) or 1)
+    if requests_paginator.number not in paginator.page_range2:
+        paginator.page_range2.append(requests_paginator.number)
+        paginator.page_range2 = sorted(paginator.page_range2)
 
     context.update({"requests_paginator": requests_paginator})
 

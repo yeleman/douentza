@@ -4,12 +4,11 @@
 
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
-import json
 import datetime
 
 import numpy as np
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import JsonResponse
 from django.db.models import Avg, Max, Min, Sum
 from django.contrib.auth.decorators import login_required
 from py3compat import PY2
@@ -363,5 +362,4 @@ def dashboard(request):
 @login_required
 def event_response_counts_json(request):
 
-    return HttpResponse(json.dumps(get_event_responses_counts()),
-                        mimetype='application/json')
+    return JsonResponse(get_event_responses_counts())

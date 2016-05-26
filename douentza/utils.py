@@ -11,14 +11,12 @@ from py3compat import string_types
 
 
 NB_CHARS_VALID_NUMBER = 8  # bellow, number is considered invalid
-COUNTRY_PREFIX = '223'  # home phone prefix
+COUNTRY_PREFIX = '234'  # home phone prefix
 EMPTY_ENTITY = '00000000'  # must not exist in fixtures
 ORANGE = 'orange'
 MALITEL = 'malitel'
-FOREIGN = 'foreign'
-OPERATORS = {ORANGE: "Orange MALI",
-             MALITEL: "Malitel",
-             FOREIGN: "Extérieur"}
+UNKNOWN = 'unknown'
+OPERATORS = {UNKNOWN: "Unknown"}
 ALL_COUNTRY_CODES = [1242, 1246, 1264, 1268, 1284, 1340, 1345, 1441, 1473,
                      1599, 1649, 1664, 1670, 1671, 1684, 1758, 1767, 1784,
                      1809, 1868, 1869, 1876, 1, 20, 212, 213, 216, 218, 220,
@@ -207,6 +205,10 @@ def operator_from_mali_number(number, default=ORANGE):
         if clean_number.startswith(str(prefix)):
             return ORANGE
 
+    return default
+
+
+def operator_from_nigeria_number(number, default=UNKNOWN):
     return default
 
 

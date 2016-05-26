@@ -362,9 +362,11 @@ class HotlineRequest(models.Model):
     SMS_TYPES = (TYPE_SMS, TYPE_SMS_SPAM)
     DONE_STATUSES = (STATUS_GAVE_UP, STATUS_HANDLED)
 
-    created_on = models.DateTimeField(auto_now_add=True)
+    created_on = models.DateTimeField(default=timezone.now)
     identity = models.CharField(max_length=30, verbose_name="Number")
-    operator = models.CharField(max_length=50, choices=OPERATORS.items())
+    operator = models.CharField(max_length=50,
+                                blank=True, null=True,
+                                choices=OPERATORS.items())
     hotline_number = models.CharField(max_length=30, blank=True, null=True)
     status = models.CharField(max_length=50, choices=STATUSES.items(),
                               default=STATUS_NEW_REQUEST)
@@ -492,7 +494,7 @@ class AdditionalRequest(models.Model):
 
     event = models.ForeignKey(HotlineRequest,
                               related_name='additionalrequests')
-    created_on = models.DateTimeField(auto_now_add=True)
+    created_on = models.DateTimeField(default=timezone.now)
     request_type = models.CharField(max_length=50,
                                     choices=HotlineRequest.TYPES.items())
     sms_message = models.TextField(null=True, blank=True)
@@ -528,7 +530,7 @@ class CallbackAttempt(models.Model):
         ordering = ('-created_on', '-id')
 
     event = models.ForeignKey(HotlineRequest, related_name='callbackattempts')
-    created_on = models.DateTimeField(auto_now_add=True)
+    created_on = models.DateTimeField(default=timezone.now)
     status = models.CharField(max_length=50,
                               choices=HotlineRequest.STATUSES.items())
 
@@ -748,7 +750,7 @@ class SurveyTaken(models.Model):
 
     survey = models.ForeignKey('Survey', related_name='survey_takens')
     request = models.ForeignKey('HotlineRequest', related_name='survey_takens')
-    taken_on = models.DateTimeField(auto_now_add=True)
+    taken_on = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return str(self.survey)
@@ -812,7 +814,7 @@ class CachedData(models.Model):
     }
 
     slug = models.CharField(max_length=75, primary_key=True)
-    created_on = models.DateTimeField(auto_now_add=True)
+    created_on = models.DateTimeField(default=timezone.now)
     data_type = models.CharField(choices=TYPES.items(),
                                  default=TYPE_OBJECT, max_length=50)
     value = PickledObjectField(null=True, blank=True)

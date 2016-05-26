@@ -59,7 +59,7 @@ def handle_sms_call(payload, event_type=None):
     phone_number = payload.get('phone_number')
     timestamp = payload.get('timestamp')
     received_on = datetime_from_timestamp(timestamp)
-    operator = None  # operator_from_mali_number(identity)
+    operator = None
 
     try:
         existing = HotlineRequest.objects \

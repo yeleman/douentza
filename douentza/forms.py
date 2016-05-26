@@ -8,6 +8,7 @@ from __future__ import (unicode_literals, absolute_import,
 from django import forms
 from django.utils.text import slugify
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 from douentza.models import (HotlineRequest, Project, Ethnicity,
                              Entity, Survey, Question)
@@ -90,6 +91,10 @@ class BasicInformationForm(forms.Form):
         self.fields['ethnicity'].choices = all_ethinicty
         self.fields['project'].choices = all_project
         self.fields['state'].choices = all_state
+
+    def clean_responded_on(self):
+        return timezone.make_aware(self.cleaned_data['responded_on'],
+                                   timezone.get_current_timezone())
 
     def clean_ward(self):
             ''' Returns a Ward Entity from the multiple selects '''

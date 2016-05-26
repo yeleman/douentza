@@ -4,7 +4,6 @@
 
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
-import json
 
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404

@@ -12,6 +12,7 @@ from django.http import Http404, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
+from django.utils import timezone
 
 from douentza.models import (HotlineRequest, BlacklistedNumber,
                              AdditionalRequest, CallbackAttempt,
@@ -67,8 +68,9 @@ def dashboard(request):
 @staff_required
 def ping_json(request):
     try:
-        since = datetime.datetime.fromtimestamp(
-            int(request.GET.get('since')) / 1000)
+        since = timezone.make_aware(datetime.datetime.fromtimestamp(
+            int(request.GET.get('since')) / 1000),
+            timezone.get_current_timezone())
     except:
         raise Http404
 
@@ -98,8 +100,9 @@ def ping_html(request):
     now = datetime.datetime.now()
 
     try:
-        since = datetime.datetime.fromtimestamp(
-            int(request.GET.get('since')) / 1000)
+        since = timezone.make_aware(datetime.datetime.fromtimestamp(
+            int(request.GET.get('since')) / 1000),
+            timezone.get_current_timezone())
     except:
         raise Http404
 

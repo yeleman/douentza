@@ -9,8 +9,10 @@ from django.conf.urls import include, url
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
+
+from fondasms import views as fonda_views
 
 from douentza import views as views
 
@@ -26,13 +28,13 @@ urlpatterns = [
         views.cached_data.cached_data_lookup, name='cached_slug'),
 
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^login/$', 'django.contrib.auth.views.login',
+    url(r'^login/$', auth_views.login,
         {'template_name': 'login.html'}, name='login'),
-    url(r'^logout/$', 'django.contrib.auth.views.logout',
+    url(r'^logout/$', auth_views.logout,
         {'next_page': '/'}, name='logout'),
 
     # # Android API
-    url(r'^fondasms/?$', 'fondasms.views.fondasms_handler',
+    url(r'^fondasms/?$', fonda_views.fondasms_handler,
         {'handler_module': 'douentza.fondasms_handlers',
          'send_automatic_reply': False,
          'automatic_reply_via_handler': False,

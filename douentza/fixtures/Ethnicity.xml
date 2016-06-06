@@ -186,4 +186,7 @@
     <object model="douentza.ethnicity" pk="yugur">
         <field name="name" type="CharField">Yugur</field>
     </object>
+    <object model="douentza.ethnicity" pk="other">
+        <field name="name" type="CharField">Other</field>
+    </object>
 </django-objects>

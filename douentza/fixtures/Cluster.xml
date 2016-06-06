@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<django-objects version="1.0">
+    <object model="douentza.cluster" pk="fulani">
+        <field name="name" type="CharField">Fulani</field>
+    </object>
+    <object model="douentza.cluster" pk="hausa">
+        <field name="name" type="CharField">Hausa</field>
+    </object>
+    <object model="douentza.cluster" pk="kanuri">
+        <field name="name" type="CharField">Kanuri</field>
+    </object>
+</django-objects>

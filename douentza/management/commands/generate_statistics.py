@@ -5,11 +5,11 @@
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import os
-import datetime
 import json
 
 from django.conf import settings
 from django.utils.text import slugify
+from django.utils import timezone
 from django.core.management.base import BaseCommand
 
 from douentza.views.surveys_stats import (
@@ -36,7 +36,7 @@ class Command(BaseCommand):
                 except:
                     return False
 
-        now = datetime.datetime.now()
+        now = timezone.now()
         datestr = now.strftime('%Y-%m-%d-%Hh%M')
 
         # SURVEYS

@@ -8,11 +8,10 @@ from __future__ import (unicode_literals, absolute_import,
 from django import forms
 from django.utils.text import slugify
 from django.core.exceptions import ValidationError
-from django.utils import timezone
 
 from douentza.models import (HotlineRequest, Project, Ethnicity,
                              Entity, Survey, Question)
-from douentza.utils import EMPTY_ENTITY
+from douentza.utils import EMPTY_ENTITY, make_aware
 
 help_duration = "Duration in seconds formatted like 2:30"
 help_age = "Age in years"
@@ -93,8 +92,7 @@ class BasicInformationForm(forms.Form):
         self.fields['state'].choices = all_state
 
     def clean_responded_on(self):
-        return timezone.make_aware(self.cleaned_data['responded_on'],
-                                   timezone.get_current_timezone())
+        return make_aware(self.cleaned_data['responded_on'])
 
     def clean_ward(self):
             ''' Returns a Ward Entity from the multiple selects '''

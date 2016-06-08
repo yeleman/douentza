@@ -3,8 +3,8 @@
     <object model="douentza.entity" pk="abadam">
         <field name="name" type="CharField">Abadam</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">10.654583</field>
+        <field name="longitude" type="FloatField">12.908333</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">borno</field>
         <field name="lft" type="PositiveIntegerField">2</field>
         <field name="rght" type="PositiveIntegerField">23</field>
@@ -278,8 +278,8 @@
     <object model="douentza.entity" pk="askirauba">
         <field name="name" type="CharField">Askira/Uba</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">10.654583</field>
+        <field name="longitude" type="FloatField">12.908333</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">borno</field>
         <field name="lft" type="PositiveIntegerField">24</field>
         <field name="rght" type="PositiveIntegerField">49</field>
@@ -333,8 +333,8 @@
     <object model="douentza.entity" pk="bade">
         <field name="name" type="CharField">Bade</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">130.251111</field>
+        <field name="longitude" type="FloatField">4.0835</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">yobe</field>
         <field name="lft" type="PositiveIntegerField">2</field>
         <field name="rght" type="PositiveIntegerField">21</field>
@@ -465,8 +465,8 @@
     <object model="douentza.entity" pk="bama">
         <field name="name" type="CharField">Bama</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">11.529817</field>
+        <field name="longitude" type="FloatField">13.6871</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">borno</field>
         <field name="lft" type="PositiveIntegerField">50</field>
         <field name="rght" type="PositiveIntegerField">79</field>
@@ -564,8 +564,8 @@
     <object model="douentza.entity" pk="bayo">
         <field name="name" type="CharField">Bayo</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">10.3405</field>
+        <field name="longitude" type="FloatField">11.619967</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">borno</field>
         <field name="lft" type="PositiveIntegerField">80</field>
         <field name="rght" type="PositiveIntegerField">101</field>
@@ -696,8 +696,8 @@
     <object model="douentza.entity" pk="biu">
         <field name="name" type="CharField">Biu</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">10.619817</field>
+        <field name="longitude" type="FloatField">12.16</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">borno</field>
         <field name="lft" type="PositiveIntegerField">102</field>
         <field name="rght" type="PositiveIntegerField">125</field>
@@ -1147,8 +1147,8 @@
     <object model="douentza.entity" pk="chibok">
         <field name="name" type="CharField">Chibok</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">10.864617</field>
+        <field name="longitude" type="FloatField">12.848333</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">borno</field>
         <field name="lft" type="PositiveIntegerField">126</field>
         <field name="rght" type="PositiveIntegerField">149</field>
@@ -1422,8 +1422,8 @@
     <object model="douentza.entity" pk="damaturu">
         <field name="name" type="CharField">Damaturu</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">13.262222</field>
+        <field name="longitude" type="FloatField">5.175</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">yobe</field>
         <field name="lft" type="PositiveIntegerField">40</field>
         <field name="rght" type="PositiveIntegerField">63</field>
@@ -1444,8 +1444,8 @@
     <object model="douentza.entity" pk="damboa">
         <field name="name" type="CharField">Damboa</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">11.15935</field>
+        <field name="longitude" type="FloatField">12.768333</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">borno</field>
         <field name="lft" type="PositiveIntegerField">150</field>
         <field name="rght" type="PositiveIntegerField">169</field>
@@ -1642,8 +1642,8 @@
     <object model="douentza.entity" pk="demsa">
         <field name="name" type="CharField">Demsa</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">9.4166667</field>
+        <field name="longitude" type="FloatField">12.13333333</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">adamawa</field>
         <field name="lft" type="PositiveIntegerField">2</field>
         <field name="rght" type="PositiveIntegerField">21</field>
@@ -1664,8 +1664,8 @@
     <object model="douentza.entity" pk="dikwa">
         <field name="name" type="CharField">Dikwa</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">12.038817</field>
+        <field name="longitude" type="FloatField">13.91</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">borno</field>
         <field name="lft" type="PositiveIntegerField">170</field>
         <field name="rght" type="PositiveIntegerField">189</field>
@@ -2060,8 +2060,8 @@
     <object model="douentza.entity" pk="farore">
         <field name="name" type="CharField">Farore</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">9.2166667</field>
+        <field name="longitude" type="FloatField">12.65</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">adamawa</field>
         <field name="lft" type="PositiveIntegerField">22</field>
         <field name="rght" type="PositiveIntegerField">45</field>
@@ -2093,8 +2093,8 @@
     <object model="douentza.entity" pk="fika">
         <field name="name" type="CharField">Fika</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">11.313611</field>
+        <field name="longitude" type="FloatField">5.183056</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">yobe</field>
         <field name="lft" type="PositiveIntegerField">64</field>
         <field name="rght" type="PositiveIntegerField">85</field>
@@ -2137,8 +2137,8 @@
     <object model="douentza.entity" pk="fune">
         <field name="name" type="CharField">Fune</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">12.27</field>
+        <field name="longitude" type="FloatField">5.188333</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">yobe</field>
         <field name="lft" type="PositiveIntegerField">86</field>
         <field name="rght" type="PositiveIntegerField">111</field>
@@ -2445,8 +2445,8 @@
     <object model="douentza.entity" pk="ganye">
         <field name="name" type="CharField">Ganye</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">8.4333333</field>
+        <field name="longitude" type="FloatField">12.06666667</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">adamawa</field>
         <field name="lft" type="PositiveIntegerField">46</field>
         <field name="rght" type="PositiveIntegerField">67</field>
@@ -2665,8 +2665,8 @@
     <object model="douentza.entity" pk="gerei">
         <field name="name" type="CharField">Gerei</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">9.3666667</field>
+        <field name="longitude" type="FloatField">12.55</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">adamawa</field>
         <field name="lft" type="PositiveIntegerField">68</field>
         <field name="rght" type="PositiveIntegerField">89</field>
@@ -2731,8 +2731,8 @@
     <object model="douentza.entity" pk="gombi">
         <field name="name" type="CharField">Gombi</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">10.1622222</field>
+        <field name="longitude" type="FloatField">12.74</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">adamawa</field>
         <field name="lft" type="PositiveIntegerField">90</field>
         <field name="rght" type="PositiveIntegerField">111</field>
@@ -2863,8 +2863,8 @@
     <object model="douentza.entity" pk="gubio">
         <field name="name" type="CharField">Gubio</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">12.4917</field>
+        <field name="longitude" type="FloatField">12.785</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">borno</field>
         <field name="lft" type="PositiveIntegerField">190</field>
         <field name="rght" type="PositiveIntegerField">211</field>
@@ -2973,8 +2973,8 @@
     <object model="douentza.entity" pk="gujba">
         <field name="name" type="CharField">Gujba</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">11.658056</field>
+        <field name="longitude" type="FloatField">11.1</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">yobe</field>
         <field name="lft" type="PositiveIntegerField">134</field>
         <field name="rght" type="PositiveIntegerField">153</field>
@@ -3006,8 +3006,8 @@
     <object model="douentza.entity" pk="gulani">
         <field name="name" type="CharField">Gulani</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">10.751389</field>
+        <field name="longitude" type="FloatField">7.033517</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">yobe</field>
         <field name="lft" type="PositiveIntegerField">154</field>
         <field name="rght" type="PositiveIntegerField">177</field>
@@ -3204,8 +3204,8 @@
     <object model="douentza.entity" pk="guyuk">
         <field name="name" type="CharField">Guyuk</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">9.905556</field>
+        <field name="longitude" type="FloatField">11.928333</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">adamawa</field>
         <field name="lft" type="PositiveIntegerField">112</field>
         <field name="rght" type="PositiveIntegerField">131</field>
@@ -3347,8 +3347,8 @@
     <object model="douentza.entity" pk="gwoza">
         <field name="name" type="CharField">Gwoza</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">11.08645</field>
+        <field name="longitude" type="FloatField">13.7</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">borno</field>
         <field name="lft" type="PositiveIntegerField">232</field>
         <field name="rght" type="PositiveIntegerField">259</field>
@@ -3446,8 +3446,8 @@
     <object model="douentza.entity" pk="hawul">
         <field name="name" type="CharField">Hawul</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">10.5267</field>
+        <field name="longitude" type="FloatField">13.186333</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">borno</field>
         <field name="lft" type="PositiveIntegerField">260</field>
         <field name="rght" type="PositiveIntegerField">285</field>
@@ -3479,8 +3479,8 @@
     <object model="douentza.entity" pk="hong">
         <field name="name" type="CharField">Hong</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">10.231667</field>
+        <field name="longitude" type="FloatField">12.930278</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">adamawa</field>
         <field name="lft" type="PositiveIntegerField">132</field>
         <field name="rght" type="PositiveIntegerField">155</field>
@@ -3556,8 +3556,8 @@
     <object model="douentza.entity" pk="jada">
         <field name="name" type="CharField">Jada</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">8.7666667</field>
+        <field name="longitude" type="FloatField">12.15</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">adamawa</field>
         <field name="lft" type="PositiveIntegerField">156</field>
         <field name="rght" type="PositiveIntegerField">179</field>
@@ -3622,8 +3622,8 @@
     <object model="douentza.entity" pk="jakusko">
         <field name="name" type="CharField">Jakusko</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">12.638889</field>
+        <field name="longitude" type="FloatField">8.178333</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">yobe</field>
         <field name="lft" type="PositiveIntegerField">178</field>
         <field name="rght" type="PositiveIntegerField">197</field>
@@ -3732,8 +3732,8 @@
     <object model="douentza.entity" pk="jerr">
         <field name="name" type="CharField">Jerr</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">11.799633</field>
+        <field name="longitude" type="FloatField">13.176667</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">borno</field>
         <field name="lft" type="PositiveIntegerField">286</field>
         <field name="rght" type="PositiveIntegerField">311</field>
@@ -3853,8 +3853,8 @@
     <object model="douentza.entity" pk="kaga">
         <field name="name" type="CharField">Kaga</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">11.50895</field>
+        <field name="longitude" type="FloatField">12.513333</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">borno</field>
         <field name="lft" type="PositiveIntegerField">312</field>
         <field name="rght" type="PositiveIntegerField">343</field>
@@ -3897,8 +3897,8 @@
     <object model="douentza.entity" pk="kala-balge">
         <field name="name" type="CharField">Kala Balge</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">11.917967</field>
+        <field name="longitude" type="FloatField">14.635</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">borno</field>
         <field name="lft" type="PositiveIntegerField">344</field>
         <field name="rght" type="PositiveIntegerField">365</field>
@@ -3963,8 +3963,8 @@
     <object model="douentza.entity" pk="karasuwa">
         <field name="name" type="CharField">Karasuwa</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">13.88</field>
+        <field name="longitude" type="FloatField">6.176389</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">yobe</field>
         <field name="lft" type="PositiveIntegerField">198</field>
         <field name="rght" type="PositiveIntegerField">219</field>
@@ -4392,8 +4392,8 @@
     <object model="douentza.entity" pk="konduga">
         <field name="name" type="CharField">Konduga</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">11.7055556</field>
+        <field name="longitude" type="FloatField">13.40222222</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">borno</field>
         <field name="lft" type="PositiveIntegerField">366</field>
         <field name="rght" type="PositiveIntegerField">387</field>
@@ -4535,8 +4535,8 @@
     <object model="douentza.entity" pk="kukawa">
         <field name="name" type="CharField">Kukawa</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">12.9266</field>
+        <field name="longitude" type="FloatField">14.573333</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">borno</field>
         <field name="lft" type="PositiveIntegerField">388</field>
         <field name="rght" type="PositiveIntegerField">407</field>
@@ -4722,8 +4722,8 @@
     <object model="douentza.entity" pk="kwaya-kusar">
         <field name="name" type="CharField">Kwaya Kusar</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">10.560717</field>
+        <field name="longitude" type="FloatField">11.941667</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">borno</field>
         <field name="lft" type="PositiveIntegerField">408</field>
         <field name="rght" type="PositiveIntegerField">427</field>
@@ -4810,8 +4810,8 @@
     <object model="douentza.entity" pk="lamurde">
         <field name="name" type="CharField">Lamurde</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">9.6</field>
+        <field name="longitude" type="FloatField">11.78333333</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">adamawa</field>
         <field name="lft" type="PositiveIntegerField">180</field>
         <field name="rght" type="PositiveIntegerField">199</field>
@@ -5041,8 +5041,8 @@
     <object model="douentza.entity" pk="machina">
         <field name="name" type="CharField">Machina</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">13.068611</field>
+        <field name="longitude" type="FloatField">7.165556</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">yobe</field>
         <field name="lft" type="PositiveIntegerField">220</field>
         <field name="rght" type="PositiveIntegerField">241</field>
@@ -5063,8 +5063,8 @@
     <object model="douentza.entity" pk="madagali">
         <field name="name" type="CharField">Madagali</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">10.746111</field>
+        <field name="longitude" type="FloatField">9.223333</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">adamawa</field>
         <field name="lft" type="PositiveIntegerField">200</field>
         <field name="rght" type="PositiveIntegerField">219</field>
@@ -5085,8 +5085,8 @@
     <object model="douentza.entity" pk="mafa">
         <field name="name" type="CharField">Mafa</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">11.920917</field>
+        <field name="longitude" type="FloatField">7.226389</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">borno</field>
         <field name="lft" type="PositiveIntegerField">428</field>
         <field name="rght" type="PositiveIntegerField">451</field>
@@ -5129,8 +5129,8 @@
     <object model="douentza.entity" pk="magumer">
         <field name="name" type="CharField">Magumer</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">12.112517</field>
+        <field name="longitude" type="FloatField">12.823333</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">borno</field>
         <field name="lft" type="PositiveIntegerField">452</field>
         <field name="rght" type="PositiveIntegerField">479</field>
@@ -5162,8 +5162,8 @@
     <object model="douentza.entity" pk="maiha">
         <field name="name" type="CharField">Maiha</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">9.9955556</field>
+        <field name="longitude" type="FloatField">13.21805556</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">adamawa</field>
         <field name="lft" type="PositiveIntegerField">220</field>
         <field name="rght" type="PositiveIntegerField">239</field>
@@ -5481,8 +5481,8 @@
     <object model="douentza.entity" pk="marte">
         <field name="name" type="CharField">Marte</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">12.36705</field>
+        <field name="longitude" type="FloatField">13.826333</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">borno</field>
         <field name="lft" type="PositiveIntegerField">510</field>
         <field name="rght" type="PositiveIntegerField">535</field>
@@ -5580,8 +5580,8 @@
     <object model="douentza.entity" pk="mayo-belwa">
         <field name="name" type="CharField">Mayo - Belwa</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">9.05</field>
+        <field name="longitude" type="FloatField">12.05</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">adamawa</field>
         <field name="lft" type="PositiveIntegerField">240</field>
         <field name="rght" type="PositiveIntegerField">261</field>
@@ -5734,8 +5734,8 @@
     <object model="douentza.entity" pk="michika">
         <field name="name" type="CharField">Michika</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">10.618056</field>
+        <field name="longitude" type="FloatField">13.389444</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">adamawa</field>
         <field name="lft" type="PositiveIntegerField">262</field>
         <field name="rght" type="PositiveIntegerField">295</field>
@@ -5833,8 +5833,8 @@
     <object model="douentza.entity" pk="mobbar">
         <field name="name" type="CharField">Mobbar</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">12.883567</field>
+        <field name="longitude" type="FloatField">12.506667</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">borno</field>
         <field name="lft" type="PositiveIntegerField">536</field>
         <field name="rght" type="PositiveIntegerField">557</field>
@@ -5921,8 +5921,8 @@
     <object model="douentza.entity" pk="mubi-north">
         <field name="name" type="CharField">Mubi - North</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">10.2666667</field>
+        <field name="longitude" type="FloatField">13.26666667</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">adamawa</field>
         <field name="lft" type="PositiveIntegerField">296</field>
         <field name="rght" type="PositiveIntegerField">319</field>
@@ -5932,8 +5932,8 @@
     <object model="douentza.entity" pk="mubi-south">
         <field name="name" type="CharField">Mubi - South</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">11.244</field>
+        <field name="longitude" type="FloatField">13.395556</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">adamawa</field>
         <field name="lft" type="PositiveIntegerField">320</field>
         <field name="rght" type="PositiveIntegerField">341</field>
@@ -6097,8 +6097,8 @@
     <object model="douentza.entity" pk="nangere">
         <field name="name" type="CharField">Nangere</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">11.828889</field>
+        <field name="longitude" type="FloatField">5.183611</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">yobe</field>
         <field name="lft" type="PositiveIntegerField">242</field>
         <field name="rght" type="PositiveIntegerField">263</field>
@@ -6185,8 +6185,8 @@
     <object model="douentza.entity" pk="ngala">
         <field name="name" type="CharField">Ngala</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">12.2061</field>
+        <field name="longitude" type="FloatField">14.02</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">borno</field>
         <field name="lft" type="PositiveIntegerField">584</field>
         <field name="rght" type="PositiveIntegerField">605</field>
@@ -6416,8 +6416,8 @@
     <object model="douentza.entity" pk="nguru">
         <field name="name" type="CharField">Nguru</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">12.870278</field>
+        <field name="longitude" type="FloatField">3.171667</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">yobe</field>
         <field name="lft" type="PositiveIntegerField">264</field>
         <field name="rght" type="PositiveIntegerField">283</field>
@@ -6460,8 +6460,8 @@
     <object model="douentza.entity" pk="numan">
         <field name="name" type="CharField">Numan</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">9.4666667</field>
+        <field name="longitude" type="FloatField">12.03333333</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">adamawa</field>
         <field name="lft" type="PositiveIntegerField">342</field>
         <field name="rght" type="PositiveIntegerField">363</field>
@@ -6647,8 +6647,8 @@
     <object model="douentza.entity" pk="potiskum">
         <field name="name" type="CharField">Potiskum</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">11.658056</field>
+        <field name="longitude" type="FloatField">11.101944</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">yobe</field>
         <field name="lft" type="PositiveIntegerField">284</field>
         <field name="rght" type="PositiveIntegerField">305</field>
@@ -6944,8 +6944,8 @@
     <object model="douentza.entity" pk="shelleng">
         <field name="name" type="CharField">Shelleng</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">9.884722</field>
+        <field name="longitude" type="FloatField">12.008889</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">adamawa</field>
         <field name="lft" type="PositiveIntegerField">364</field>
         <field name="rght" type="PositiveIntegerField">383</field>
@@ -7054,8 +7054,8 @@
     <object model="douentza.entity" pk="song">
         <field name="name" type="CharField">Song</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">9.824444</field>
+        <field name="longitude" type="FloatField">12.625</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">adamawa</field>
         <field name="lft" type="PositiveIntegerField">384</field>
         <field name="rght" type="PositiveIntegerField">407</field>
@@ -7241,8 +7241,8 @@
     <object model="douentza.entity" pk="tarmuwa">
         <field name="name" type="CharField">Tarmuwa</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">13.251111</field>
+        <field name="longitude" type="FloatField">4.0835</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">yobe</field>
         <field name="lft" type="PositiveIntegerField">306</field>
         <field name="rght" type="PositiveIntegerField">325</field>
@@ -7417,8 +7417,8 @@
     <object model="douentza.entity" pk="tungo">
         <field name="name" type="CharField">Tungo</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">8.1166667</field>
+        <field name="longitude" type="FloatField">12.05</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">adamawa</field>
         <field name="lft" type="PositiveIntegerField">408</field>
         <field name="rght" type="PositiveIntegerField">429</field>
@@ -7989,8 +7989,8 @@
     <object model="douentza.entity" pk="yola-north">
         <field name="name" type="CharField">Yola - North</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">9.23</field>
+        <field name="longitude" type="FloatField">12.46</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">adamawa</field>
         <field name="lft" type="PositiveIntegerField">430</field>
         <field name="rght" type="PositiveIntegerField">449</field>
@@ -8000,8 +8000,8 @@
     <object model="douentza.entity" pk="yola-south">
         <field name="name" type="CharField">Yola - South</field>
         <field name="entity_type" type="CharField">lga</field>
-        <field name="latitude" type="FloatField"><None></None></field>
-        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="latitude" type="FloatField">9.25</field>
+        <field name="longitude" type="FloatField">12.43333333</field>
         <field name="parent" rel="ManyToOneRel" to="douentza.entity">adamawa</field>
         <field name="lft" type="PositiveIntegerField">450</field>
         <field name="rght" type="PositiveIntegerField">473</field>

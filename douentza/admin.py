@@ -67,7 +67,7 @@ class CustomHotlineRequest(admin.ModelAdmin):
 class CustomEntity(admin.ModelAdmin):
     list_display = ("slug", "name", "entity_type", "latitude",
                     "longitude", "parent",)
-    list_filter = ("parent", )
+    list_filter = ("entity_type", "parent")
 
 
 class CustomEthnicity(admin.ModelAdmin):

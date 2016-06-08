@@ -23,17 +23,18 @@ from douentza.models import (HotlineRequest, Project, Survey, SurveyTaken,
 from douentza.utils import (get_default_context, datetime_range,
                             start_or_end_day_from_date, to_jstimestamp,
                             ethinicity_requests, lga_located_requests,
-                            stats_per_age, percent_calculation, isoformat_date)
+                            stats_per_age, percent_calculation,
+                            isoformat_date, hotline_requests_qs, make_aware)
 
 
 def get_event_responses_counts():
 
-    hotlinerequest = HotlineRequest.objects
+    hotlinerequest = hotline_requests_qs()
 
     try:
         start = hotlinerequest.order_by('received_on')[0].received_on
     except IndexError:
-        start = datetime.datetime.today()
+        start = make_aware(datetime.datetime.today())
 
     events = []
     responses = []
@@ -61,11 +62,13 @@ def get_event_responses_counts():
 
 
 def data_for_entity(entity, descendants=False):
+    hotlinerequest = hotline_requests_qs()
     if descendants:
-        qs = HotlineRequest.objects.filter(
+        qs = hotlinerequest.filter(
             location__in=entity.get_descendants(True))
     else:
-        qs = HotlineRequest.objects.filter(location=entity)
+        qs = hotlinerequest.filter(location=entity)
+
     return {
         'nb_calls': qs.count(),
         'nb_unique_numbers': qs.distinct().count(),
@@ -74,9 +77,9 @@ def data_for_entity(entity, descendants=False):
         'nb_unknown_gender': qs.filter(sex=HotlineRequest.SEX_UNKNOWN).count(),
         'nb_answered': qs.filter(status=HotlineRequest.STATUS_HANDLED).count(),
         'first_call': isoformat_date(
-            qs.order_by('created_on').first().created_on),
+            qs.order_by('created_on').first().created_on) if qs.count() else 0,
         'last_call': isoformat_date(
-            qs.order_by('created_on').last().created_on),
+            qs.order_by('created_on').last().created_on) if qs.count() else 0,
         'marker-size': 'medium',
         'marker-color': '#2C3E50',
         'marker-symbol': 'mobilephone',
@@ -98,16 +101,18 @@ def get_geojson_statistics():
         'name': "Location of people who called the Hotline"
     })
 
+    hotlinerequest = hotline_requests_qs()
+
     entities_with_data = list(
-        set([Entity.get_or_none(r['location'])
-            for r in HotlineRequest.objects.all().values('location')
+        set([Entity.get_or_none(r['location']).get_lga()
+            for r in hotlinerequest.values('location')
             if not r['location'] is None]))
 
     for entity in entities_with_data:
         if entity.get_geopoint() is None:
             continue
         cgj = entity.geojson_feature
-        cgj['properties'].update(data_for_entity(entity))
+        cgj['properties'].update(data_for_entity(entity, descendants=True))
         data['features'].append(cgj)
     return data
 
@@ -115,7 +120,7 @@ def get_geojson_statistics():
 def get_statistics_dict():
     context = {}
 
-    hotlinerequest = HotlineRequest.objects.filter(survey_takens__isnull=False)
+    hotlinerequest = hotline_requests_qs()
 
     try:
         last_event = hotlinerequest.latest('received_on')

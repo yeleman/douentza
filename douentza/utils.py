@@ -7,6 +7,7 @@ from __future__ import (unicode_literals, absolute_import,
 import re
 import datetime
 
+from django.utils import timezone
 from py3compat import string_types
 
 
@@ -79,11 +80,14 @@ def datetime_range(start, stop=None, days=1):
 
     # remove offset
     start = start.replace(tzinfo=None)
+    start = make_aware(start)
     if stop:
         stop = stop.replace(tzinfo=None)
+
     # stop at 00h00 today so we don't have an extra
     # point for today if the last period ends today.
     stop = stop or datetime.datetime(*datetime.date.today().timetuple()[:-4])
+    stop = make_aware(stop)
 
     while(start < stop):
         yield start
@@ -93,12 +97,12 @@ def datetime_range(start, stop=None, days=1):
 
 
 def start_or_end_day_from_date(adate, start=True):
-    return datetime.datetime(int(adate.year),
-                             int(adate.month),
-                             int(adate.day),
-                             0 if start else 23,
-                             0 if start else 59,
-                             0 if start else 59)
+    return make_aware(datetime.datetime(int(adate.year),
+                                        int(adate.month),
+                                        int(adate.day),
+                                        0 if start else 23,
+                                        0 if start else 59,
+                                        0 if start else 59))
 
 
 def clean_phone_number_str(number, skip_indicator=None):
@@ -222,12 +226,14 @@ def to_timestamp(dt):
     Return a timestamp for the given datetime object.
     """
     if dt is not None:
-        return (dt - datetime.datetime(1970, 1, 1)).total_seconds()
+        ref = make_aware(datetime.datetime(1970, 1, 1))
+        return (dt - ref).total_seconds()
 
 
 def hotline_requests_qs():
     from douentza.models import HotlineRequest
-    return HotlineRequest.objects.filter(survey_takens__isnull=False)
+    return HotlineRequest.objects.all()
+    # .filter(survey_takens__isnull=False)
 
 
 def ethinicity_requests(ethnicity):
@@ -268,3 +274,9 @@ def isoformat_date(date):
         return date.isoformat()
     except:
         return None
+
+
+def make_aware(dt):
+    if timezone.is_naive(dt):
+        return timezone.make_aware(dt, timezone.get_current_timezone())
+    return dt

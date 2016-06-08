@@ -2123,6 +2123,17 @@
         <field name="tree_id" type="PositiveIntegerField">2</field>
         <field name="level" type="PositiveIntegerField">2</field>
     </object>
+    <object model="douentza.entity" pk="foreign">
+        <field name="name" type="CharField">Foreign Country</field>
+        <field name="entity_type" type="CharField">state</field>
+        <field name="latitude" type="FloatField"><None></None></field>
+        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="parent" rel="ManyToOneRel" to="douentza.entity"><None></None></field>
+        <field name="lft" type="PositiveIntegerField">1</field>
+        <field name="rght" type="PositiveIntegerField">2</field>
+        <field name="tree_id" type="PositiveIntegerField">5</field>
+        <field name="level" type="PositiveIntegerField">0</field>
+    </object>
     <object model="douentza.entity" pk="fuguwa">
         <field name="name" type="CharField">Fuguwa</field>
         <field name="entity_type" type="CharField">ward</field>
@@ -6566,6 +6577,17 @@
         <field name="rght" type="PositiveIntegerField">192</field>
         <field name="tree_id" type="PositiveIntegerField">1</field>
         <field name="level" type="PositiveIntegerField">2</field>
+    </object>
+    <object model="douentza.entity" pk="other_nigeria">
+        <field name="name" type="CharField">Other Nigerian State</field>
+        <field name="entity_type" type="CharField">state</field>
+        <field name="latitude" type="FloatField"><None></None></field>
+        <field name="longitude" type="FloatField"><None></None></field>
+        <field name="parent" rel="ManyToOneRel" to="douentza.entity"><None></None></field>
+        <field name="lft" type="PositiveIntegerField">1</field>
+        <field name="rght" type="PositiveIntegerField">2</field>
+        <field name="tree_id" type="PositiveIntegerField">4</field>
+        <field name="level" type="PositiveIntegerField">0</field>
     </object>
     <object model="douentza.entity" pk="pakarau-karekare-pakarau-fulani">
         <field name="name" type="CharField">Pakarau Kare‐Kare/ Pakarau Fulani</field>

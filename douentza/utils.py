@@ -226,6 +226,7 @@ def to_timestamp(dt):
     Return a timestamp for the given datetime object.
     """
     if dt is not None:
+        dt = make_aware(dt)
         ref = make_aware(datetime.datetime(1970, 1, 1))
         return (dt - ref).total_seconds()
 

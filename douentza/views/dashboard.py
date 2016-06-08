@@ -19,7 +19,7 @@ from douentza.models import (HotlineRequest, BlacklistedNumber,
                              Cluster)
 from douentza.utils import (start_or_end_day_from_date,
                             get_default_context,
-                            to_jstimestamp)
+                            to_jstimestamp, make_aware)
 from douentza.decorators import staff_required
 
 
@@ -61,16 +61,16 @@ def dashboard(request):
     clusters = clusters.all()
     context.update({'all_events': all_events(user),
                     'clusters': clusters})
-    context.update({'now': to_jstimestamp(datetime.datetime.today())})
+    context.update({'now': to_jstimestamp(
+                    make_aware(datetime.datetime.today()))})
     return render(request, "dashboard.html", context)
 
 
 @staff_required
 def ping_json(request):
     try:
-        since = timezone.make_aware(datetime.datetime.fromtimestamp(
-            int(request.GET.get('since')) / 1000),
-            timezone.get_current_timezone())
+        since = make_aware(datetime.datetime.fromtimestamp(
+            int(request.GET.get('since')) / 1000))
     except:
         raise Http404
 
@@ -88,7 +88,7 @@ def ping_json(request):
               for r in HotlineRequest.incoming.filter(received_on__gte=since)
                                      .exclude(id__in=excludes)]
     data = {
-        'now': to_jstimestamp(datetime.datetime.today()),
+        'now': to_jstimestamp(make_aware(datetime.datetime.today())),
         'events': events
     }
     return JsonResponse(data)
@@ -97,12 +97,11 @@ def ping_json(request):
 @staff_required
 def ping_html(request):
 
-    now = datetime.datetime.now()
+    now = timezone.now()
 
     try:
-        since = timezone.make_aware(datetime.datetime.fromtimestamp(
-            int(request.GET.get('since')) / 1000),
-            timezone.get_current_timezone())
+        since = make_aware(datetime.datetime.fromtimestamp(
+            int(request.GET.get('since')) / 1000))
     except:
         raise Http404
 

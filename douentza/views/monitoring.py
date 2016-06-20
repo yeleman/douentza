@@ -5,21 +5,26 @@
 from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 
-from datetime import timedelta, datetime
+import datetime
+
 from django.shortcuts import render
 
 from douentza.models import SurveyTaken, HotlineRequest, HotlineUser
+from douentza.utils import make_aware, today
+
+NB_DAYS = 60
 
 
 def summary(request):
-    # static
-    start = datetime(2015, 12, 15)
-    usernames = ['abba', 'kani', 'abdramane', 'amadou']
+    start = make_aware(today() - datetime.timedelta(days=NB_DAYS))
 
-    users = HotlineUser.objects.filter(username__in=usernames)
+    users = HotlineUser.objects \
+        .exclude(username__in=('admin', 'staff')) \
+        .filter(cluster__isnull=False)
     data = []
-    for _ in range(32):
-        end = start + timedelta(days=1)
+
+    for _ in range(NB_DAYS + 1):
+        end = start + datetime.timedelta(days=1)
         qs = SurveyTaken.objects.filter(taken_on__gte=start, taken_on__lt=end)
         qs2 = HotlineRequest.objects.all()
         data.append({
@@ -32,6 +37,7 @@ def summary(request):
             'counts': [(qs.filter(request__hotline_user=user).count())
                        for user in users]
             })
+
         start = end
-    context = {'page': 'monitoring', 'data': data, 'users': users}
+    context = {'page': 'monitoring', 'data': reversed(data), 'users': users}
     return render(request, 'monitoring.html', context)

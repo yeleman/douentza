@@ -281,3 +281,8 @@ def make_aware(dt):
     if timezone.is_naive(dt):
         return timezone.make_aware(dt, timezone.get_current_timezone())
     return dt
+
+
+def today():
+    return datetime.datetime(
+        *[int(x) for x in datetime.date.today().timetuple()[:4]])

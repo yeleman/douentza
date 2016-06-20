@@ -590,7 +590,7 @@ function changeSurveyButton(button) {
     console.log(button.html());
     button.off('click');
     if (!keep_name) {
-        button.text("Voir les données");
+        button.text("See data");
     }
     button.popover({html: true,
                     trigger: 'hover',

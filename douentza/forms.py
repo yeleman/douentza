@@ -10,7 +10,7 @@ from django.utils.text import slugify
 from django.core.exceptions import ValidationError
 
 from douentza.models import (HotlineRequest, Project, Ethnicity,
-                             Entity, Survey, Question)
+                             Entity, Survey, Question, Cluster)
 from douentza.utils import EMPTY_ENTITY, make_aware
 
 help_duration = "Duration in seconds formatted like 2:30"
@@ -60,6 +60,8 @@ class BasicInformationForm(forms.Form):
         label="Ethnicity", required=False, widget=forms.Select)
     project = forms.ChoiceField(
         label="Project", required=False, widget=forms.Select)
+    cluster = forms.ChoiceField(
+        label="Language", required=True, widget=forms.Select)
 
     state = forms.ChoiceField(
         label=Entity.TYPES.get(Entity.TYPE_STATE),
@@ -78,6 +80,8 @@ class BasicInformationForm(forms.Form):
             [(e.slug, e.name) for e in Ethnicity.objects.order_by('name')]
         all_project = [('#', "None")] + \
             [(p.id, p.name) for p in Project.objects.order_by('name')]
+        all_cluster = [(c.slug, c.name)
+                       for c in Cluster.objects.order_by('name')]
         all_state = [(EMPTY_ENTITY, "UNKNOWN")] +\
             [(e.slug, e.name)
              for e in Entity.objects.filter(entity_type=Entity.TYPE_STATE)
@@ -89,6 +93,7 @@ class BasicInformationForm(forms.Form):
 
         self.fields['ethnicity'].choices = all_ethinicty
         self.fields['project'].choices = all_project
+        self.fields['cluster'].choices = all_cluster
         self.fields['state'].choices = all_state
 
     def clean_responded_on(self):
@@ -127,6 +132,9 @@ class BasicInformationForm(forms.Form):
             return Project.objects.get(id=int(project_id))
         except (ValueError, Project.DoesNotExist):
             return None
+
+    def clean_cluster(self):
+        return Cluster.get_or_none(self.cleaned_data.get('cluster'))
 
     def clean_ethnicity(self):
         ethnicity_slug = self.cleaned_data.get('ethnicity')

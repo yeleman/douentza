@@ -43,7 +43,8 @@ def display_request(request, request_id):
             event.ethnicity = form.cleaned_data.get('ethnicity')
             event.duration = form.cleaned_data.get('duration')
             event.location = form.cleaned_data.get('ward')
-            event.cluster = request.user.cluster
+            event.cluster = form.cleaned_data.get('cluster') \
+                or request.user.cluster
             event.save()
             return redirect('dashboard')
         else:
@@ -53,6 +54,7 @@ def display_request(request, request_id):
             'request_id': request_id,
             'age': event.age,
             'project': getattr(event.project, 'id', None),
+            'cluster': getattr(request.user.cluster, 'slug', None),
             'sex': event.sex,
             'ethnicity': getattr(event.ethnicity, 'slug', None),
             'state': event.location.get_state().slug

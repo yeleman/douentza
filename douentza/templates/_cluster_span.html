@@ -1,0 +1,1 @@
+{% if event.cluster or always %}<span class="label label-default label-xs label-cluster" {% if event.cluster %}title="Language: {{event.cluster}}"{% endif %}>{{event.cluster|default:"Unknown"}} <span class="glyphicon glyphicon-flag"></span></span>{% endif %}

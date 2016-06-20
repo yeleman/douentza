@@ -19,7 +19,7 @@ else:
     import csv
 
 from douentza.models import (HotlineRequest, Project, Survey, SurveyTaken,
-                             Entity, Ethnicity, CachedData)
+                             Entity, Ethnicity, CachedData, Cluster)
 from douentza.utils import (get_default_context, datetime_range,
                             start_or_end_day_from_date, to_jstimestamp,
                             ethinicity_requests, lga_located_requests,
@@ -133,6 +133,7 @@ def get_statistics_dict():
     nb_survey = Survey.objects.count()
     nb_survey_taken = SurveyTaken.objects.count()
     projects = Project.objects.all()
+    clusters = Cluster.objects.all()
     nb_projects = projects.count()
     nb_non_projects = hotlinerequest.filter(project=None).count()
 
@@ -161,6 +162,13 @@ def get_statistics_dict():
         percent_calculation(
             handled_hotline_request.filter(project=project).count(),
             handled_hotline_request.count())) for project in projects]
+
+    hotlinerequest_cluster_count = [(
+        cluster.name,
+        handled_hotline_request.filter(cluster=cluster).count(),
+        percent_calculation(
+            handled_hotline_request.filter(cluster=cluster).count(),
+            handled_hotline_request.count())) for cluster in clusters]
 
     under_18 = stats_per_age(0, 18)
     stats_19_25 = stats_per_age(19, 25)
@@ -198,6 +206,8 @@ def get_statistics_dict():
                     'unknown_age_percent': unknown_age_percent,
                     'hotlinerequest_project_count':
                         hotlinerequest_project_count,
+                    'hotlinerequest_cluster_count':
+                        hotlinerequest_cluster_count,
                     'sum_duration': sum_duration,
                     'nb_ethinicity_requests': [
                         ethinicity_requests(ethinicity)

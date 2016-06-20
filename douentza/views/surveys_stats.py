@@ -232,20 +232,20 @@ def compute_survey_meta_data_as_questions(survey):
         'required': False,
         'choices': []}
 
-    # operator
-    operator = copy.copy(question_tmpl)
-    operator['id'] = 'meta_operator'
-    operator['field'] = 'operator'
-    operator['label'] += "Agents"
-    operator['choices'] = [{'slug': k, 'label': v}
-                           for k, v in OPERATORS.items()]
-    all_questions.append(operator)
+    # # operator
+    # operator = copy.copy(question_tmpl)
+    # operator['id'] = 'meta_operator'
+    # operator['field'] = 'operator'
+    # operator['label'] += "Operators"
+    # operator['choices'] = [{'slug': k, 'label': v}
+    #                        for k, v in OPERATORS.items()]
+    # all_questions.append(operator)
 
     # cluster
     cluster = copy.copy(question_tmpl)
-    cluster['id'] = 'meta_cluster'
+    cluster['id'] = 'meta_language'
     cluster['field'] = 'cluster'
-    cluster['label'] += "Clusters"
+    cluster['label'] += "Languages"
     cluster['choices'] = [{'slug': c.slug, 'label': c.name}
                           for c in Cluster.objects.all()]
     all_questions.append(cluster)
@@ -309,7 +309,8 @@ def compute_survey_meta_data_as_questions(survey):
 
     all_questions_data = []
 
-    for question_data in (operator, cluster, project, age, gender,
+    # operator bellow
+    for question_data in (cluster, project, age, gender,
                           ethnicity, respondant, duration):
         print(question_data['label'])
         total = SurveyTaken.objects.filter(survey=survey).count()
@@ -332,8 +333,9 @@ def compute_survey_meta_data_as_questions(survey):
 def export_survey_as_csv(survey, filename):
 
     norm_header = lambda label: slugify(label)
-    meta_headers = ['meta_received_on', 'meta_responded_on', 'meta_operator',
-                    'meta_cluster', 'meta_project', 'meta_age', 'meta_sex',
+    # meta_operator was removed
+    meta_headers = ['meta_received_on', 'meta_responded_on',
+                    'meta_language', 'meta_project', 'meta_age', 'meta_sex',
                     'meta_call_duration', 'meta_ethnicity', 'meta_state',
                     'meta_lga', 'meta_ward', 'meta_gps']
     headers = meta_headers + ["{}-{}".format(q['id'], norm_header(q['label']))
@@ -357,8 +359,8 @@ def export_survey_as_csv(survey, filename):
                 survey_taken.request.received_on),
             'meta_responded_on': isoformat_date(
                 survey_taken.request.responded_on),
-            'meta_operator': survey_taken.request.operator,
-            'meta_cluster': survey_taken.request.cluster,
+            # 'meta_operator': survey_taken.request.operator,
+            'meta_language': survey_taken.request.cluster,
             'meta_project': survey_taken.request.project,
             'meta_age': survey_taken.request.age,
             'meta_sex': survey_taken.request.sex,

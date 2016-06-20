@@ -1,0 +1,25 @@
+{% load douentza %}
+
+{% if hotlinerequest_cluster_count %}
+
+<h3>Repartition of Callbacks by Language</h3>
+<table class="table table-condensed table-hover table-bordered table-striped table-stats">
+    <thead>
+        <tr>
+            <th>Language</th>
+            <th>Rate</th>
+            <th>Number</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for name_cluster, count, percent in hotlinerequest_cluster_count %}
+            <tr>
+                <td>{{ name_cluster }}</td>
+                <td class='important'>{{ percent|floatformat:2 }}% </td>
+                <td class='important'>{{ count }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endif %}

@@ -30,6 +30,10 @@ $('.btn-survey').each(function (){
             <td>{{ event.responded_on|handleddate }}</td>
         </tr>
         <tr>
+            <th>Language</th>
+            <td>{% include "_cluster_span.html" with event=event always=True %}</td>
+        </tr>
+        <tr>
             <th>Agent</th>
             <td>{{ event.hotline_user }}</td>
         </tr>

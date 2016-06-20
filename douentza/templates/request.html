@@ -73,6 +73,9 @@ $('button[type="submit"]').on('click', function () {
         </div>
 
         <div class="col-md-6">
+        	<div class="form-group {% if form.project.errors %} has-error {% endif %}">
+                <label class="col-lg-3 control-label">{{ form.cluster.label }}</label> <div class="col-lg-9">{% include "form_error_span.html" with errors=form.cluster.errors %}{{ form.cluster }}</div>
+            </div>
             <div class="form-group {% if form.state.errors %} has-error {% endif %}">
                 <label class="col-lg-3 control-label">{{ form.state.label }}</label> <div class="col-lg-9">{% include "form_error_span.html" with errors=form.state.errors %}{{ form.state }}</div>
             </div>

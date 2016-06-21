@@ -6,6 +6,7 @@ from __future__ import (unicode_literals, absolute_import,
                         division, print_function)
 import datetime
 import json
+from collections import OrderedDict
 
 from django.utils import timezone
 from django.db import models
@@ -150,12 +151,12 @@ class Entity(MPTTModel):
     TYPE_WARD = 'ward'
     TYPE_OTHER = 'autre'
 
-    TYPES = {
-        TYPE_STATE: "State",
-        TYPE_LGA: "LGA",
-        TYPE_WARD: "Ward",
-        TYPE_OTHER: "Other",
-    }
+    TYPES = OrderedDict([
+        (TYPE_STATE, "State"),
+        (TYPE_LGA, "LGA"),
+        (TYPE_WARD, "Ward"),
+        (TYPE_OTHER, "Other"),
+    ])
 
     slug = models.CharField(max_length=20, primary_key=True)
     name = models.CharField(max_length=100)
@@ -322,11 +323,11 @@ class HotlineRequest(models.Model):
     SEX_UNKNOWN = 'unknown'
     SEX_MALE = 'male'
     SEX_FEMALE = 'female'
-    SEXES = {
-        SEX_UNKNOWN: 'Unknown',
-        SEX_MALE: "Male",
-        SEX_FEMALE: "Female"
-    }
+    SEXES = OrderedDict([
+        (SEX_UNKNOWN, "Unknown"),
+        (SEX_MALE, "Male"),
+        (SEX_FEMALE, "Female"),
+    ])
 
     STATUS_NEW_REQUEST = 'NEW_REQUEST'
     STATUS_NOT_ANSWERING = 'NOT_ANSWERING'
@@ -335,13 +336,14 @@ class HotlineRequest(models.Model):
     STATUS_GAVE_UP = 'GAVE_UP'
     STATUS_BLACK_LIST = 'BLACK_LIST'
 
-    STATUSES = {
-        STATUS_NEW_REQUEST: "New",
-        STATUS_NOT_ANSWERING: "Not answering",
-        STATUS_HANDLED: "Handled",
-        STATUS_IS_BUSY: "Busy",
-        STATUS_BLACK_LIST: "Black listed",
-        STATUS_GAVE_UP: "Gave up"}
+    STATUSES = OrderedDict([
+        (STATUS_NEW_REQUEST, "New"),
+        (STATUS_NOT_ANSWERING, "Not answering"),
+        (STATUS_HANDLED, "Handled"),
+        (STATUS_IS_BUSY, "Busy"),
+        (STATUS_BLACK_LIST, "Black listed"),
+        (STATUS_GAVE_UP, "Gave up"),
+    ])
 
     TYPE_CALL_ME = 'CALL_ME'
     TYPE_CHARGE_ME = 'CHARGE_ME'
@@ -350,13 +352,14 @@ class HotlineRequest(models.Model):
     TYPE_SMS_SPAM = 'SMS_SPAM'
     TYPE_WEB = 'WEB'
 
-    TYPES = {
-        TYPE_CALL_ME: "Call me",
-        TYPE_CHARGE_ME: "Top-up my account",
-        TYPE_RING: "Ring.",
-        TYPE_SMS: "SMS",
-        TYPE_WEB: "Web",
-        TYPE_SMS_SPAM: "SMS (SPAM)"}
+    TYPES = OrderedDict([
+        (TYPE_CALL_ME, "Call me"),
+        (TYPE_CHARGE_ME, "Top-up my account"),
+        (TYPE_RING, "Ring."),
+        (TYPE_SMS, "SMS"),
+        (TYPE_WEB, "Web"),
+        (TYPE_SMS_SPAM, "SMS (SPAM)"),
+    ])
 
     HOTLINE_TYPES = (TYPE_CALL_ME, TYPE_CHARGE_ME, TYPE_SMS, TYPE_RING)
     SMS_TYPES = (TYPE_SMS, TYPE_SMS_SPAM)
@@ -570,11 +573,11 @@ class Survey(models.Model):
     STATUS_READY = 'ready'
     STATUS_DISABLED = 'disabled'
 
-    STATUSES = {
-        STATUS_CREATED: "Started",
-        STATUS_READY: "Ready",
-        STATUS_DISABLED: "Disabled"
-    }
+    STATUSES = OrderedDict([
+        (STATUS_CREATED, "Started"),
+        (STATUS_READY, "Ready"),
+        (STATUS_DISABLED, "Disabled"),
+    ])
 
     title = models.CharField(max_length=200,
                              verbose_name="Title",
@@ -652,27 +655,27 @@ class Question(models.Model):
     TYPE_MULTI_CHOICES = 'multi_choice'
     TYPE_TEXT = 'text'
 
-    TYPES = {
-        TYPE_STRING: "Short text",
-        TYPE_TEXT: "Text",
-        TYPE_BOOLEAN: "True/False",
-        TYPE_DATE: "Date",
-        TYPE_INTEGER: "Number (integer)",
-        TYPE_FLOAT: "Number (float)",
-        TYPE_CHOICES: "Choice List",
-        TYPE_MULTI_CHOICES: "Multiple Choice List"
-    }
+    TYPES = OrderedDict([
+        (TYPE_STRING, "Short text"),
+        (TYPE_TEXT, "Text"),
+        (TYPE_BOOLEAN, "True/False"),
+        (TYPE_DATE, "Date"),
+        (TYPE_INTEGER, "Number (integer)"),
+        (TYPE_FLOAT, "Number (float)"),
+        (TYPE_CHOICES, "Choice List"),
+        (TYPE_MULTI_CHOICES, "Multiple Choice List"),
+    ])
 
-    TYPES_CLS = {
-        TYPE_STRING: forms.CharField(),
-        TYPE_TEXT: forms.CharField(),
-        TYPE_BOOLEAN: forms.BooleanField(),
-        TYPE_DATE: forms.DateField(),
-        TYPE_INTEGER: forms.IntegerField(),
-        TYPE_FLOAT: forms.FloatField(),
-        TYPE_CHOICES: forms.ChoiceField(),
-        TYPE_CHOICES: forms.MultipleChoiceField(),
-    }
+    TYPES_CLS = OrderedDict([
+        (TYPE_STRING, forms.CharField()),
+        (TYPE_TEXT, forms.CharField()),
+        (TYPE_BOOLEAN, forms.BooleanField()),
+        (TYPE_DATE, forms.DateField()),
+        (TYPE_INTEGER, forms.IntegerField()),
+        (TYPE_FLOAT, forms.FloatField()),
+        (TYPE_CHOICES, forms.ChoiceField()),
+        (TYPE_CHOICES, forms.MultipleChoiceField()),
+    ])
 
     order = models.PositiveIntegerField(
         default=0, verbose_name="Order",
@@ -808,10 +811,10 @@ class CachedData(models.Model):
 
     TYPE_OBJECT = 'object'
     TYPE_FILE = 'file'
-    TYPES = {
-        TYPE_OBJECT: "Object",
-        TYPE_FILE: "File"
-    }
+    TYPES = OrderedDict([
+        (TYPE_OBJECT, "Object"),
+        (TYPE_FILE, "File"),
+    ])
 
     slug = models.CharField(max_length=75, primary_key=True)
     created_on = models.DateTimeField(default=timezone.now)

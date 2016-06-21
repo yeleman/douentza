@@ -109,6 +109,10 @@ def clean_phone_number_str(number, skip_indicator=None):
     ''' properly formated for visualization: (xxx) xx xx xx xx '''
 
     def format(number):
+        # Nigerian format
+        if len(number) == 11:
+            return "{a} {b} {c}".format(
+                a=number[0:4], b=number[4:7], c=number[7:])
         if len(number) % 2 == 0:
             span = 2
         else:
@@ -122,6 +126,12 @@ def clean_phone_number_str(number, skip_indicator=None):
         return "(%(ind)s) %(num)s" \
                % {'ind': indicator,
                   'num': format(clean_number)}
+
+    # Nigeria has a 0 prefix
+    if (indicator is None or indicator == COUNTRY_PREFIX) \
+            and len(clean_number) == 10:
+        clean_number = "0{}".format(clean_number)
+
     return format(clean_number)
 
 

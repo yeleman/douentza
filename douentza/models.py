@@ -43,7 +43,7 @@ class Cluster(models.Model):
 @implements_to_string
 class HotlineUser(AbstractUser):
 
-    cluster = models.ForeignKey('Cluster', null=True)
+    cluster = models.ForeignKey('Cluster', null=True, blank=True)
 
     def full_name(self):
         if self.get_full_name():

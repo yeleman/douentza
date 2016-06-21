@@ -20,7 +20,7 @@ def summary(request):
 
     users = HotlineUser.objects \
         .exclude(username__in=('admin', 'staff')) \
-        .filter(cluster__isnull=False)
+        .exclude(cluster__isnull=True)
     data = []
 
     for _ in range(NB_DAYS + 1):

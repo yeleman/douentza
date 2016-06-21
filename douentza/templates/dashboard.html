@@ -15,5 +15,7 @@
 {% endblock %}
 
 {% block extra_js %}
+{% if user.is_staff %}
 setupPingLoop('{{now}}');
+{% endif %}
 {% endblock %}

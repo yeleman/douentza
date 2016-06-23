@@ -6,7 +6,7 @@
         <title>{% block title %}Modal{% endblock %}</title>
         {% include "css_tags.html" %}
     </head>
-    <body class="{{ page }}">
+    <body class="{{ page }}" data-status="{% block status %}displayed{% endblock %}">
 
         {% block content %}{% endblock %}
 

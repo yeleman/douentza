@@ -44,27 +44,27 @@ function graph_event_response_counts(data_url) {
             //     },
             // },
             yAxis: [{ // Primary yAxis
-	            title: {
-	                text: 'Nb. calls',
-	                style: {
-	                    color: Highcharts.getOptions().colors[1]
-	                }
-	            }
-	        }, { // Secondary yAxis
-	            title: {
-	                text: 'Callbacks duration',
-	                style: {
-	                    color: Highcharts.getOptions().colors[0]
-	                }
-	            },
-		            labels: {
-		                format: '{value} mn',
-		                style: {
-		                    color: Highcharts.getOptions().colors[0]
-		                }
-	            },
-	            opposite: true
-	        }],
+                title: {
+                    text: 'Nb. calls',
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                }
+            }, { // Secondary yAxis
+                title: {
+                    text: 'Callbacks duration',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                    labels: {
+                        format: '{value} mn',
+                        style: {
+                            color: Highcharts.getOptions().colors[0]
+                        }
+                },
+                opposite: true
+            }],
             tooltip: { valueSuffix: null,
             },
             legend: {},
@@ -76,8 +76,8 @@ function graph_event_response_counts(data_url) {
                       type: 'column',
                       yAxis: 1,
                       data: data.duration,
-                  	  tooltip: {valueSuffix: 'mn'}}]
-        	});
+                        tooltip: {valueSuffix: 'mn'}}]
+            });
     });
 }
 
@@ -547,13 +547,23 @@ function createMiniSurvey(options) {
 
     var url = '/survey/'+ survey_id + '-'+ request_id +'/form';
 
-    var aframe = $('<iframe src="' + url + '" frameborder="0"/>');
+    var afid = 'iframe_' + survey_id + '-' + request_id;
+    var cid = 'container_' + survey_id + '-' + request_id;
+    var aframe = $('<iframe id="'+ afid + '" src="' + url + '" frameborder="0"/>');
 
-    var container = $('<div class="modal fade" tabindex="-1" role="dialog"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title">Modal title</h4></div><div class="modal-body"></div></div></div></div>');
+    var container = $('<div id="'+ cid +'" class="modal fade" tabindex="-1" role="dialog"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h4 class="modal-title">Modal title</h4></div><div class="modal-body"></div></div></div></div>');
     container.attr('survey-id', survey_id);
     container.attr('request-id', request_id);
     container.find('.modal-title').html(title);
     container.find('.modal-body').append(aframe);
+
+    aframe.on('load', function (e) {
+        var status = $("body", $('#'+afid).contents()).data("status");
+        if (status == "redirect") {
+            container.find("button.close").click();
+        }
+    });
+    aframe.load(function(){});
 
     return container;
 }

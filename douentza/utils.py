@@ -38,6 +38,8 @@ ALL_COUNTRY_CODES = [1242, 1246, 1264, 1268, 1284, 1340, 1345, 1441, 1473,
                      880, 886, 90, 91, 92, 93, 94, 95, 960, 961, 962, 963,
                      964, 965, 966, 967, 968, 970, 971, 972, 973, 974, 975,
                      976, 977, 98, 992, 993, 994, 995, 996, 998]
+# some countries are prefixed with 0 locally
+ZERO_PREFIXED_CONTRIES = [234]
 
 
 def event_type_from_message(message):
@@ -127,11 +129,6 @@ def clean_phone_number_str(number, skip_indicator=None):
                % {'ind': indicator,
                   'num': format(clean_number)}
 
-    # Nigeria has a 0 prefix
-    if (indicator is None or indicator == COUNTRY_PREFIX) \
-            and len(clean_number) == 10:
-        clean_number = "0{}".format(clean_number)
-
     return format(clean_number)
 
 
@@ -147,7 +144,7 @@ def is_valid_number(number):
 
 def number_is_blacklisted(number):
     from douentza.models import BlacklistedNumber
-    identity = join_phone_number(*clean_phone_number(number))
+    identity = normalize_phone_number(number)
     if BlacklistedNumber.objects.filter(identity=identity).count():
         b = BlacklistedNumber.objects.get(identity=identity)
         b.call_count += 1
@@ -176,6 +173,7 @@ def get_phone_number_indicator(number):
 
 def clean_phone_number(number):
     ''' return (indicator, number) cleaned of space and other '''
+
     # clean up
     if not isinstance(number, string_types):
         number = number.__str__()
@@ -183,22 +181,34 @@ def clean_phone_number(number):
     # cleanup markup
     clean_number = re.sub(r'[^\d\+]', '', number)
 
+    indicator = None
     if phone_number_is_int(clean_number):
         h, indicator, clean_number = \
             clean_number.partition(get_phone_number_indicator(clean_number))
-        return (indicator, clean_number)
 
-    return (None, clean_number)
+    # add-back missing zero prefix
+    if (indicator in ZERO_PREFIXED_CONTRIES
+        or int(COUNTRY_PREFIX) in ZERO_PREFIXED_CONTRIES) \
+            and not clean_number.startswith('0'):
+        clean_number = "0{}".format(clean_number)
 
-
-def join_phone_number(prefix, number, force_intl=True):
-    if not prefix and force_intl:
-        prefix = COUNTRY_PREFIX
-    return '+%s%s' % (prefix, number)
+    return (indicator, clean_number)
 
 
 def normalize_phone_number(number_text):
-    return join_phone_number(*clean_phone_number(number_text))
+    def join_phone_number(prefix, number, force_intl=True):
+        if not prefix and force_intl:
+            prefix = COUNTRY_PREFIX
+        return '+%s%s' % (prefix, number)
+
+    indicator, clean_number = clean_phone_number(number_text)
+    if indicator is None:
+        indicator = int(COUNTRY_PREFIX)
+
+    if (indicator in ZERO_PREFIXED_CONTRIES) and clean_number.startswith('0'):
+        clean_number = clean_number[1:]
+
+    return join_phone_number(indicator, clean_number)
 
 
 def operator_from_mali_number(number, default=ORANGE):

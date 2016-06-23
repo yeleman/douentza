@@ -11,9 +11,9 @@
 
     {% if unsorted %}
         <td>
-            {% for cluster in clusters %}<a href="{% url 'sorted_location' event.id cluster.slug %}">
+            {% for cluster in clusters %}{% if cluster.slug != "english" %}<a href="{% url 'sorted_location' event.id cluster.slug %}">
                 <button type="button" class="btn btn-xs btn-primary"><span class="glyphicon"></span>{{ cluster.name }}</button></a>
-            {% endfor %}
+            {% endif %}{% endfor %}
         </td>
     {% endif %}
 

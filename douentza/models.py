@@ -18,7 +18,7 @@ from mptt.managers import TreeManager
 from picklefield.fields import PickledObjectField
 
 from py3compat import implements_to_string
-from douentza.utils import OPERATORS, to_jstimestamp
+from douentza.utils import OPERATORS, to_jstimestamp, timedelta_in_seconds
 
 
 @implements_to_string
@@ -417,6 +417,13 @@ class HotlineRequest(models.Model):
     @property
     def request_type(self):
         return self.event_type
+
+    def response_delay(self, in_minutes=False):
+        if self.responded_on is None:
+            return None
+        x = 60 if in_minutes else 1
+        delay = timedelta_in_seconds(self.responded_on - self.received_on) // x
+        return delay if delay >= 0 else None
 
     def to_dict(self):
         return {

@@ -306,3 +306,7 @@ def make_aware(dt):
 def today():
     return datetime.datetime(
         *[int(x) for x in datetime.date.today().timetuple()[:4]])
+
+
+def timedelta_in_seconds(td):
+    return 86400 * td.days + td.seconds

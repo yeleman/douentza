@@ -335,6 +335,7 @@ def export_survey_as_csv(survey, filename):
     norm_header = lambda label: slugify(label)
     # meta_operator was removed
     meta_headers = ['meta_received_on', 'meta_responded_on',
+                    'meta_response_delay', 'meta_response_delay_mn',
                     'meta_language', 'meta_project', 'meta_age', 'meta_sex',
                     'meta_call_duration', 'meta_ethnicity', 'meta_state',
                     'meta_lga', 'meta_ward', 'meta_gps']
@@ -359,6 +360,9 @@ def export_survey_as_csv(survey, filename):
                 survey_taken.request.received_on),
             'meta_responded_on': isoformat_date(
                 survey_taken.request.responded_on),
+            'meta_response_delay': survey_taken.request.response_delay(),
+            'meta_response_delay_mn':
+                survey_taken.request.response_delay(in_minutes=True),
             # 'meta_operator': survey_taken.request.operator,
             'meta_language': survey_taken.request.cluster,
             'meta_project': survey_taken.request.project,

@@ -188,7 +188,8 @@ def clean_phone_number(number):
 
     # add-back missing zero prefix
     if (indicator in ZERO_PREFIXED_CONTRIES
-        or int(COUNTRY_PREFIX) in ZERO_PREFIXED_CONTRIES) \
+        or (indicator is None
+            and int(COUNTRY_PREFIX) in ZERO_PREFIXED_CONTRIES)) \
             and not clean_number.startswith('0'):
         clean_number = "0{}".format(clean_number)
 
@@ -202,11 +203,15 @@ def normalize_phone_number(number_text):
         return '+%s%s' % (prefix, number)
 
     indicator, clean_number = clean_phone_number(number_text)
+    print('clean', indicator, clean_number)
     if indicator is None:
         indicator = int(COUNTRY_PREFIX)
+    print('missing indicator', indicator, clean_number)
 
-    if (indicator in ZERO_PREFIXED_CONTRIES) and clean_number.startswith('0'):
+    if int(indicator) in ZERO_PREFIXED_CONTRIES \
+            and clean_number.startswith('0'):
         clean_number = clean_number[1:]
+    print('removed zero', indicator, clean_number)
 
     return join_phone_number(indicator, clean_number)
 

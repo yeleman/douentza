@@ -74,7 +74,7 @@ def handle_sms_call(payload, event_type=None):
     # we add an additional request only
     if existing:
         existing.add_additional_request(request_type=event_type,
-                                        sms_message=identity)
+                                        sms_message=message)
         # no text answer - retruning straight
         return
 
@@ -90,7 +90,7 @@ def handle_sms_call(payload, event_type=None):
     except Exception as e:
         raise UnableToCreateHotlineRequest(e)
 
-    return [outgoing_for(to=phone_number,
+    return [outgoing_for(to=identity,
                          message=settings.FONDA_REPLY_TEXT)]
 
 

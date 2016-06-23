@@ -674,14 +674,14 @@ class Question(models.Model):
     ])
 
     TYPES_CLS = OrderedDict([
-        (TYPE_STRING, forms.CharField()),
-        (TYPE_TEXT, forms.CharField()),
-        (TYPE_BOOLEAN, forms.BooleanField()),
-        (TYPE_DATE, forms.DateField()),
-        (TYPE_INTEGER, forms.IntegerField()),
-        (TYPE_FLOAT, forms.FloatField()),
-        (TYPE_CHOICES, forms.ChoiceField()),
-        (TYPE_CHOICES, forms.MultipleChoiceField()),
+        (TYPE_STRING, forms.CharField),
+        (TYPE_TEXT, forms.CharField),
+        (TYPE_BOOLEAN, forms.NullBooleanField),
+        (TYPE_DATE, forms.DateField),
+        (TYPE_INTEGER, forms.IntegerField),
+        (TYPE_FLOAT, forms.FloatField),
+        (TYPE_CHOICES, forms.ChoiceField),
+        (TYPE_MULTI_CHOICES, forms.MultipleChoiceField),
     ])
 
     order = models.PositiveIntegerField(

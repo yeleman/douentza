@@ -4,6 +4,16 @@
 
 {% block extra_js %}
 styleFormElements();
+// Filter non-digits from input value
+// as safari doesn't prevent html5 number from inserting text
+$('input[type="number"]').on('keyup', function(e)
+{
+	var target = $('#' + $(e.target)[0].id);
+	var value = target.val();
+	if (value.length == 0 || /[^0-9\.]/g.test(value)) {
+        $(this).val(value.replace(/[^0-9\.]+/g, ''));
+    }
+});
 {% for field in form %}{{ field|datepickerjs|safe }}{% endfor %}
 {% endblock %}
 

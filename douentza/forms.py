@@ -157,27 +157,26 @@ def get_form_property(question_dict):
     from django import forms
 
     question_type = question_dict.get('type', Question.TYPE_STRING)
+    attrs = {}
 
     if question_type == Question.TYPE_CHOICES:
-        field = forms.ChoiceField(
-            choices=[(c.get('slug'), c.get('label'))
-                     for c in question_dict.get('choices')])
+        attrs = {'choices': [(c.get('slug'), c.get('label'))
+                             for c in question_dict.get('choices')]}
     elif question_type == Question.TYPE_MULTI_CHOICES:
-        field = forms.MultipleChoiceField(
-            choices=[(c.get('slug'), c.get('label'))
-                     for c in question_dict.get('choices')])
+        attrs = {'choices': [(c.get('slug'), c.get('label'))
+                             for c in question_dict.get('choices')]}
     elif question_type == Question.TYPE_STRING:
-        field = forms.CharField(max_length=250)
+        attrs = {'max_length': 250}
     elif question_type == Question.TYPE_TEXT:
-        field = forms.CharField(widget=forms.Textarea)
-    elif question_type == Question.TYPE_BOOLEAN:
-        field = forms.NullBooleanField()
-    else:
-        field = Question.TYPES_CLS.get(question_type)
+        attrs = {'widget': forms.Textarea}
+    elif question_type == Question.TYPE_FLOAT:
+        attrs = {'widget': forms.NumberInput(attrs={'step': 'any'})}
+
+    field = Question.TYPES_CLS.get(question_type)(**attrs)
 
     field.label = question_dict.get('label')
     field.required = question_dict.get('required')
-    field.widget.attrs = {'autocomplete': "off"}
+    field.widget.attrs.update({'autocomplete': "off"})
     return field
 
 

@@ -7,10 +7,9 @@ from __future__ import (unicode_literals, absolute_import,
 
 from django.conf.urls import include, url
 from django.conf import settings
-from django.conf.urls.static import static
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
+from django.views.static import serve as static_serve
 
 from fondasms import views as fonda_views
 
@@ -110,9 +109,7 @@ urlpatterns = [
     url(r'^survey/' + SURVEY_ID + '-' + REQUEST_ID + '/data/?$',
         views.surveys.survey_data, name='mini_survey_data'),
 
-    url(r'^static/(?P<path>.*)$', 'django.views.static.serve',
+    url(r'^static/(?P<path>.*)$', static_serve,
         {'document_root': settings.STATIC_ROOT,
          'show_indexes': settings.DEBUG}),
 ]
-
-# urlpatterns += staticfiles_urlpatterns()

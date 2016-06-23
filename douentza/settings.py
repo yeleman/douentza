@@ -178,6 +178,9 @@ CACHEDDATA_FOLDER = os.path.join(BASE_DIR, 'cached_data')
 FONDA_INCOMING_NUMBERS = []
 AUTH_HTTPPASSWD_FILE = None
 
+FONDA_REPLY_TEXT = ("Thank You, we recorded your request."
+                    "You'll be called back shortly.")
+
 try:
     from douentza.settings_local import *
 except ImportError:

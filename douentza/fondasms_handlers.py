@@ -7,7 +7,7 @@ from __future__ import (unicode_literals, absolute_import,
 import random
 
 from django.conf import settings
-from fondasms.utils import datetime_from_timestamp
+from fondasms.utils import datetime_from_timestamp, outgoing_for
 
 from douentza.models import HotlineRequest
 from douentza.utils import (event_type_from_message,
@@ -75,6 +75,7 @@ def handle_sms_call(payload, event_type=None):
     if existing:
         existing.add_additional_request(request_type=event_type,
                                         sms_message=message)
+        # no text answer - retruning straight
         return
 
     try:
@@ -88,6 +89,9 @@ def handle_sms_call(payload, event_type=None):
             cluster=cluster)
     except Exception as e:
         raise UnableToCreateHotlineRequest(e)
+
+    return [outgoing_for(to=phone_number,
+                         message=settings.FONDA_REPLY_TEXT)]
 
 
 def handle_outgoing_status_change(payload):

@@ -74,7 +74,7 @@ def handle_sms_call(payload, event_type=None):
     # we add an additional request only
     if existing:
         existing.add_additional_request(request_type=event_type,
-                                        sms_message=message)
+                                        sms_message=identity)
         # no text answer - retruning straight
         return
 

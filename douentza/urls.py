@@ -109,8 +109,10 @@ urlpatterns = [
         views.surveys.survey_form, name='mini_survey_form'),
     url(r'^survey/' + SURVEY_ID + '-' + REQUEST_ID + '/data/?$',
         views.surveys.survey_data, name='mini_survey_data'),
+
+    url(r'^static/(?P<path>.*)$', 'django.views.static.serve',
+        {'document_root': settings.STATIC_ROOT,
+         'show_indexes': settings.DEBUG}),
 ]
 
-# urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-
-urlpatterns += staticfiles_urlpatterns()
+# urlpatterns += staticfiles_urlpatterns()

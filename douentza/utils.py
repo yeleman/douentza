@@ -120,8 +120,8 @@ def clean_phone_number_str(number, skip_indicator=None):
         else:
             span = 3
         # use NBSP
-        return " ".join(["".join(number[i:i + span])
-                        for i in range(0, len(number), span)])
+        return " ".join(["".join(number[i:i + span])
+                         for i in range(0, len(number), span)])
 
     indicator, clean_number = clean_phone_number(number)
     if indicator and indicator != skip_indicator:
@@ -187,10 +187,14 @@ def clean_phone_number(number):
             clean_number.partition(get_phone_number_indicator(clean_number))
 
     # add-back missing zero prefix
-    if (indicator in ZERO_PREFIXED_CONTRIES
-        or (indicator is None
-            and int(COUNTRY_PREFIX) in ZERO_PREFIXED_CONTRIES)) \
-            and not clean_number.startswith('0'):
+    country_prefixed = False
+    if indicator is not None:
+        if int(indicator) in ZERO_PREFIXED_CONTRIES:
+            country_prefixed = True
+    elif int(COUNTRY_PREFIX) in ZERO_PREFIXED_CONTRIES:
+        country_prefixed = True
+
+    if country_prefixed and not clean_number.startswith('0'):
         clean_number = "0{}".format(clean_number)
 
     return (indicator, clean_number)

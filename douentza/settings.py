@@ -185,6 +185,9 @@ AUTH_HTTPPASSWD_FILE = None
 
 FONDA_REPLY_TEXT = ("Thank You, we recorded your request."
                     "You'll be called back shortly.")
+FONDA_REPLY_TEXT = ("Mungode da kiranka,zamu tuntubeka nan ba da jimawa ba, "
+                    "AskƏrenyena tushin ba andema nya bonyen Usoko, "
+                    "mon hosi dadburi ma.min yaune te yeso")
 
 try:
     from douentza.settings_local import *

@@ -43,6 +43,7 @@ def display_request(request, request_id):
             event.ethnicity = form.cleaned_data.get('ethnicity')
             event.duration = form.cleaned_data.get('duration')
             event.location = form.cleaned_data.get('ward')
+            event.transcript = form.cleaned_data.get('transcript')
             event.cluster = form.cleaned_data.get('cluster') \
                 or request.user.cluster
             event.save()
@@ -63,6 +64,7 @@ def display_request(request, request_id):
             if event.location and event.location.get_lga() else None,
             'ward': event.location.get_ward().slug
             if event.location and event.location.get_ward() else None,
+            'transcript': event.transcript,
         })
 
     context.update({"form": form})

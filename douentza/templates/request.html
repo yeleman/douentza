@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+	{% extends "base.html" %}
 {% load douentza %}
 
 {% block title %}Data Entry for {{ event.identity|phone }}{% endblock %}
@@ -85,8 +85,12 @@ $('button[type="submit"]').on('click', function () {
             <div class="form-group {% if form.ward.errors %} has-error {% endif %}">
                 <label class="col-lg-3 control-label">{{ form.ward.label }}</label> <div class="col-lg-9">{% include "form_error_span.html" with errors=form.ward.errors %}{{ form.ward }}</div>
             </div>
+            <div class="form-group {% if form.transcript.errors %} has-error {% endif %}">
+                <label class="col-lg-3 control-label">{{ form.transcript.label }}</label> <div class="col-lg-9">{% include "form_error_span.html" with errors=form.transcript.errors %}{{ form.transcript }}</div>
+            </div>
         </div>
     </div>
+
 {% if form.errors or form.lga.value or form.ward.value %}
     <input type="hidden" id="previous_lga" value="{{ form.lga.value }}" />
     <input type="hidden" id="previous_ward" value="{{ form.ward.value }}" />
@@ -96,6 +100,7 @@ $('button[type="submit"]').on('click', function () {
 <div class="tags_container">
     <h2>Tags</h2>
 </div>
+
 {% if surveys %}
 <div>
     <h2>Mini Surveys</h2>

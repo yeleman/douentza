@@ -109,7 +109,7 @@ def get_geojson_statistics():
             if not r['location'] is None]))
 
     for entity in entities_with_data:
-        if entity.get_geopoint() is None:
+        if entity is None or entity.get_geopoint() is None:
             continue
         cgj = entity.geojson_feature
         cgj['properties'].update(data_for_entity(entity, descendants=True))

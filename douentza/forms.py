@@ -73,6 +73,9 @@ class BasicInformationForm(forms.Form):
         label=Entity.TYPES.get(Entity.TYPE_WARD),
         widget=forms.Select, required=False)
 
+    transcript = forms.CharField(required=False, strip=True,
+                                 widget=forms.Textarea)
+
     def __init__(self, *args, **kwargs):
         super(BasicInformationForm, self).__init__(*args, **kwargs)
 

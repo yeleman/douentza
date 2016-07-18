@@ -69,6 +69,10 @@ $('.btn-survey').each(function (){
             <th>Surveys</th>
             <td>{% include "_surveys_span.html" with event=event %}</td>
         </tr>
+        <tr>
+        	<th>Transcript</th>
+        	<td>{{ event.transcript|linebreaks }}</td>
+        </tr>
     </tbody>
 </table>
 

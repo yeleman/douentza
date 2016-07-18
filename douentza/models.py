@@ -398,6 +398,8 @@ class HotlineRequest(models.Model):
     email = models.EmailField(max_length=250, verbose_name="E-mail",
                               null=True, blank=True)
 
+    transcript = models.TextField(null=True, blank=True)
+
     objects = models.Manager()
     incoming = IncomingManager()
     done = DoneManager()

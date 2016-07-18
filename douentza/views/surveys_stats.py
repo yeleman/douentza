@@ -340,7 +340,8 @@ def export_survey_as_csv(survey, filename):
                     'meta_call_duration', 'meta_ethnicity', 'meta_state',
                     'meta_lga', 'meta_ward', 'meta_gps']
     headers = meta_headers + ["{}-{}".format(q['id'], norm_header(q['label']))
-                              for q in survey.to_dict()['questions']]
+                              for q in survey.to_dict()['questions']] \
+        + ['transript']
 
     def norm_value(value):
         if isinstance(value, list):
@@ -379,6 +380,7 @@ def export_survey_as_csv(survey, filename):
                                  'get_ward', lambda: None)(),
             'meta_gps': getattr(survey_taken.request.location,
                                 'get_geopoint', lambda: None)(),
+            'transript': slugify(survey_taken.request.transcript),
         }
         for question in survey_taken.survey.questions.order_by('-order', 'id'):
             try:

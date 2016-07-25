@@ -23,7 +23,7 @@ from douentza.models import (Survey, Question,
                              SurveyTakenData, CachedData,
                              HotlineRequest, HotlineUser, SurveyTaken,
                              Cluster, Project, Ethnicity)
-from douentza.utils import get_default_context, isoformat_date, OPERATORS
+from douentza.utils import get_default_context, isoformat_date
 
 main_types = {
     Question.TYPE_STRING: 'string',

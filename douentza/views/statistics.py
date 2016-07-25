@@ -254,8 +254,7 @@ def export_general_stats_as_csv(filename):
         for slug in alist]
 
     tags_headers = names_until("tag", nb_cols_tags) + ["tags", tag_total_nb]
-    entity_headers = prefix_list('location', [
-        "slug", "type", "gps", "name", "latitude", "longitude", "parent"])
+    entity_headers = prefix_list('location', ['type', 'state', 'LGA', 'ward'])
 
     additional_headers = [
         prefix + '_' + suffix
@@ -317,14 +316,10 @@ def export_general_stats_as_csv(filename):
 
         location = hotlinerequest.location
         if location:
-            data.update({'location_slug': location.slug,
-                         'location_type': location.entity_type,
-                         'location_longitude': location.longitude,
-                         'location_latitude': location.latitude,
-                         'location_parent': location.parent,
-                         'location_gps': location.get_geopoint(),
-                         'location_name': location.name
-                         })
+            data.update({'location_type': location.entity_type,
+                         'location_state': location.get_state(),
+                         'location_LGA': location.get_lga(),
+                         'location_ward': location.get_ward()})
 
         tags = hotlinerequest.tags.all()[:nb_cols_tags]
         for n, tag in enumerate(tags):

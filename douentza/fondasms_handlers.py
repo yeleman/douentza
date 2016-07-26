@@ -15,10 +15,8 @@ from douentza.utils import (event_type_from_message,
                             number_is_blacklisted,
                             operator_from_mali_number)
 from douentza.utils import normalize_phone_number
+from douentza.helpers import create_request
 
-
-class UnableToCreateHotlineRequest(Exception):
-    pass
 
 # place holder for incoming phone numbers (phone device)
 # with operator
@@ -61,34 +59,12 @@ def handle_sms_call(payload, event_type=None):
     received_on = datetime_from_timestamp(timestamp)
     operator = None
 
-    try:
-        existing = HotlineRequest.objects \
-                                 .exclude(status__in=HotlineRequest.DONE_STATUSES) \
-                                 .get(identity=identity)
-        cluster = existing.cluster
-    except HotlineRequest.DoesNotExist:
-        existing = None
-        cluster = None
-
-    # if same number calls again before previous request has been treated
-    # we add an additional request only
-    if existing:
-        existing.add_additional_request(request_type=event_type,
-                                        sms_message=message)
-        # no text answer - retruning straight
-        return
-
-    try:
-        HotlineRequest.objects.create(
-            identity=identity,
-            event_type=event_type,
-            hotline_number=phone_number,
-            received_on=received_on,
-            sms_message=message,
-            operator=operator,
-            cluster=cluster)
-    except Exception as e:
-        raise UnableToCreateHotlineRequest(e)
+    create_request(identity=identity,
+                   event_type=event_type,
+                   received_on=received_on,
+                   operator=operator,
+                   message=message,
+                   phone_number=phone_number)
 
     return [outgoing_for(to=identity,
                          message=settings.FONDA_REPLY_TEXT)]

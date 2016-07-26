@@ -453,9 +453,13 @@ class HotlineRequest(models.Model):
             self.status = new_status
         self.save()
 
-    def add_additional_request(self, request_type, sms_message=None):
+    def add_additional_request(self, request_type, sms_message=None,
+                               created_on=None):
+        if created_on is None:
+            created_on = timezone.now()
         if self.status != HotlineRequest.STATUS_HANDLED:
             AdditionalRequest.objects.create(event=self,
+                                             created_on=created_on,
                                              request_type=request_type,
                                              sms_message=sms_message)
 

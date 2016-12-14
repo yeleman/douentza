@@ -97,6 +97,11 @@ urlpatterns = [
     url(r'^blacklist/(?P<blacknum_id>[0-9]+)?$',
         views.admin.admin_blacklist, name='blacklist'),
 
+    url(r'^reports/(?P<lang>[a-z]+)/(?P<period>[a-zA-Z\-0-9]+)/?$',
+        views.reports.report, name='report'),
+    url(r'^reports/?', views.reports.reports,
+        name='reports'),
+
     url(r'^sorted_location/' + REQUEST_ID + r'/(?P<cluster_slug>[a-zA-Z\_]+)$',
         views.dashboard.sorted_location, name='sorted_location'),
 

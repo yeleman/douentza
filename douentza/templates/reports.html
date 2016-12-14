@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load douentza %}
+
+{% block title %}Reports{% endblock %}
+
+{% block content %}
+    <h3>Reports</h3>
+    <table class="table table-bordered">
+    <tr><th>Week</th><th>From</th><th>To</th>{% for cluster in clusters %}<th>{{ cluster }}</th>{% endfor %}</tr>
+    {% for period, monday, sunday in weeks %}
+    	<tr><td>{{period}}</td>
+    		<td>{{ monday.date }}</td>
+    		<td>{{ sunday.date }}</td>
+    		{% for cluster in clusters %}
+    			<td><a href="{% url 'report' lang=cluster.slug period=period %}">{{ period }}-{{ cluster.slug }}</a></td>
+			{% endfor %}
+    	</tr>
+    {% empty %}
+    	<tr colspan="6">-</tr>
+    {% endfor %}
+    </table>
+
+{% endblock %}

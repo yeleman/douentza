@@ -19,6 +19,7 @@ import douentza.views.statistics
 import douentza.views.surveys
 import douentza.views.surveys_stats
 import douentza.views.tags
+import douentza.views.reports
 
 
 def handler404(request):

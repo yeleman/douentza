@@ -286,7 +286,7 @@ def gen_report(lang, period):
                "Security", "Complain", "Hunger", "Request"]
     reasons_validation = DataValidation(
         type="list", formula1='"{}"'.format(",".join(reasons)),
-        allow_blank=True)
+        allow_blank=True, showErrorMessage=False)
     ws.add_data_validation(reasons_validation)
 
     def std_write(row, column, value, style=std_style):
@@ -294,21 +294,29 @@ def gen_report(lang, period):
         cell.value = value
         apply_style(cell, style)
 
-    headers = ["S/N", "Date", "Transcript", "Issue",
+    headers = ["S/N", "Incoming", "Outgoing", "Transcript", "Issue",
                "Location", "Ward", "LGA", "State", "Summary of Issue",
-               "Remarks"]
-    sn_col, date_col, transcript_col, issue_col, location_col, ward_col, \
-        lga_col, state_col, summary_col, remarks_col = \
+               "Gender", "Remarks"]
+    sn_col, date_col, date2_col, transcript_col, issue_col, \
+        location_col, ward_col, \
+        lga_col, state_col, summary_col, gender_col, remarks_col = \
         range(1, len(headers) + 1)
 
+    gender_letter = column_to_letter(gender_col)
     state_letter = column_to_letter(state_col)
     issue_letter = column_to_letter(issue_col)
 
-    day_headers = ["", "", "Summary for the day", "", "",
+    day_headers = ["", "", "", "Summary for the day",
+                   "Male", "Female", "Unknown",
                    "Adamawa", "Borno", "Yobe", "Incoming calls"]
-    sn_dcol, date_dcol, summary_dcol, _, _, adamawa_dcol, \
-        borno_dcol, yobe_dcol, total_dcol = range(1, len(day_headers) + 1)
+    sn_dcol, date_dcol, date2_dcol, summary_dcol, \
+        male_dcol, female_dcol, unknown_dcol, \
+        adamawa_dcol, borno_dcol, yobe_dcol, \
+        total_dcol = range(1, len(day_headers) + 1)
 
+    male_letter = column_to_letter(male_dcol)
+    female_letter = column_to_letter(female_dcol)
+    unknown_letter = column_to_letter(unknown_dcol)
     borno_letter = column_to_letter(borno_dcol)
     adamawa_letter = column_to_letter(adamawa_dcol)
     yobe_letter = column_to_letter(yobe_dcol)
@@ -344,6 +352,7 @@ def gen_report(lang, period):
     xl_set_col_width(ws, location_col, 1.6)
     xl_set_col_width(ws, state_col, 1.2)
     xl_set_col_width(ws, summary_col, 2.2)
+    xl_set_col_width(ws, gender_col, 1)
     xl_set_col_width(ws, remarks_col, 1.8)
 
     data_first_row = 4
@@ -385,6 +394,9 @@ def gen_report(lang, period):
             std_write(row, sn_col, req.id, std_style)
             std_write(row, date_col,
                       day[0].date().strftime("%Y-%m-%d"), std_style)
+            std_write(row, date2_col,
+                      req.responded_on.strftime("%Y-%m-%d")
+                      if req.responded_on else "", std_style)
 
             std_write(row, transcript_col, req.transcript, stdw_style)
 
@@ -399,21 +411,21 @@ def gen_report(lang, period):
                 if req.location.get_state():
                     std_write(row, state_col,
                               str(req.location.get_state()), std_style)
+
+            std_write(row, gender_col, req.gender(), std_style)
             row += 1
 
         day_end = copy.copy(row - 1)
 
         # summary of the day
         style_row(row, dheader_style)
-        ws.merge_cells("{ca}{r}:{cb}{r}".format(
-            r=row,
-            ca=column_to_letter(transcript_col),
-            cb=column_to_letter(location_col)))
         # header
         for colnum, header in enumerate(day_headers):
             std_write(row, colnum + 1, header, dheader_style)
         row += 1
 
+        range_gender = "{sl}{rs}:{sl}{re}".format(
+            sl=gender_letter, rs=day_start, re=day_end)
         range_state = "{sl}{rs}:{sl}{re}".format(
             sl=state_letter, rs=day_start, re=day_end)
         range_issue = "{il}{rs}:{il}{re}".format(
@@ -423,11 +435,32 @@ def gen_report(lang, period):
         for reason in reasons:
             style_row(row, std_style)
             apply_first_cols_style(row, 2, dheader_style)
-            ws.merge_cells("{ca}{r}:{cb}{r}".format(
-                r=row,
-                ca=column_to_letter(transcript_col),
-                cb=column_to_letter(location_col)))
             std_write(row, summary_dcol, reason, std_style)
+
+            # formula for totals
+            male_cell = ws.cell(row=row, column=male_dcol)
+            male_cell.set_explicit_value(
+                value='=COUNTIFS({rs},"{n}",{ri},"{i}")'.format(
+                    ri=range_issue, rs=range_gender,
+                    i=reason, n=day_headers[male_dcol - 1]),
+                data_type=male_cell.TYPE_FORMULA)
+            apply_style(male_cell, value_style)
+
+            female_cell = ws.cell(row=row, column=female_dcol)
+            female_cell.set_explicit_value(
+                value='=COUNTIFS({rs},"{n}",{ri},"{i}")'.format(
+                    ri=range_issue, rs=range_gender,
+                    i=reason, n=day_headers[female_dcol - 1]),
+                data_type=female_cell.TYPE_FORMULA)
+            apply_style(female_cell, value_style)
+
+            unknown_cell = ws.cell(row=row, column=unknown_dcol)
+            unknown_cell.set_explicit_value(
+                value='=COUNTIFS({rs},"{n}",{ri},"{i}")'.format(
+                    ri=range_issue, rs=range_gender,
+                    i=reason, n=day_headers[unknown_dcol - 1]),
+                data_type=unknown_cell.TYPE_FORMULA)
+            apply_style(unknown_cell, value_style)
 
             # formula for totals
             borno_cell = ws.cell(row=row, column=borno_dcol)
@@ -468,11 +501,35 @@ def gen_report(lang, period):
         # total line for day
         style_row(row, bold_style)
         apply_first_cols_style(row, 2, dheader_style)
-        ws.merge_cells("{ca}{r}:{cb}{r}".format(
-            r=row,
-            ca=column_to_letter(transcript_col),
-            cb=column_to_letter(location_col)))
         std_write(row, summary_dcol, "Total", bold_style)
+
+        # formula for totals
+        male_cell = ws.cell(row=row, column=male_dcol)
+        male_cell.set_explicit_value(
+            value='=SUM({})'.format(
+                "{sl}{rs}:{sl}{re}".format(sl=male_letter,
+                                           rs=range_reasons[0],
+                                           re=range_reasons[1])),
+            data_type=male_cell.TYPE_FORMULA)
+        apply_style(male_cell, value_style)
+
+        female_cell = ws.cell(row=row, column=female_dcol)
+        female_cell.set_explicit_value(
+            value='=SUM({})'.format(
+                "{sl}{rs}:{sl}{re}".format(sl=female_letter,
+                                           rs=range_reasons[0],
+                                           re=range_reasons[1])),
+            data_type=female_cell.TYPE_FORMULA)
+        apply_style(female_cell, value_style)
+
+        unknown_cell = ws.cell(row=row, column=unknown_dcol)
+        unknown_cell.set_explicit_value(
+            value='=SUM({})'.format(
+                "{sl}{rs}:{sl}{re}".format(sl=unknown_letter,
+                                           rs=range_reasons[0],
+                                           re=range_reasons[1])),
+            data_type=unknown_cell.TYPE_FORMULA)
+        apply_style(unknown_cell, value_style)
 
         # formula for totals
         borno_cell = ws.cell(row=row, column=borno_dcol)
@@ -509,16 +566,18 @@ def gen_report(lang, period):
 
     # summary of the week
     style_row(row, wheader_style)
-    ws.merge_cells("{ca}{r}:{cb}{r}".format(
-        r=row,
-        ca=column_to_letter(transcript_col),
-        cb=column_to_letter(location_col)))
+    # ws.merge_cells("{ca}{r}:{cb}{r}".format(
+    #     r=row,
+    #     ca=column_to_letter(transcript_col),
+    #     cb=column_to_letter(location_col)))
     # header
     for colnum, header in enumerate(day_headers):
         std_write(row, colnum + 1, header, wheader_style)
     std_write(row, summary_dcol, "Summary for the week", wheader_style)
     row += 1
 
+    range_gender = "{sl}{rs}:{sl}{re}".format(
+        sl=gender_letter, rs=data_first_row, re=week_end)
     range_state = "{sl}{rs}:{sl}{re}".format(
         sl=state_letter, rs=data_first_row, re=week_end)
     range_issue = "{il}{rs}:{il}{re}".format(
@@ -528,11 +587,36 @@ def gen_report(lang, period):
     for reason in reasons:
         style_row(row, std_style)
         apply_first_cols_style(row, 2, wheader_style)
-        ws.merge_cells("{ca}{r}:{cb}{r}".format(
-            r=row,
-            ca=column_to_letter(transcript_col),
-            cb=column_to_letter(location_col)))
+        # ws.merge_cells("{ca}{r}:{cb}{r}".format(
+        #     r=row,
+        #     ca=column_to_letter(transcript_col),
+        #     cb=column_to_letter(location_col)))
         std_write(row, summary_dcol, reason, std_style)
+
+        # formula for totals
+        male_cell = ws.cell(row=row, column=male_dcol)
+        male_cell.set_explicit_value(
+            value='=COUNTIFS({rs},"{n}",{ri},"{i}")'.format(
+                ri=range_issue, rs=range_gender,
+                i=reason, n=day_headers[male_dcol - 1]),
+            data_type=male_cell.TYPE_FORMULA)
+        apply_style(male_cell, value_style)
+
+        female_cell = ws.cell(row=row, column=female_dcol)
+        female_cell.set_explicit_value(
+            value='=COUNTIFS({rs},"{n}",{ri},"{i}")'.format(
+                ri=range_issue, rs=range_gender,
+                i=reason, n=day_headers[female_dcol - 1]),
+            data_type=female_cell.TYPE_FORMULA)
+        apply_style(female_cell, value_style)
+
+        unknown_cell = ws.cell(row=row, column=unknown_dcol)
+        unknown_cell.set_explicit_value(
+            value='=COUNTIFS({rs},"{n}",{ri},"{i}")'.format(
+                ri=range_issue, rs=range_gender,
+                i=reason, n=day_headers[unknown_dcol - 1]),
+            data_type=unknown_cell.TYPE_FORMULA)
+        apply_style(unknown_cell, value_style)
 
         # formula for totals
         borno_cell = ws.cell(row=row, column=borno_dcol)
@@ -568,16 +652,44 @@ def gen_report(lang, period):
 
         row += 1
 
-    range_reasons = week_end, week_end + len(reasons)
+    range_reasons = week_end + 1, week_end + len(reasons) + 1
 
     # total line for week
     style_row(row, bold_style)
     apply_first_cols_style(row, 2, wheader_style)
-    ws.merge_cells("{ca}{r}:{cb}{r}".format(
-        r=row,
-        ca=column_to_letter(transcript_col),
-        cb=column_to_letter(location_col)))
+    # ws.merge_cells("{ca}{r}:{cb}{r}".format(
+    #     r=row,
+    #     ca=column_to_letter(transcript_col),
+    #     cb=column_to_letter(location_col)))
     std_write(row, summary_dcol, "Total", bold_style)
+
+    # formula for totals
+    male_cell = ws.cell(row=row, column=male_dcol)
+    male_cell.set_explicit_value(
+        value='=SUM({})'.format(
+            "{sl}{rs}:{sl}{re}".format(sl=male_letter,
+                                       rs=range_reasons[0],
+                                       re=range_reasons[1])),
+        data_type=male_cell.TYPE_FORMULA)
+    apply_style(male_cell, value_style)
+
+    female_cell = ws.cell(row=row, column=female_dcol)
+    female_cell.set_explicit_value(
+        value='=SUM({})'.format(
+            "{sl}{rs}:{sl}{re}".format(sl=female_letter,
+                                       rs=range_reasons[0],
+                                       re=range_reasons[1])),
+        data_type=female_cell.TYPE_FORMULA)
+    apply_style(female_cell, value_style)
+
+    unknown_cell = ws.cell(row=row, column=unknown_dcol)
+    unknown_cell.set_explicit_value(
+        value='=SUM({})'.format(
+            "{sl}{rs}:{sl}{re}".format(sl=unknown_letter,
+                                       rs=range_reasons[0],
+                                       re=range_reasons[1])),
+        data_type=unknown_cell.TYPE_FORMULA)
+    apply_style(unknown_cell, value_style)
 
     # formula for totals
     borno_cell = ws.cell(row=row, column=borno_dcol)
